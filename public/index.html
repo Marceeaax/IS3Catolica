@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio del Proyecto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            margin: 10;
+            padding: 0;
+            background-color: #ffffff;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .header-bar {
+            background-color: #491D57;
+            color: rgb(255, 255, 255);
+            padding: 15px 0;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .main-content {
+            padding-top: 60px;
+        }
+
+        img {
+            max-width: 500px;
+            margin: 40px 0;
+            transition: transform 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.1);
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        li {
+            margin: 10px;
+            animation: fadeInUp 0.5s ease forwards;
+            background-color: #e0e0e0; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 8px #ffffff; /*fondo de los btn*/
+        }
+
+        li a {
+            display: inline-block;
+            padding: 9px 15px;
+            color: #555;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s, transform 0.3s, background-color 0.3s;
+        }
+
+        li a:hover {
+            color: white;
+            background-color: #fbfbfb;
+            transform: translateY(-3px);
+        }
+
+        .info-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            border: 1px solid #ccc;
+            gap: 20px; 
+        }
+
+
+        .info-links a:hover {
+            background-color: #efeff4fe;
+            color: rgb(0, 0, 0);
+        }
+
+        .divider {
+            background-color: #ccc;
+            height: 20px;
+            width: 2px; 
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        a {
+            color: #555;
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s, transform 0.2s;
+        }
+    
+        a:hover {
+            color: #1e90ff; 
+            transform: translateY(-5px) scale(1.1);
+        }
+    
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+
+        li a {
+            display: inline-block;
+            padding: 7px 13px; 
+            font-size: 12px; 
+            background-color: #e0e0e0; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
+            transition: transform 0.2s ease, background-color 0.3s ease; 
+        }
+
+        li a:hover, li a:focus {
+            transform: translateY(2px); /* Efecto "pop up" al pasar el ratón */
+            background-color: #491D57; 
+            color: white; 
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar"><b>Página Principal</b></div>
+    
+    <div class="main-content">
+        <ul>
+            <li><a href="paginas/Y18624/index.html">Lujan Caceres - Y18624</a></li>
+            <li><a href="public/paginas/Y25366/index.html">Christian Salinas - Y25366</a></li>
+            <li><a href="public/paginas/Y12887/index.html">Steven Lopez - Y12887</a></li>
+            <li><a href="public/paginas/3850665/index.html">Marcio Saldivar - 3850665</a></li>
+        </ul>
+
+        <img src="images/logo.png" alt="Logo del Grupo"> 
+
+        <div class="info-links">
+            <a href="ruta/a/informacion-del-curso.html">Información del Curso</a>
+            <div class="divider"></div> 
+            <a href="ruta/a/word-cloud.html">Word Cloud</a>
+        </div>
+    </div>
+</body>
+</html>
