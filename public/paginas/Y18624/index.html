@@ -2,25 +2,78 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Página de [Nombre del Alumno]</title>
-
+    <title>Página de Lujan Caceres</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap');
     
         body {
-            font-family: 'Quicksand', sans-serif;
+            font-family: 'Noto Sans', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #000000; /* Un tono suave de rosa */
-            color: #333;
+            background-color: #FFFFFF; /* Blanco */
+            color: #c7a9d0;
         }
-    
-        header {
-            background-color: #d62365; /* Rosa pastel */
-            color: #333;
+        nav {
+            background-color: #491D57;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #491D57;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        .nav-links li a:hover {
+            background-color: #a783b8;
+        }
+        header, footer {
+            background-color: #491D57; 
+            color: #FFFFFF; 
             padding: 20px 0;
             text-align: center;
             animation: fadeIn 2s ease-out;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 10px;
+        }
+
+        .nav-links li a {
+            background-color: #ca98da;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links li a:hover {
+            background-color: #a783b8;
+        }
+        .nav-links {
+            background-color: #491D57;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center; /* Centrar los elementos de navegación */
+            align-items: center;
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0 10px;
         }
     
         h1, h2 {
@@ -30,29 +83,12 @@
         section {
             margin: 20px auto;
             padding: 20px;
-            background-color: #e2ece9; /* Verde agua muy claro */
+            background-color: #ca98da; 
+            color: #FFFFFF; 
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             max-width: 800px;
             animation: slideIn 1s ease-out;
-        }
-    
-        footer {
-            background-color: #c5dedd; /* Verde agua pastel */
-            color: #333;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
-    
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-    
-        ul li a {
-            color: #ff88a2; /* Rosa más intenso */
-            text-decoration: none;
         }
     
         iframe, img {
@@ -87,40 +123,58 @@
             50% { transform: rotate(5deg); }
             100% { transform: rotate(0deg); }
         }
+        
+        
+        li a {
+            display: inline-block;
+            padding: 7px 13px; 
+            font-size: 12px; 
+            background-color: #e0e0e0; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
+            transition: transform 0.2s ease, background-color 0.3s ease; 
+            color: #555; 
+        }
+
+        li a:hover, li a:focus {
+            transform: translateY(-3px); /* Efecto "pop up" al pasar el ratón */
+            background-color: #491D57; 
+            color: white; 
+        }
     </style>
-    
-    
-    
 </head>
 <body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="/index.html">Inicio</a></li>
+            <li><a href="public/paginas/Y25366/index.html">Christian Salinas - Y25366</a></li>
+            <li><a href="public/paginas/Y12887/index.html">Steven Lopez - Y12887</a></li>
+            <li><a href="public/paginas/3850665/index.html">Marcio Saldivar - 3850665</a></li>
+            <li><a href="ruta/a/informacion-del-curso.html">Información del Curso</a></li>
+            <li><a href="ruta/a/word-cloud.html">Word Cloud</a></li>
+        </ul>
+    </nav>
+
     <header>
         <h1>Lujan Caceres</h1>
-        <p>Matrícula: Y18324</p>
+        <p>Matrícula: Y18324</p> 
     </header>
-
     <section>
         <h2>Video Favorito</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/OdITLHtLNCY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/Ci5raxp37QE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </section>
 
     <section>
         <h2>Imagen Representativa</h2>
-        <img src="http://localhost:3000/images/maddie.jpg" alt="Descripción de la imagen">
+        <img src="http://localhost:3000/images/isla.jpeg" alt="Descripción de la imagen">
     </section>
 
     <section>
         <h2>Mi Dibujo</h2>
-        <!-- Reemplaza "dibujo.jpg" con la ruta de tu dibujo en Paint -->
-        <img src="dibujo.jpg" alt="Dibujo de [Nombre del Alumno]">
+        <img src="http://localhost:3000/images/paint_lujan.png" alt="Dibujo de Lujan Caceres">
     </section>
 
     <footer>
-        <h3>Enlaces</h3>
-        <ul>
-            <li><a href="/index.html">Página Principal</a></li>
-            <!-- Agrega aquí los enlaces a las páginas de los demás miembros del grupo -->
-            <li><a href="ruta/a/la/pagina/de/otro/integrante.html">Nombre del Otro Integrante</a></li>
-        </ul>
     </footer>
 </body>
 </html>
