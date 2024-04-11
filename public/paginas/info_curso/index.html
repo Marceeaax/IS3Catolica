@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingeniería de Software 3 - Universidad Católica</title>
+    <link rel="stylesheet" href="style_curso.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF; /* Blanco */
+            color: #491D57; /* Lila oscuro */
+        }
+
+        header {
+            background-color: #4e1b6e; /* Lila claro */
+            padding: 1rem;
+            text-align: center;
+            color: #FFFFFF; /* Blanco */
+        }
+        nav {
+            background-color: #491D57;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #491D57;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        .nav-links :hover {
+            background-color: #a783b8;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        nav ul :hover {
+            text-decoration: underline;
+        }
+
+        .course-info {
+            background-color: #F3F3F3;
+            margin: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #ffffff; 
+        }
+
+        h2, h3 {
+            color: #000000; 
+        }
+
+        footer {
+            background-color: #491D57; 
+            color: #000000; 
+            text-align: center;
+            padding: 0.5rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @media (hover: hover) {
+            nav ul li a:hover {
+                background-color: #6985C0; 
+                border-radius: 5px;
+                padding: 5px;
+            }
+        }
+        li a {
+            display: inline-block;
+            padding: 7px 13px; 
+            font-size: 12px; 
+            background-color: #000000; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
+            transition: transform 0.2s ease, background-color 0.3s ease; 
+        }
+
+        li a:hover, li a:focus {
+            transform: translateY(2px); /* Efecto "pop up" al pasar el ratón */
+            background-color: #491D57; 
+            color: rgb(0, 0, 0); 
+        }
+        nav {
+            background-color: #491D57;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #491D57;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        .nav-links li a:hover {
+            background-color: #a783b8;
+        }
+        header, footer {
+            background-color: #491D57; 
+            color: #000000; 
+            padding: 20px 0;
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 10px;
+        }
+
+        .nav-links li a {
+            background-color: #ca98da;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links li a:hover {
+            background-color: #a783b8;
+        }
+        .nav-links {
+            background-color: #491D57;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center; /* Centrar los elementos de navegación */
+            align-items: center;
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0 10px;
+        }
+    
+        h1, h2 {
+            margin: 20px 0;
+        }
+    
+        section {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ca98da; 
+            color: #000000; 
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 800px;
+            animation: slideIn 1s ease-out;
+        }
+    
+        iframe, img {
+            display: block;
+            max-width: 100%;
+            margin: 20px auto;
+            border-radius: 5px;
+        }
+    
+        img {
+            animation: rotate 10s infinite linear;
+        }
+    
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    
+        @keyframes slideIn {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="../Y25366/index.html">Christian Salinas - Y25366</a></li>
+            <li><a href="../Y12887/index.html">Steven Lopez - Y12887</a></li>
+            <li><a href="../3850665/index.html">Marcio Saldivar - 3850665</a></li>
+            <li><a href="paginas/Y18624/index.html">Lujan Caceres - Y18624</a></li>
+            <li><a href="../wordcloud/index.html">Word Cloud</a></li>
+        </ul>
+    </nav>
+    <header>
+        <h1>Ingeniería de Software 3</h1>
+            </ul>
+    </header>
+
+    <main>
+        <section class="course-info">
+            <h2>Universidad Católica "Nuestra Señora de la Asunción"</h2>
+            <p><strong>Profesor:</strong> Omar Esgaib</p>
+            <article>
+                <h3>Objetivos del Curso</h3>
+                <p> Aprender los conceptos teóricos de la programación Web y aplicar los mismos en el
+                    desarrollo de páginas Web estáticas y dinámicas, así como la utilización de servicios
+                    disponibles en la Nube en las distintas etapas del ciclo de vida del software, respetando los
+                    conceptos dictados en la Ingeniería de Software.</p>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Universidad Católica "Nuestra Señora de la Asunción"</p>
+    </footer>
+</body>
+</html>
