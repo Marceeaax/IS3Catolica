@@ -1,6 +1,10 @@
 const express = require('express');
 const hbs = require('hbs');
+const db = require("./db/data")
+
+//Aplicacion express
 const app = express();
+
 //configuracion para motor de vistas hbs
 app.use(express.static('public'));
 app.set('view engine', 'hbs');
@@ -13,7 +17,7 @@ app.get("/", (request, response) => {
     response.render("index");
 });
 
-// este me hace dudar si realmente es necesario o no
+// este me hace dudar 
 app.get("/index.html", (request, response) => {
     response.render("index");
 });
@@ -53,3 +57,6 @@ app.get("/paginas/info_curso.html", (request, response) => {
 app.listen(3000, () => {
     console.log("El servidor se está ejecutando en http://localhost:3000");
 });
+
+console.log("Base de datos simulada", db);
+console.log(db.integrantes[0].Codigo);
