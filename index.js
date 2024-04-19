@@ -10,6 +10,8 @@ app.use(express.static('public'));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
+hbs.registerPartials(__dirname + "/views/partials");
+
 //CORRECCION DE RUTAS
 
 // Pagina principal
@@ -58,5 +60,5 @@ app.listen(3000, () => {
     console.log("El servidor se está ejecutando en http://localhost:3000");
 });
 
-console.log("Base de datos simulada", db);
-console.log(db.integrantes[0].Codigo);
+//console.log("Base de datos simulada", db);
+//console.log(db.integrantes[0].Codigo);
