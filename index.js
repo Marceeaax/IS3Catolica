@@ -1,4 +1,6 @@
+
 const express = require('express');
+
 const hbs = require('hbs');
 const db = require("./db/data")
 
@@ -6,7 +8,7 @@ const db = require("./db/data")
 const app = express();
 
 //configuracion para motor de vistas hbs
-app.use(express.static('public'));
+app.use(express.static('public'));0
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
@@ -16,12 +18,12 @@ hbs.registerPartials(__dirname + "/views/partials");
 
 // Pagina principal
 app.get("/", (request, response) => {
-    response.render("index");
+    response.render("index", { integrantes: db.integrantes});
 });
 
 // este me hace dudar 
 app.get("/index.html", (request, response) => {
-    response.render("index");
+    response.render("index", { integrantes: db.integrantes });
 });
 
 
@@ -60,5 +62,5 @@ app.listen(3000, () => {
     console.log("El servidor se está ejecutando en http://localhost:3000");
 });
 
-//console.log("Base de datos simulada", db);
+console.log("Base de datos simulada", db);
 //console.log(db.integrantes[0].Codigo);
