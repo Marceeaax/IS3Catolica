@@ -1,0 +1,11 @@
+<nav>
+    <div class="main-content"></div>
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            {{#each integrantes}}
+            <li><a href="{{nombre}}">{{nombre}} {{apellido}} - {{matricula}}</a></li>
+            {{/each}}
+            {{!-- <li><a href="/InfoCurso">Información del Curso</a></li>
+            <li><a href="/WordCloud">Word Cloud</a></li>     --}}
+        </ul>
+</nav>
