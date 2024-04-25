@@ -137,7 +137,9 @@
     </style>
 </head>
 <body>
-    <nav>
+
+    {{> nav }}
+<!--   <nav>
         <ul class="nav-links">
             <li><a href="/">Inicio</a></li>
             <li><a href="/paginas/Y25366/index.html">Christian Salinas - Y25366</a></li>
@@ -146,7 +148,7 @@
             <li><a href="/paginas/info_curso.html">Información del Curso</a></li>
             <li><a href="/paginas/wordcloud.html">Word Cloud</a></li>
         </ul>
-    </nav>
+    </nav>-->
 
     <header>
         <h1>Marcio Saldivar</h1>
@@ -154,20 +156,19 @@
     </header>
     <section>
         <h2>Video Favorito</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/QcaZLO59Vpc?si=qS5-wBEcKhgr_DaM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="{{media.youtube}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </section>
 
     <section>
         <h2>Imagen Representativa</h2>
-        <img src="../../images/mathi.jpg" alt="Descripción de la imagen">
+        <img src="{{media.imagen}}" alt="Descripción de la imagen">
     </section>
 
     <section>
         <h2>Mi Dibujo</h2>
-        <img src="../../images/imagen.png" alt="Dibujo de Marcio Saldivar">
+        <img src="{{media.dibujo}}" alt="Dibujo de Marcio Saldivar">
     </section>
 
-    <footer>
-    </footer>
+    {{> footer }}
 </body>
 </html>

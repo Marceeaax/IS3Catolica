@@ -6,33 +6,35 @@
     <title>Página Personal - Christian</title>
 </head>
 <body>
+
+<!-- Incluir el partial en la vista -->
+    {{> nav }}	
 	
-	<a href="../../index.html">Volver a la página principal</a>
+<!--<a href="../../index.html">Volver a la página principal</a>
     <a href="/paginas/Y18624/index.html">Y18624 Lujan</a>
 	<a href="/paginas/Y12887/index.html">Y12887 Steven</a>
 	<a href="/paginas/3850665/index.html">Marcio</a>
     <a href="/paginas/info_curso.html">Información del curso</a>
-    <a href="/paginas/wordcloud.html">Ver el Word Cloud del grupo</a>
-	 <hr>
+    <a href="/paginas/wordcloud.html">Ver el Word Cloud del grupo</a> -->
+	
     
 	<h1>Christian Salinas</h1>
     <p>Matrícula: Y25366</p>
 	<section>
 		<h2>Video Favorito</h2>
-			<iframe width="640" height="360" src="https://www.youtube.com/embed/ZDs_f_ZdluU" title="La PRIMERA VICTORIA de CHECO PÉREZ| " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+			<iframe width="640" height="360" src="{{media.youtube}}" title="La PRIMERA VICTORIA de CHECO PÉREZ| " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 	</section>
 	
 	<section>
 		<h2>Imagen Representativa</h2>
-			<img src="../../images/imgrepresentativa.jpg" alt="Imagen representativa"width="540" height="420">
+			<img src="{{media.imagen}}" alt="Imagen representativa"width="540" height="420">
 	</section>
 	<section>
     <h2>Dibujo Propio</h2>
-    <img src="../../images/imgpropia.png" alt="Dibujo propio Y25366" width="540" height="420">
+    <img src="{{media.dibujo}}" alt="Dibujo propio Y25366" width="540" height="420">
 
     <p>F: Christian Salinas</p>
 	</section>
-   
-   
+	{{> footer }}
 </body>
 </html>
