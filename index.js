@@ -33,8 +33,7 @@ function dbPersonalizada(db, index) {
 app.get("/", (request, response) => {
     response.render("index", { 
         integrantes: db.integrantes,
-        ocultarLinkInfoCurso: true,
-        ocultarLinkWordCloud: true
+        footerfijo: true
     });
 });
 
@@ -47,30 +46,12 @@ app.get("/Lujan", (request, response) => {
     });
 });
 
-// Christian
-app.get("/Christian", (request, response) => {
-    let integrantesP = dbPersonalizada(db.integrantes, 1);
-    response.render("Y25366/index", { 
-        integrantes: integrantesP, 
-        media: db.media["Y25366"] 
-    });
-});
-
-// Steven
-app.get("/Steven", (request, response) => {
-    let integrantesP = dbPersonalizada(db.integrantes, 2);
-    response.render("Y12887/index", { 
-        integrantes: integrantesP, 
-        media: db.media["Y12887"] 
-    });
-});
-
-// Marcio
-app.get("/Marcio", (request, response) => {
-    let integrantesP = dbPersonalizada(db.integrantes, 3);
-    response.render("3850665/index", { 
-        integrantes: integrantesP, 
-        media: db.media["3850665"] 
+// Informacion de los integrantes
+app.get("/Integrantes", (request, response) => {
+    response.render("integrantes", { 
+        integrantes: db.integrantes,
+        media: db.media["Y18624"],
+        footerfijo: false
     });
 });
 
@@ -89,6 +70,25 @@ app.get("/WordCloud", (request, response) => {
         ocultarLinkWordCloud: true 
     });
 });
+
+app.get('/api/integrante/:matricula', (req, res) => {
+    const { matricula } = req.params;
+    const integrante = db.integrantes.find(i => i.matricula === matricula);
+    if (integrante) {
+        res.json({
+            nombre: integrante.nombre,
+            apellido: integrante.apellido,
+            youtube: db.media[matricula].youtube,
+            imagen: db.media[matricula].imagen,
+            dibujo: db.media[matricula].dibujo,
+            matricula: integrante.matricula,
+            colores: db.media[matricula].colores
+        });
+    } else {
+        res.status(404).send('Integrante no encontrado');
+    }
+});
+
 
 // Para errores 404
 app.use((req, res, next) => {
