@@ -11,7 +11,9 @@
             background-color: #491D57;
             color: rgb(255, 255, 255);
             padding: 22px 0;
-            margin-top: 95px;
+            position:relative;
+            bottom: 0;
+            width: 100%;
     }
     .footer a {
         color: white; 
@@ -21,3 +23,17 @@
     }
 
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var footerFijo = {{{footerfijo}}};
+    if (footerFijo) {
+      var footerElement = document.querySelector('.footer');
+      footerElement.style.position = 'fixed';
+    }
+    else {
+      var footerElement = document.querySelector('.footer');
+      footerElement.style.position = 'relative';
+    }
+  });
+</script>
