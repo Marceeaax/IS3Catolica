@@ -11,12 +11,11 @@ const db = require("./db/data")
 const app = express();
 
 //configuracion para motor de vistas hbs
-app.use(express.static('public'));0
+app.use(express.static('public'));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
 hbs.registerPartials(__dirname + "/views/partials");
-
 
 ///////////////////////////////////////////FUNCIONES//////////////////////////////////////////////////////
 
@@ -91,6 +90,19 @@ app.get("/WordCloud", (request, response) => {
     });
 });
 
+// Para errores 404
+app.use((req, res, next) => {
+    // Renderizar una página de error personalizada
+    
+    var randomNumber = Math.round(Math.random());
+    if (randomNumber === 0) {
+        res.status(404).render('error/index');
+    }
+    else {
+        res.status(404).render('error/index2');
+    }
+});
+
 
 // Correr el servidor en el puerto 3000
 app.listen(3000, () => {
@@ -99,3 +111,5 @@ app.listen(3000, () => {
 
 //console.log("Base de datos simulada", db);
 //console.log(db.integrantes[0].Codigo);
+
+
