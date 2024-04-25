@@ -19,6 +19,9 @@ hbs.registerPartials(__dirname + "/views/partials");
 
 ///////////////////////////////////////////FUNCIONES//////////////////////////////////////////////////////
 
+// Funcion que se pensaba utilizar para evitar redudancia (por ej. si estoy en la pagina de Lujan, no mostrar el boton de Lujan)
+// Por falta de tiempo, quedo fuera dela implementacion
+
 function dbPersonalizada(db, index) {
     // Crear una copia del array original
     let dbPersonalizado = [...db];
@@ -28,21 +31,12 @@ function dbPersonalizada(db, index) {
 }
 
 
-/////////////////////////////////////////////RUTAS///////////////////////////////////////////////////////////
+/////////////////////////////////////////////RUTAS//////////////////////////////////////////////////////////
 // Pagina principal
 app.get("/", (request, response) => {
     response.render("index", { 
         integrantes: db.integrantes,
         footerfijo: true
-    });
-});
-
-// Lujan
-app.get("/Lujan", (request, response) => {
-    let integrantesP = dbPersonalizada(db.integrantes, 0);
-    response.render("Y18624/index", { 
-        integrantes: integrantesP, 
-        media: db.media["Y18624"] 
     });
 });
 
@@ -71,6 +65,8 @@ app.get("/WordCloud", (request, response) => {
     });
 });
 
+// Esto es como un API, es una ruta que utilizamos de manera invisible, es decir, nunca nuestro sitio web accedera esa ruta, pero de esta manera
+// Actualizamos los datos de manera asincrona en nuestra pagina, mostrando todos los integrantes del grupo de acuerdo al boton que se presione
 app.get('/api/integrante/:matricula', (req, res) => {
     const { matricula } = req.params;
     const integrante = db.integrantes.find(i => i.matricula === matricula);
@@ -90,7 +86,9 @@ app.get('/api/integrante/:matricula', (req, res) => {
 });
 
 
-// Para errores 404
+// Aqui contemplamos la renderizacion de la pagina de error 404 cuando no se puede encontrar una pagina solicitada
+// Se genera un numero aleatorio del 0 al 1 con math.random, y mostramos una pagina de error al azar dependiendo del resultado
+
 app.use((req, res, next) => {
     // Renderizar una página de error personalizada
     

@@ -124,9 +124,12 @@
     <script>
         function cargarIntegrante(matricula) {
             $.ajax({
-                url: `/api/integrante/${matricula}`, // Endpoint para los datos del integrante
+                url: `/api/integrante/${matricula}`, // API para los datos del integrante
                 type: 'GET',
                 success: function(data) {
+                    // En esta seccion, en caso de encontrar al integrante buscado, modificamos el HTML Y CSS de nuestra pagina integrantes.hbs
+                    // Esto es mas conocido como "editar el DOM (Document Object Model)"
+                    
                     // Actualiza los elementos multimedia
                     $('#videoFavorito').attr('src', data.youtube);
                     $('#imagenRepresentativa').attr('src', data.imagen);
