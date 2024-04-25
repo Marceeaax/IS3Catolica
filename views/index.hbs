@@ -7,13 +7,14 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
         
-        body {
+        body, html {
             font-family: 'Noto Sans', sans-serif;
-            margin: 10;
+            margin: 0;
             padding: 0;
             background-color: #ffffff;
             color: #ffffff;
             text-align: center;
+            padding-bottom: 100px;
         }
 
         .header-bar {
@@ -21,19 +22,14 @@
             color: rgb(255, 255, 255);
             padding: 15px 0;
             width: 100%;
-            position: fixed;
             top: 0;
             left: 0;
             z-index: 1000;
         }
 
-        .main-content {
-            padding-top: 60px;
-        }
-
         img {
             max-width: 500px;
-            margin: 40px 0;
+            margin: 100px 0;
             transition: transform 0.3s ease;
         }
 
@@ -138,23 +134,41 @@
             background-color: #491D57; 
             color: white; 
         }
+
+        li a {
+            display: inline-block;
+            padding: 7px 13px; 
+            font-size: 12px; 
+            font-weight: 600;
+            background-color: #e0e0e0; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
+            transition: transform 0.2s ease, background-color 0.3s ease; 
+        }
+
+        li a:hover, li a:focus {
+            transform: translateY(2px); /* Efecto "pop up" al pasar el ratón */
+            background-color: #491D57; 
+            color: white; 
+        }
+
+        a {
+            color: #555;
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s, transform 0.2s;
+        }
+    
+        a:hover {
+            color: #1e90ff; 
+            transform: translateY(-5px) scale(1.1);
+        }
     </style>
 </head>
 <body>
     <div class="header-bar"><b>Página Principal</b></div>
-    
-    <!-- Incluir el partial en la vista -->
-    {{> nav }}
-    
-    
-
-<!-- <nav>
-    <div class="main-content"></div>
-            <li><a href="/paginas/Y18624/index.html">Lujan Caceres - Y18624</a></li>
-            <li><a href="/paginas/Y25366/index.html">Christian Salinas - Y25366</a></li>
-            <li><a href="/paginas/Y12887/index.html">Steven Lopez - Y12887</a></li>
-            <li><a href="/paginas/3850665/index.html">Marcio Saldivar - 3850665</a></li>
-    </nav> -->
+    <div>
+    <li style="margin-top: 20px;"><a href="/integrantes">Integrantes</a></li>
 
         <img src="../../images/logo.png" alt="Logo del Grupo"> 
 
