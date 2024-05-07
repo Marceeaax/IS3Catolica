@@ -96,7 +96,7 @@
 </head>
 <body>
     <!-- Inclusión de la navegación con Handlebars -->
-    {{> navintegrantes }}
+    {{> nav }}
 
     <header>
         <h1>Lujan Caceres</h1>
@@ -123,8 +123,9 @@
     <!-- Función JavaScript para carga asincrónica -->
     <script>
         function cargarIntegrante(matricula) {
+            
             $.ajax({
-                url: `/api/integrante/${matricula}`, // API para los datos del integrante
+                url: `/integrantes/${matricula}`, // API para los datos del integrante
                 type: 'GET',
                 success: function(data) {
                     // En esta seccion, en caso de encontrar al integrante buscado, modificamos el HTML Y CSS de nuestra pagina integrantes.hbs
@@ -136,6 +137,7 @@
                     $('#miDibujo').attr('src', data.dibujo);
 
                     // Actualiza el texto del encabezado
+                    console.log(data.nombre + ' ' + data.apellido + ' - ' + data.matricula);
                     $('title').text(data.nombre + ' ' + data.apellido + ' - ' + data.matricula);
                     $('h1').text(data.nombre + ' ' + data.apellido);
                     $('p').text('Matrícula: ' + data.matricula);
