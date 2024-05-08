@@ -8,31 +8,23 @@
 
         body {
             font-family: 'Quicksand', sans-serif;
-            margin: 10;
-            padding: 10;
+            margin: 0;
+            padding: 0;
             background-color: #FFFFFF; /* Blanco */
             color: #c7a9d0;
-            display: flex;
-            flex-direction: column;
-            height: 200vh;
         }
 
-        header, footer {
-            background-color: #491D57; 
-            color: #FFFFFF; 
-            padding: 1000px 0;
-            text-align: center;
-            animation: fadeIn 2s ease-out;
-        }
-
-        nav {
+        .header-bar {
             background-color: #491D57;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 20px;
+            color: rgb(255, 255, 255);
+            padding: 15px 0;
+            text-align: center;
             width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
+
 
         .nav-links {
             display: flex;
@@ -56,15 +48,6 @@
         .nav-links li a:hover, .nav-links li a:focus {
             background-color: #a783b8;
             transform: translateY(-3px);
-        }
-
-        header, footer {
-            background-color: #491D57; 
-            color: #FFFFFF; 
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            animation: fadeIn 2s ease-out;
         }
 
         .nav-links {
@@ -107,7 +90,11 @@
     
 
         .word-cloud {
-            margin-bottom: 30px;
+            /*margin-top: 80px;
+            margin-bottom: 125px; */
+            position: absolute;
+            top: 25%;
+            left: 35%;
             transform: rotate(-15deg);
         }
 
@@ -173,13 +160,9 @@
         }
 
         html, body {
-        height: 100vh;
-        width: 100vw;
         margin: 0;
         padding: 0;
-        display: flex;
         align-items: center;
-        justify-content: center;
         }
 
         ul.cloud {
@@ -254,45 +237,32 @@
     </style>
 </head>
 <body>
-<!-- Incluir el partial en la vista -->
-    {{> nav }}
+    <div class="header-bar">
+        <b>Word Cloud</b>
+    </div>
 
-<!-- <nav>
-        <ul class="nav-links">
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/paginas/Y25366/index.html">Christian Salinas - Y25366</a></li>
-            <li><a href="/paginas/Y12887/index.html">Steven Lopez - Y12887</a></li>
-            <li><a href="/paginas/3850665/index.html">Marcio Saldivar - 3850665</a></li>
-            <li><a href="/paginas/Y18624/index.html">Lujan Caceres - Y18624</a></li>
-            <li><a href="/paginas/info_curso.html">Información del Curso</a></li>
-        </ul>
-    </nav>-->
-    <header>
-        <h1>Word Cloud</h1>
-    </header>
+    {{> nav }}
 
     <div class="word-cloud">
         <ul class="cloud" role="navigation" aria-label="Webdev word cloud">
-            <li><a href="#" data-weight="4">HTTP</a></li>
-            <li><a href="#" data-weight="1">Ember</a></li>
-            <li><a href="#" data-weight="5">Sass</a></li>
-            <li><a href="#" data-weight="8">HTML</a></li>
-            <li><a href="#" data-weight="6">FlexBox</a></li>
-            <li><a href="#" data-weight="4">API</a></li>
-            <li><a href="#" data-weight="5">VueJS</a></li>
-            <li><a href="#" data-weight="6">Grid</a></li>
-            <li><a href="#" data-weight="2">Rest</a></li>
-            <li><a href="#" data-weight="9">JavaScript</a></li>
-            <li><a href="#" data-weight="3">Animation</a></li>
-            <li><a href="#" data-weight="7">React</a></li>
-            <li><a href="#" data-weight="8">CSS</a></li>
-            <li><a href="#" data-weight="1">Cache</a></li>
-            <li><a href="#" data-weight="3">Less</a></li>
+            <li><a href="https://go.dev/" data-weight="4">Go</a></li>
+            <li><a href="https://www.typescriptlang.org/" data-weight="1">TypeScript</a></li>
+            <li><a href="https://www.lua.org/" data-weight="5">Lua</a></li>
+            <li><a href="https://react.dev/" data-weight="8">React</a></li>
+            <li><a href="https://www.djangoproject.com/" data-weight="6">Django</a></li>
+            <li><a href="https://java.com" data-weight="4">Java</a></li>
+            <li><a href="https://www.ruby-lang.org/es/" data-weight="5">Ruby</a></li>
+            <li><a href="https://fortran-lang.org/" data-weight="6">Fortran</a></li>
+            <li><a href="https://angular.io/" data-weight="2">Angular</a></li>
+            <li><a href="https://getbootstrap.com/" data-weight="9">Bootstrap</a></li>
+            <li><a href="https://www.mathworks.com/" data-weight="3">MATLAB</a></li>
+            <li><a href="https://www.python.org/" data-weight="7">Python</a></li>
+            <li><a href="https://jquery.com/" data-weight="8">JQuery</a></li>
+            <li><a href="https://www.swift.org/" data-weight="1">Swift</a></li>
+            <li><a href="https://www.php.net/" data-weight="3">PHP</a></li>
         </ul>
     </div>
 
-    <footer>
-    </footer>
     {{> footer }}
 </body>
 </html>

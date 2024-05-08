@@ -20,7 +20,7 @@ hbs.registerPartials(__dirname + "/views/partials");
 ///////////////////////////////////////////FUNCIONES//////////////////////////////////////////////////////
 
 // Funcion que se pensaba utilizar para evitar redudancia (por ej. si estoy en la pagina de Lujan, no mostrar el boton de Lujan)
-// Por falta de tiempo, quedo fuera dela implementacion
+// Por falta de tiempo, quedo fuera de la implementacion
 
 function dbPersonalizada(db, index) {
     // Crear una copia del array original
@@ -44,8 +44,7 @@ app.get("/", (request, response) => {
 app.get("/Integrantes", (request, response) => {
     response.render("integrantes", { 
         integrantes: db.integrantes,
-        media: db.media["Y18624"],
-        footerfijo: false
+        /* media: db.media["Y18624"], */
     });
 });
 
@@ -53,7 +52,7 @@ app.get("/Integrantes", (request, response) => {
 app.get("/InfoCurso", (request, response) => {
     response.render("info_curso", { 
         integrantes: db.integrantes,
-        ocultarLinkInfoCurso: true 
+        footerfijo: true
     });
 });
 
@@ -61,29 +60,28 @@ app.get("/InfoCurso", (request, response) => {
 app.get("/WordCloud", (request, response) => {
     response.render("wordcloud", { 
         integrantes: db.integrantes,
-        ocultarLinkWordCloud: true 
+        footerfijo: true
     });
 });
 
 // Esto es como un API, es una ruta que utilizamos de manera invisible, es decir, nunca nuestro sitio web accedera esa ruta, pero de esta manera
 // Actualizamos los datos de manera asincrona en nuestra pagina, mostrando todos los integrantes del grupo de acuerdo al boton que se presione
-app.get('/api/integrante/:matricula', (req, res) => {
-    const { matricula } = req.params;
+app.get('/integrantes/:matricula', (request, response) => {
+    const matricula = request.params.matricula;
     const integrante = db.integrantes.find(i => i.matricula === matricula);
-    if (integrante) {
-        res.json({
-            nombre: integrante.nombre,
-            apellido: integrante.apellido,
-            youtube: db.media[matricula].youtube,
-            imagen: db.media[matricula].imagen,
-            dibujo: db.media[matricula].dibujo,
-            matricula: integrante.matricula,
-            colores: db.media[matricula].colores
+    const media = db.media[matricula];
+
+    if (integrante && media) {
+        response.render('integrantes', {
+            integrante,
+            media,
+            footerfijo: false
         });
     } else {
-        res.status(404).send('Integrante no encontrado');
+        response.status(404).render('404', { error: 'Integrante no encontrado' });
     }
 });
+
 
 
 // Aqui contemplamos la renderizacion de la pagina de error 404 cuando no se puede encontrar una pagina solicitada

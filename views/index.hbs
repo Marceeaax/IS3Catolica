@@ -37,23 +37,6 @@
             transform: scale(1.1);
         }
 
-        nav {
-            padding: 0;
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 20px 0;
-        }
-
-        nav {
-            margin: 10px;
-            animation: fadeInUp 0.5s ease forwards;
-            background-color: #e0e0e0; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 8px #ffffff; /*fondo de los btn*/
-        }
-
         nav li a {
             display: inline-block;
             padding: 9px 15px;
@@ -135,6 +118,17 @@
             color: white; 
         }
 
+        .button-link {
+            display: inline-block;
+            padding: 7px 13px; 
+            font-size: 12px; 
+            font-weight: 600;
+            background-color: #e0e0e0; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
+            transition: transform 0.2s ease, background-color 0.3s ease; 
+        }
+
         li a {
             display: inline-block;
             padding: 7px 13px; 
@@ -163,20 +157,21 @@
             color: #1e90ff; 
             transform: translateY(-5px) scale(1.1);
         }
+        
+        .button-container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+    gap: 10px; /* Espacio entre los botones */
+    margin-top: 20px; /* Espacio superior para separar del resto del contenido */
+}
+
     </style>
 </head>
 <body>
     <div class="header-bar"><b>Página Principal</b></div>
     <div>
-    <li style="margin-top: 20px;"><a href="/integrantes">Integrantes</a></li>
-
+        {{> nav }}
         <img src="../../images/logo.png" alt="Logo del Grupo"> 
-
-        <div class="in-fo-links">
-            <a href="/InfoCurso">Información del Curso</a>
-            <div class="divider"></div> 
-            <a href="/WordCloud">Word Cloud </a>
-        </div>
     </div>
         {{> footer }}
 </body>
