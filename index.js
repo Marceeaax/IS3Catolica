@@ -45,7 +45,6 @@ app.get("/Integrantes", (request, response) => {
     response.render("integrantes", { 
         integrantes: db.integrantes,
         /* media: db.media["Y18624"], */
-        footerfijo: false
     });
 });
 
@@ -53,6 +52,7 @@ app.get("/Integrantes", (request, response) => {
 app.get("/InfoCurso", (request, response) => {
     response.render("info_curso", { 
         integrantes: db.integrantes,
+        footerfijo: true
     });
 });
 
@@ -60,26 +60,28 @@ app.get("/InfoCurso", (request, response) => {
 app.get("/WordCloud", (request, response) => {
     response.render("wordcloud", { 
         integrantes: db.integrantes,
+        footerfijo: true
     });
 });
 
 // Esto es como un API, es una ruta que utilizamos de manera invisible, es decir, nunca nuestro sitio web accedera esa ruta, pero de esta manera
 // Actualizamos los datos de manera asincrona en nuestra pagina, mostrando todos los integrantes del grupo de acuerdo al boton que se presione
-app.get("/integrantes/:matricula", (request, response) => {
+app.get('/integrantes/:matricula', (request, response) => {
     const matricula = request.params.matricula;
-    console.log(matricula);
     const integrante = db.integrantes.find(i => i.matricula === matricula);
-    if (integrante) {
-        response.render("integrantes", { 
-            integrantes: [integrante], // Solo pasamos el integrante seleccionado
-            media: db.media[matricula],
+    const media = db.media[matricula];
+
+    if (integrante && media) {
+        response.render('integrantes', {
+            integrante,
+            media,
             footerfijo: false
         });
     } else {
-        // Si no se encuentra el integrante, puedes renderizar una página de error o redirigir a otra página.
-        response.status(404).send('Integrante no encontrado');
+        response.status(404).render('404', { error: 'Integrante no encontrado' });
     }
 });
+
 
 
 // Aqui contemplamos la renderizacion de la pagina de error 404 cuando no se puede encontrar una pagina solicitada

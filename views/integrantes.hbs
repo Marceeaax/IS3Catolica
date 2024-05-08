@@ -3,7 +3,7 @@
 <head>
     <!-- Metadata y recursos -->
     <meta charset="UTF-8">
-    <title>Lujan Caceres - Y18624</title>
+    <title>{{integrante.nombre}} {{integrante.apellido}} - {{integrante.matricula}}</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href='https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap' rel='stylesheet'>
 
@@ -13,12 +13,12 @@
             font-family: 'Noto Sans', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #FFFFFF; /* Blanco */
-            color: #c7a9d0;
+            background-color: {{media.colores.fondo}}; /* Blanco */
+            color: {{media.colores.texto}};
         }
 
-        nav, header, footer {
-            background-color: #491D57; 
+        header{
+            background-color: {{media.colores.headerBackground}}; 
             color: #FFFFFF;
             text-align: center;
             padding: 10px 20px;
@@ -58,7 +58,7 @@
         section {
             margin: 20px auto;
             padding: 20px;
-            background-color: #ca98da; 
+            background-color: {{media.colores.sectionBackground}}; 
             color: #FFFFFF; 
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -96,12 +96,14 @@
 </head>
 <body>
     <!-- Inclusión de la navegación con Handlebars -->
-    {{> nav }}
+    
 
     <header>
-        <h1>Lujan Caceres</h1>
-        <p>Matrícula: Y18324</p>
+        <h1>{{integrante.nombre}} {{integrante.apellido}}</h1>
+        <p>Matrícula: {{integrante.matricula}}</p>
     </header>
+
+    {{> nav }}
 
     <!-- Secciones de contenido multimedia -->
     <section>
@@ -119,43 +121,6 @@
 
     <!-- Footer opcional -->
     {{> footer }}
-
-    <!-- Función JavaScript para carga asincrónica -->
-    <script>
-        function cargarIntegrante(matricula) {
-            
-            $.ajax({
-                url: `/integrantes/${matricula}`, // API para los datos del integrante
-                type: 'GET',
-                success: function(data) {
-                    // En esta seccion, en caso de encontrar al integrante buscado, modificamos el HTML Y CSS de nuestra pagina integrantes.hbs
-                    // Esto es mas conocido como "editar el DOM (Document Object Model)"
-                    
-                    // Actualiza los elementos multimedia
-                    $('#videoFavorito').attr('src', data.youtube);
-                    $('#imagenRepresentativa').attr('src', data.imagen);
-                    $('#miDibujo').attr('src', data.dibujo);
-
-                    // Actualiza el texto del encabezado
-                    console.log(data.nombre + ' ' + data.apellido + ' - ' + data.matricula);
-                    $('title').text(data.nombre + ' ' + data.apellido + ' - ' + data.matricula);
-                    $('h1').text(data.nombre + ' ' + data.apellido);
-                    $('p').text('Matrícula: ' + data.matricula);
-
-                    // Actualiza los colores de la página
-                    $('body').css('background-color', data.colores.fondo);
-                    $('body').css('color', data.colores.texto);
-                    $('header').css('background-color', data.colores.headerBackground);
-                    $('nav').css('background-color', data.colores.navBackground);
-                    $('nav a').css('color', data.colores.navText);
-                    $('section').css('background-color', data.colores.sectionBackground);
-                },
-                error: function() {
-                    alert('Error al cargar los datos del integrante');
-                }
-            });
-        }
-    </script>
 
 </body>
 </html>
