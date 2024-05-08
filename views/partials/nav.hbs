@@ -1,14 +1,44 @@
-<nav>
-    <div class="main-content"></div>
-        <ul>
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/Integrantes">Integrantes</a></li>
-            {{#unless ocultarLinkInfoCurso}}
-                <li><a href="/InfoCurso">Información del Curso</a></li>
-            {{/unless}}
+<style>
+    .button-container {
+        display: flex;
+        justify-content: center; /* Centra horizontalmente el contenido */
+        gap: 10px; /* Espacio entre los botones */
+        margin-top: 20px; /* Espacio superior para separar del resto del contenido */
+    }
 
-            {{#unless ocultarLinkWordCloud}}
-                <li><a href="/WordCloud">Word Cloud</a></li>
-            {{/unless}}    
-        </ul>
+    .button-link {
+        display: inline-block;
+        padding: 7px 13px; 
+        font-size: 12px; 
+        font-weight: 600;
+        background-color: #e0e0e0; 
+        border-radius: 8px; 
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
+        transition: transform 0.2s ease, background-color 0.3s ease; 
+    }
+
+    a {
+        color: #555;
+        text-decoration: none;
+        font-weight: 400;
+        transition: color 0.3s, transform 0.2s;
+    }
+    
+    a:hover {
+        color: #1e90ff; 
+        transform: translateY(-5px) scale(1.1);
+    }
+
+</style>
+
+<nav class="button-container">
+    <a href="/" class="button-link">Inicio</a>
+    <a href="/integrantes/Y18624" class="button-link">Lujan</a>
+    <a href="/integrantes/Y25366" class="button-link">Christian</a>
+    <a href="/integrantes/Y12887" class="button-link">Steven</a>
+    <a href="/integrantes/3850665" class="button-link">Marcio</a>
+    <a href="/WordCloud" class="button-link">Word Cloud</a>
+    <a href="/InfoCurso" class="button-link">Información del Curso</a>
 </nav>
+
+{{!-- <a href="javascript:void(0);" class="button-link" onclick="cargarIntegrante('{{matricula}}')">{{nombre}} {{apellido}} - {{matricula}}</a> --}}
