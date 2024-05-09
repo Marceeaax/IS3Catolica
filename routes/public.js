@@ -3,6 +3,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/conexion');
 
+// Importar el archivo .env
+require('dotenv').config();
+
 const info = {
     repo: process.env.GITLAB_REPO_URL,
     nombre: process.env.FULL_NAME,

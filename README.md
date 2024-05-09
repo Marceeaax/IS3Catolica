@@ -1,10 +1,28 @@
-# Instrucciones para Configurar la Base de Datos SQLite
+# Instrucciones para montaje de proyecto
+
+Para correr el proyecto en un entorno de desarrollo, es necesario tener preinstalado:
+- `git`
+- `npm`
+- Un IDE
+
+## Clonar el proyecto
+```bash
+git clone https://gitlab.com/cacereslujann/03-y-18624-motor-plantillas
+```
 
 ## Instalación de Dependencias
-Ejecuta el siguiente comando para instalar la librería `sqlite3`:
+
+Ejecuta el siguiente comando para instalar la librería `nodemon`, para renderizar automaticamente las paginas cuando se producen cambios en el proyecto:
+```bash
+npm install nodemon
+```
+
+Ejecuta el siguiente comando para instalar la librería `sqlite3`, que es el motor de base de datos utilizada para el proyecto:
 ```bash
 npm install sqlite3
 ```
+
+Es probable que tambien necesites instalar `express`, que es un framework de Node.js utilizado para construir aplicaciones web, y `hbs`, que es un motor de plantillas para Express.js utilizado para generar vistas dinámicas en HTML. Puedes hacerlo utilizando los dos comandos anteriores
 
 ## Proceso de implementación
 ### 1. Crear la Base de Datos
@@ -25,7 +43,11 @@ node db/crebas.js
 node db/inserts.js
 ```
 
-### 3. Ejecutar la aplicacion
+### 3. Rescatar las variables de entorno
+
+Se debe renombrar el archivo `.env.example` a `.env`, para que las variables de entorno del proyecto puedan ser utilizadas
+
+### 4. Ejecutar la aplicacion
 
 - Una vez que la base de datos esté configurada e inicializada, ejecuta tu aplicación Node.js con el siguiente comando:
 
@@ -33,4 +55,4 @@ node db/inserts.js
 npm run dev
 ```
 
-Este comando ejecutará el servidor de desarrollo y permitirá la conexión a la base de datos SQLite para consultar, insertar, actualizar o eliminar datos según sea necesario
+Este comando ejecutará el servidor de desarrollo y permitirá la conexión a la base de datos SQLite para renderizar los datos de cada integrante 

@@ -11,10 +11,12 @@ const app = express();
 require('dotenv').config();
 
 const info = {
-    gitlabRepo: process.env.GITLAB_REPO_URL,
-    fullName: process.env.FULL_NAME,
-    subjectDetails: process.env.SUBJECT_DETAILS
+    repo: process.env.GITLAB_REPO_URL,
+    nombre: process.env.FULL_NAME,
+    materia: process.env.SUBJECT_DETAILS
 };
+
+console.log('Información general:', info);
 
 // SECCION BASE DE DATOS
 // Ejemplo: Consulta de todos los integrantes
