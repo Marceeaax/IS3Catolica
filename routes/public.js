@@ -3,6 +3,12 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/conexion');
 
+const info = {
+    repo: process.env.GITLAB_REPO_URL,
+    nombre: process.env.FULL_NAME,
+    materia: process.env.SUBJECT_DETAILS
+};
+
 // Ruta para la página principal
 router.get("/", (request, response) => {
     db.all('SELECT * FROM Integrantes WHERE activo = 1', (err, rows) => {
@@ -12,6 +18,7 @@ router.get("/", (request, response) => {
         } else {
             response.render("index", { 
                 integrantes: rows,
+                info,
                 footerfijo: true
             });
         }
@@ -28,6 +35,7 @@ router.get("/InfoCurso", (request, response) => {
         } else {
             response.render("info_curso", { 
                 integrantes: rows,
+                info,
                 footerfijo: true
             });
         }
@@ -43,6 +51,7 @@ router.get("/WordCloud", (request, response) => {
         } else {
             response.render("wordcloud", { 
                 integrantes: rows,
+                info,
                 footerfijo: true
             });
         }
@@ -107,6 +116,7 @@ router.get('/integrantes/:matricula', (request, response) => {
                                         integrante,                 // Información individual del integrante
                                         media,                      // Los diferentes tipos de medios
                                         colores,                    // Configuración de colores
+                                        info,
                                         footerfijo: false
                                     });
                                 }
