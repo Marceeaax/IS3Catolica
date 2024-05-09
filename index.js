@@ -1,70 +1,77 @@
 // index.js
-const express = require('express');
-const hbs = require('hbs');
-const publicRoutes = require('./routes/public'); // Importa las rutas
-const db = require('./db/conexion');
+const express = require('express'); // Importa el framework Express
+const hbs = require('hbs'); // Importa Handlebars como motor de plantillas
+const publicRoutes = require('./routes/public'); // Importa las rutas públicas definidas en public.js
+const db = require('./db/conexion'); // Importa el módulo de conexión a la base de datos
 
-// Aplicación express
+// Crea una nueva instancia de la aplicación Express
 const app = express();
 
-// Importar el archivo .env
+// Carga las variables de entorno desde el archivo .env
 require('dotenv').config();
 
+// Define un objeto `info` para almacenar variables de entorno importantes
 const info = {
     repo: process.env.GITLAB_REPO_URL,
     nombre: process.env.FULL_NAME,
     materia: process.env.SUBJECT_DETAILS
 };
 
-/* Prueba para ver si se importa bien las variables de entorno */
-//console.log('Información general:', info);
+// Descomentar esta línea para verificar la importación correcta de variables de entorno
+// console.log('Información general:', info);
 
-
-// Prueba para ver si la base de datos se importa correctamente
-/*db.all('SELECT * FROM Integrantes WHERE activo = 1', (err, rows) => {
+// Descomentar para verificar la correcta conexión a la base de datos y el acceso a los datos
+/*
+db.all('SELECT * FROM Integrantes WHERE activo = 1', (err, rows) => {
     if (err) {
         console.error('Error al obtener los datos:', err.message);
     } else {
         console.log('Integrantes activos:', rows);
     }
-});*/
+});
+*/
 
-// Configuración para motor de vistas hbs
-app.use(express.static('public'));
-app.set('view engine', 'hbs');
-app.set('views', __dirname + '/views');
+// Configuración del motor de vistas hbs y la carpeta de vistas
+app.use(express.static('public')); // Sirve archivos estáticos desde la carpeta `public`
+app.set('view engine', 'hbs'); // Establece hbs como el motor de vistas
+app.set('views', __dirname + '/views'); // Configura la ubicación de la carpeta de vistas
+hbs.registerPartials(__dirname + '/views/partials'); // Registra los parciales para Handlebars
 
-hbs.registerPartials(__dirname + "/views/partials");
-
-// Usa las rutas del archivo public.js
+// Usa las rutas públicas importadas
 app.use(publicRoutes);
 
+// Middleware para manejar errores 404 (Página no encontrada)
+/*Los middlewares son códigos que se ejecutan antes de que una petición HTTP
+ llegue al manejador de rutas o antes de que un cliente reciba una respuesta, 
+ lo que da al framework la capacidad de ejecutar un script típico antes o después de la 
+ petición de un cliente*/
+ 
 app.use((req, res, next) => {
-    // Llamar al siguiente middleware con un error 404
-    next({ status: 404 });
+    next({ status: 404 }); // Llama al siguiente middleware con un error 404
 });
 
-// Aquí contemplamos la renderización de la página de error 404 cuando no se puede encontrar una página solicitada
+// Middleware para gestionar errores y renderizar una página de error adecuada
 app.use((err, req, res, next) => {
-    // Verificar si el error es 404
+    // Verificar si el error es 404 y renderizar una página de error específica
     if (err.status === 404) {
-        const randomNumber = Math.round(Math.random());
+        const randomNumber = Math.round(Math.random()); // Genera un número aleatorio (0 o 1)
+        
+        // Selecciona entre dos plantillas de error 404 de forma aleatoria
         if (randomNumber === 0) {
             return res.status(404).render('error/index');
-            
         } else {
             return res.status(404).render('error/index2');
         }
     }
 
-    // Para otros errores, continuar con el manejo de errores
+    // Para otros errores, continuar con el siguiente middleware
     next(err);
 });
 
-// Definir variable dinamica para el puerto (modificarlo en el .env)
-const puerto = process.env.PORT;
+// Obtiene el puerto del archivo .env o establece un valor predeterminado
+const puerto = process.env.PORT || 3000;
 
-// Corre el servidor en el puerto 3000
+// Inicia el servidor y escucha en el puerto especificado
 app.listen(puerto, () => {
-    console.log("El servidor se está ejecutando en http://localhost:" + puerto);
+    console.log(`El servidor se está ejecutando en http://localhost:${puerto}`);
 });
