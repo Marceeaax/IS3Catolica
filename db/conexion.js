@@ -3,7 +3,8 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Define el camino de la base de datos dentro de tu proyecto
-const dbPath = path.join(__dirname, 'bd', 'mi_base_datos.sqlite');
+const dbPath = path.join(__dirname, 'basededatos.sqlite');
+console.log(dbPath);
 
 // Crea la conexión a la base de datos
 const db = new sqlite3.Database(dbPath, (err) => {
