@@ -25,6 +25,13 @@ npm install sqlite3
 Es probable que tambien necesites instalar `express`, que es un framework de Node.js utilizado para construir aplicaciones web, y `hbs`, que es un motor de plantillas para Express.js utilizado para generar vistas dinámicas en HTML. Puedes hacerlo utilizando los dos comandos anteriores
 
 ## Proceso de implementación
+
+En este proyecto se utiliza el motor de base de datos SQLite para almacenar los datos de los integrantes. Se tienen:
+
+- 3 archivos JavaScript para la conexion, creacion e insercion de datos
+- 2 scripts SQL para la creacion e insercion de datos
+- Un diagrama de entidad de relacion en formato jpg como referencia para la implementacion de la base de datos
+
 ### 1. Crear la Base de Datos
 
 - Asegúrate de que el archivo `crebas.sql` se encuentre en la carpeta `db`.
@@ -56,3 +63,5 @@ npm run dev
 ```
 
 Este comando ejecutará el servidor de desarrollo y permitirá la conexión a la base de datos SQLite para renderizar los datos de cada integrante 
+
+Para esta entrega, se cambiaron las rutas desde el archivo principal (index.js) al archivo public.js, ubicando dentro de la carpeta routes

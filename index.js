@@ -16,17 +16,18 @@ const info = {
     materia: process.env.SUBJECT_DETAILS
 };
 
-console.log('Información general:', info);
+/* Prueba para ver si se importa bien las variables de entorno */
+//console.log('Información general:', info);
 
-// SECCION BASE DE DATOS
-// Ejemplo: Consulta de todos los integrantes
-db.all('SELECT * FROM Integrantes WHERE activo = 1', (err, rows) => {
+
+// Prueba para ver si la base de datos se importa correctamente
+/*db.all('SELECT * FROM Integrantes WHERE activo = 1', (err, rows) => {
     if (err) {
         console.error('Error al obtener los datos:', err.message);
     } else {
         console.log('Integrantes activos:', rows);
     }
-});
+});*/
 
 // Configuración para motor de vistas hbs
 app.use(express.static('public'));
@@ -38,15 +39,26 @@ hbs.registerPartials(__dirname + "/views/partials");
 // Usa las rutas del archivo public.js
 app.use(publicRoutes);
 
-// Aquí contemplamos la renderización de la página de error 404 cuando no se puede encontrar una página solicitada
 app.use((req, res, next) => {
-    var randomNumber = Math.round(Math.random());
-    if (randomNumber === 0) {
-        res.status(404).render('error/index');
+    // Llamar al siguiente middleware con un error 404
+    next({ status: 404 });
+});
+
+// Aquí contemplamos la renderización de la página de error 404 cuando no se puede encontrar una página solicitada
+app.use((err, req, res, next) => {
+    // Verificar si el error es 404
+    if (err.status === 404) {
+        const randomNumber = Math.round(Math.random());
+        if (randomNumber === 0) {
+            return res.status(404).render('error/index');
+            
+        } else {
+            return res.status(404).render('error/index2');
+        }
     }
-    else {
-        res.status(404).render('error/index2');
-    }
+
+    // Para otros errores, continuar con el manejo de errores
+    next(err);
 });
 
 // Definir variable dinamica para el puerto (modificarlo en el .env)
