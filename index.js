@@ -2,10 +2,21 @@
 const express = require('express');
 
 const hbs = require('hbs');
-const db = require("./db/data")
+//const db = require("./db/data")
 
-//////////////////////////////////////////// VERIFICAR SI SE IMPORTO BIEN LA BASE DE DATOS
-//console.log(db.media)
+// SECCION BASE DE DATOS
+
+// index.js
+const db = require('./db/conexion');
+
+// Ejemplo: Consulta de todos los integrantes
+db.all('SELECT * FROM Integrantes WHERE activo = 1', (err, rows) => {
+    if (err) {
+        console.error('Error al obtener los datos:', err.message);
+    } else {
+        console.log('Integrantes activos:', rows);
+    }
+});
 
 //Aplicacion express
 const app = express();
