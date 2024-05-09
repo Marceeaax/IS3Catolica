@@ -1,0 +1,31 @@
+CREATE TABLE Integrantes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    apellido TEXT NOT NULL,
+    matricula TEXT UNIQUE NOT NULL,
+    activo BOOLEAN DEFAULT 1
+);
+
+CREATE TABLE TiposMedia (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE Media (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    integranteId INTEGER NOT NULL,
+    tiposmediaId INTEGER NOT NULL,
+    url TEXT,
+    nombrearchivo TEXT,
+    orden INTEGER,
+    FOREIGN KEY (integranteId) REFERENCES Integrantes (id),
+    FOREIGN KEY (tiposmediaId) REFERENCES TiposMedia (id)
+);
+
+CREATE TABLE Colores (
+    integranteId INTEGER PRIMARY KEY,
+    background TEXT,
+    headerBackground TEXT,
+    sectionBackground TEXT,
+    FOREIGN KEY (integranteId) REFERENCES Integrantes (id)
+);
