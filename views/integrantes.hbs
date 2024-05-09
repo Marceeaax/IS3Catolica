@@ -13,12 +13,12 @@
             font-family: 'Noto Sans', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: {{media.colores.fondo}}; /* Blanco */
-            color: {{media.colores.texto}};
+            background-color: {{colores.background}}; /* Blanco */
+            color: {{colores.texto}};
         }
 
         header{
-            background-color: {{media.colores.headerBackground}}; 
+            background-color: {{colores.headerBackground}}; 
             color: #FFFFFF;
             text-align: center;
             padding: 10px 20px;
@@ -58,7 +58,7 @@
         section {
             margin: 20px auto;
             padding: 20px;
-            background-color: {{media.colores.sectionBackground}}; 
+            background-color: {{colores.sectionBackground}}; 
             color: #FFFFFF; 
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -99,6 +99,7 @@
     <header>
         <h1>{{integrante.nombre}} {{integrante.apellido}}</h1>
         <p>Matrícula: {{integrante.matricula}}</p>
+        
     </header>
 
     {{> nav }}

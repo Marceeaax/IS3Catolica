@@ -7,6 +7,15 @@ const db = require('./db/conexion');
 // Aplicación express
 const app = express();
 
+// Importar el archivo .env
+require('dotenv').config();
+
+const info = {
+    gitlabRepo: process.env.GITLAB_REPO_URL,
+    fullName: process.env.FULL_NAME,
+    subjectDetails: process.env.SUBJECT_DETAILS
+};
+
 // SECCION BASE DE DATOS
 // Ejemplo: Consulta de todos los integrantes
 db.all('SELECT * FROM Integrantes WHERE activo = 1', (err, rows) => {
@@ -38,7 +47,10 @@ app.use((req, res, next) => {
     }
 });
 
+// Definir variable dinamica para el puerto (modificarlo en el .env)
+const puerto = process.env.PORT;
+
 // Corre el servidor en el puerto 3000
-app.listen(3000, () => {
-    console.log("El servidor se está ejecutando en http://localhost:3000");
+app.listen(puerto, () => {
+    console.log("El servidor se está ejecutando en http://localhost:" + puerto);
 });
