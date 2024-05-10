@@ -3,12 +3,15 @@ CREATE TABLE Integrantes (
     nombre TEXT NOT NULL,
     apellido TEXT NOT NULL,
     matricula TEXT UNIQUE NOT NULL,
-    activo BOOLEAN DEFAULT 1
+    activo BOOLEAN DEFAULT 1,
+    orden INTEGER
 );
 
 CREATE TABLE TiposMedia (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT UNIQUE NOT NULL
+    nombre TEXT UNIQUE NOT NULL,
+    activo BOOLEAN DEFAULT 1,
+    orden INTEGER
 );
 
 CREATE TABLE Media (
@@ -18,6 +21,7 @@ CREATE TABLE Media (
     url TEXT,
     nombrearchivo TEXT,
     orden INTEGER,
+    activo BOOLEAN DEFAULT 1,
     FOREIGN KEY (integranteId) REFERENCES Integrantes (id),
     FOREIGN KEY (tiposmediaId) REFERENCES TiposMedia (id)
 );
