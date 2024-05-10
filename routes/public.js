@@ -131,6 +131,7 @@ router.get('/integrantes/:matricula', (request, response, next) => {
                         integrantes: allIntegrantes, // Lista completa de integrantes activos
                         integrante, // Información del integrante específico
                         media, // Medios asociados
+                        info,
                         colores, // Configuración de colores
                         footerfijo: false // No muestra un footer fijo
                     });
