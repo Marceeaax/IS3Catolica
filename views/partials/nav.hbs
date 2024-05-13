@@ -38,6 +38,10 @@
     {{/each}}
     <a href="/WordCloud" class="button-link">Word Cloud</a>
     <a href="/InfoCurso" class="button-link">Información del Curso</a>
+    {{#if mostrarAdmin}}
+        <a href="/admin" class="button-link">Admin</a>
+    {{/if}}
+
 </nav>
 
 {{!-- <a href="javascript:void(0);" class="button-link" onclick="cargarIntegrante('{{matricula}}')">{{nombre}} {{apellido}} - {{matricula}}</a> --}}

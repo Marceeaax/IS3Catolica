@@ -25,6 +25,7 @@ router.get("/", (request, response) => {
             response.render("index", { 
                 integrantes: rows,
                 info,
+                mostrarAdmin: true,
                 footerfijo: true // Muestra un footer fijo
             });
         }
