@@ -3,7 +3,8 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
     res.render("admin/index",{
-        mostrarAdmin: true
+        mostrarAdmin: true,
+        footerfijo: true
     });
 });
 
