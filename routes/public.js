@@ -3,6 +3,7 @@ const express = require('express'); // Importa el framework Express
 const router = express.Router(); // Crea un nuevo router para manejar las rutas públicas
 const db = require('../db/conexion'); // Importa el módulo de conexión a la base de datos
 
+
 // Carga las variables de entorno desde el archivo .env
 require('dotenv').config();
 

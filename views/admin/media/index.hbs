@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Integrantes</title>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <title>Página Administrativa - Inicio</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="fonts/icomoon/style.css">
     <link rel="stylesheet" href="/css/owl.carousel.min.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -14,7 +14,7 @@
     <h1>Tablas</h1>
     <div class="content">
         <div class="container">
-            <h2 class="mb-5">Integrantes</h2>
+            <h2 class="mb-5">Media</h2>
             <div class="table-responsive custom-table-responsive">
                 <table class="table custom-table">
                     <thead>
@@ -25,16 +25,15 @@
                                     <div class="control__indicator"></div>
                                 </label>
                             </th>
-                            <th scope="col">ID</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
-                            <th scope="col">Matricula</th>
-                            <th scope="col">Activo</th>
+                            <th scope="col">integranteId</th>
+                            <th scope="col">TiposMediaId</th>
+                            <th scope="col">Youtube URL</th>
+                            <th scope="col">Imagen</th>
                             <th scope="col">Orden</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{#each integrantes}}
+                        {{#each media}}, 
                         <tr>
                             <th scope="row">
                                 <label class="control control--checkbox">
@@ -42,11 +41,14 @@
                                     <div class="control__indicator"></div>
                                 </label>
                             </th>
-                            <td>{{this.id}}</td>
-                            <td>{{this.nombre}}</td>
-                            <td>{{this.apellido}}</td>
-                            <td>{{this.matricula}}</td>
-                            <td>{{this.activo}}</td>
+                            <td>{{this.integranteId}}</td>
+                            <td>{{this.tiposmediaId}}</td>
+                            <td><iframe id="videoFavorito" "width= 100px  height= 100 px" src="{{this.url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+                            <td> 
+                                {{#if this.nombrearchivo}}
+                                    <img style="height: 100px; width: 100px; text-align: center; vertical-align: middle" src="{{this.nombrearchivo}}" alt="Media Image">
+                                {{/if}}
+                            </td> 
                             <td>{{this.orden}}</td>
                         </tr>
                         <tr class="spacer"><td colspan="100"></td></tr>

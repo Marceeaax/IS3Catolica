@@ -3,9 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colores de las Páginas Integrantes</title>
+    <title>Página Administrativa - Colores</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    
+    <h1>Colores</h1>
+    <div class="content">
+        <div class="container">
+            <h2 class="mb-5">Colores</h2>
+            <div class="table-responsive custom-table-responsive">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Integrante</th>
+                            <th scope="col">Color de Fondo</th>
+                            <th scope="col">Color de Cabecera</th>
+                            <th scope="col">Color de Sección</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each colores}}
+                        <tr>
+                            <td>
+                                <label class="control control--checkbox">
+                                    <input type="checkbox" />
+                                    <div class="control__indicator"></div>
+                                </label>
+                            </td>
+                            <td>{{this.integranteId}}</td>
+                            <td style="background-color: {{this.background}};">{{this.background}}</td>
+                            <td style="background-color: {{this.headerBackground}};">{{this.headerBackground}}</td>
+                            <td style="background-color: {{this.sectionBackground}};">{{this.sectionBackground}}</td>
+                        </tr>
+                        <tr class="spacer"><td colspan="5"></td></tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>

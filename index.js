@@ -3,7 +3,7 @@ const express = require('express'); // Importa el framework Express
 const hbs = require('hbs'); // Importa Handlebars como motor de plantillas
 const publicRoutes = require('./routes/public'); // Importa las rutas públicas definidas en public.js
 const adminRoutes = require('./routes/admin'); // Importa las rutas públicas definidas en public.js
-const db = require('./db/conexion'); // Importa el módulo de conexión a la base de datos
+//const db = require('./db/conexion'); // Importa el módulo de conexión a la base de datos
 // Crea una nueva instancia de la aplicación Express
 const app = express();
 
@@ -40,7 +40,6 @@ hbs.registerPartials(__dirname + '/views/partials'); // Registra los parciales p
 // Usa las rutas públicas importadas
 app.use(publicRoutes);
 app.use('/admin', adminRoutes);
-
 
 // Middleware para manejar errores 404 (Página no encontrada)
 /*Los middlewares son códigos que se ejecutan antes de que una petición HTTP
