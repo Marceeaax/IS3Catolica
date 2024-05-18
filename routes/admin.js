@@ -1,6 +1,7 @@
 const express = require('express'); 
 const router = express.Router();
 const db = require('../db/conexion')
+const swal = require('sweetalert2');
 
 router.get("/", (req, res) => {
     res.render("admin/index",{
@@ -65,27 +66,48 @@ router.get("/colores/listar", (req, res) => {
     });
 });
 
-
 router.get('/integrantes/crear', (req, res) => {
-    res.render('admin/integrantes/crearIntegrante');  // Asegúrate de que el nombre del archivo hbs sea correcto
+    res.render('admin/integrantes/crearIntegrante', {
+        integrante: req.query,  // Pasa la query anterior para rellenar el formulario en caso de error
+        error: req.query.error  // Pasa el mensaje de error si existe
+    });
 });
 
-router.post('/crearIntegrante/create', (req, res) => {
+router.post('/integrantes/create', (req, res) => {
     const { nombre, apellido, matricula, orden } = req.body;
-    const activo = req.body.activo ? 1 : 0; // Verificar si 'activo' está marcado
+    const activo = req.body.activo ? 1 : 0;
 
-    // Validación simple de ejemplo
     if (!nombre || !apellido || !matricula || !orden) {
-        // Error: faltan datos
-        return res.redirect('/admin/crearIntegrante/create');
+        req.session.message = {
+            type: 'error',
+            text: 'Todos los campos son obligatorios.'
+        };
+        return res.redirect('/admin/integrantes/crear');
     }
 
-    // Insertar en la base de datos (simulación)
-    // Aquí deberías usar tu lógica de acceso a datos para insertar el registro
-    console.log('Insertando en la base de datos:', { nombre, apellido, matricula, activo, orden });
+    const query = `INSERT INTO Integrantes (nombre, apellido, matricula, activo, orden) VALUES (?, ?, ?, ?, ?)`;
+    db.run(query, [nombre, apellido, matricula, activo, orden], function(err) {
+        if (err) {
+            req.session.message = {
+                type: 'error',
+                text: 'Error al insertar en la base de datos.'
+            };
+            return res.redirect('/admin/integrantes/crear');
+        }
 
-    // Simular inserción exitosa y redireccionar al listado
-    res.redirect('/admin/crearIntegrante?success=true');
+        req.session.message = {
+            type: 'success',
+            text: 'Integrante creado correctamente!'
+        };
+        req.session.save(() => {
+            res.redirect('/admin/integrantes/listar');
+        });
+    });
 });
+
+
+
+
+
 
 module.exports = router;

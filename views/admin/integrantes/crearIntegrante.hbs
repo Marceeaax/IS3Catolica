@@ -1,96 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Integrante</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(45deg, #49a09d, #5f2c82);
-            font-family: sans-serif;
-            font-weight: 100;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Crear Integrante</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background: linear-gradient(45deg, #49a09d, #5f2c82);
+                font-family: sans-serif;
+                font-weight: 100;
+                color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            width: 300px;
-        }
+            .container {
+                background-color: rgba(255, 255, 255, 0.2);
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+                width: 300px;
+            }
 
-        h1 {
-            text-align: center;
-            color: #fff;
-        }
+            h1 {
+                text-align: center;
+                color: #fff;
+            }
 
-        form {
-            display: flex;
-            flex-direction: column;
-        }
+            form {
+                display: flex;
+                flex-direction: column;
+            }
 
-        label {
-            margin: 10px 0 5px;
-        }
+            label {
+                margin: 10px 0 5px;
+            }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="checkbox"] {
-            padding: 10px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 5px;
-        }
+            input[type="text"],
+            input[type="number"],
+            input[type="checkbox"] {
+                padding: 10px;
+                margin-bottom: 10px;
+                border: none;
+                border-radius: 5px;
+            }
 
-        .button-40 {
-            padding: 10px 20px;
-            background-color: #55608f;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            text-align: center;
-        }
+            .button-40 {
+                padding: 10px 20px;
+                background-color: #55608f;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+                text-align: center;
+            }
 
-        .button-40:hover {
-            background-color: #6f7bb6;
-            color: #222;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Nuevo integrante</h1>
-        <form action="/admin/integrantes/create" method="post">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
+            .button-40:hover {
+                background-color: #6f7bb6;
+                color: #222;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Nuevo integrante</h1>
+            <form action="/admin/integrantes/create" method="post">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
 
-            <label for="apellido">Apellido:</label>
-            <input type="text" id="apellido" name="apellido" required>
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" required>
 
-            <label for="matricula">Matrícula:</label>
-            <input type="text" id="matricula" name="matricula" required>
+                <label for="matricula">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula" required>
 
-            <!--
-            <label for="activo">Activo:</label>
-            <input type="checkbox" id="activo" name="activo" value="1">
-            -->
-            
-            <label for="orden">Orden:</label>
-            <input type="number" id="orden" name="orden" required>
+                <!--
+                <label for="activo">Activo:</label>
+                <input type="checkbox" id="activo" name="activo" value="1">
+                -->
+                
+                <label for="orden">Orden:</label>
+                <input type="number" id="orden" name="orden" required>
 
-            <button type="submit" class="button-40">Crear Nuevo</button>
-        </form>
-    </div>
-</body>
-</html>
+                <button type="submit" class="button-40">Crear Nuevo</button>
+            </form>
+        </div>
+    </body>
+    
+    </html>
+
+    

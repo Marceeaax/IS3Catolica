@@ -6,6 +6,31 @@ const adminRoutes = require('./routes/admin'); // Importa las rutas públicas de
 //const db = require('./db/conexion'); // Importa el módulo de conexión a la base de datos
 // Crea una nueva instancia de la aplicación Express
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+
+const session = require('express-session');
+
+app.use(session({
+  secret: 'lujan',  // Reemplaza 'lujan' con una clave secreta real
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
+
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        if (req.session.message) {
+            delete req.session.message;
+        }
+    });
+    next();
+});
+    
 
 // Carga las variables de entorno desde el archivo .env
 require('dotenv').config();

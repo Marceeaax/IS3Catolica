@@ -3,117 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Administrativa - Inicio</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <title>Listado de Media</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="fonts/icomoon/style.css">
-    <link rel="stylesheet" href="/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        /* Esconde scrollbars */
+        html {
+            overflow-y: scroll; /* Permite el desplazamiento vertical. */
+            scrollbar-width: none; /* Para Firefox */
+        }
 
-<style>
+        html::-webkit-scrollbar {
+            display: none; /* Para Safari y Chrome */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #49a09d, #5f2c82);
+            font-family: sans-serif;
+            font-weight: 100;
+            color: #fff;
+            min-height: 100vh;
+        }
+
         .header-bar {
-        background-color: #491D57;
-        color: white;
-        padding: 10px 13px; /* Ajusta el padding según necesites */
-        width: 100%;
-        display: flex;
-        align-items: center; /* Alinea verticalmente los elementos dentro del contenedor */
-        justify-content: flex-start; /* Alinea los elementos desde el inicio del contenedor */
-        position: fixed; /* Asegura que la cabecera permanezca fija en la parte superior */
-        top: 0; /* Posiciona la cabecera en la parte superior de la ventana */
-        z-index: 1000;
-    }
+            background-color: #491D57;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .home-icon, .placeholder {
+            flex:1; /* Asegura que el ícono y el placeholder tengan la misma flexibilidad */
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-family: 'Arial', sans-serif; /* Establece la fuente del texto */
+            font-size: 15px; /* Establece el tamaño del texto */
+            gap: 5px;
+        }
 
-    .button-container {
-        display: flex;
-        margin-top: 180px;
-        justify-content: center; /* Centra horizontalmente */
-        gap: 40px;
-        align-content: center; /* Centra verticalmente */
-        height: 100vh;
-    }
-    
-    .home-icon, .placeholder {
-        flex: 1; /* Asegura que el ícono y el placeholder tengan la misma flexibilidad */
-        color: white;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        font-family: 'Arial', sans-serif; /* Establece la fuente del texto */
-        font-size: 14px; /* Establece el tamaño del texto */
-        gap: 8px;
-    }
+        .title-container {
+            text-align: center;
+            flex-grow: 7;
+        }
 
-    .title-container {
-        flex: 5; /* Mayor flexibilidad para centrar el título */
-        text-align: center; /* Centra el texto dentro del contenedor */
-    }
-</style>
+        .container {
+            padding-top: 60px; /* Suficiente espacio para el encabezado */
+            padding-bottom: 20px;
+            width: 90%;
+            margin: auto;
+            max-height: 100%;
+            overflow: auto; /* Permite desplazamiento dentro del contenedor */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            background-color: rgba(255,255,255,0.2);
+            text-align: left;
+        }
+
+        thead th {
+            background-color: #55608f;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        .volver-button {
+            background-color: #55608f;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .volver-button:hover {
+            background-color: #6f7bb6;
+        }
+
+        .material-icons {
+            margin-right: 8px; /* Espacio entre el ícono y el texto */
+        }
+    </style>
 </head>
 <body>
-    <h1>Tablas</h1>
-    <div class="content">
-        <div class="container">
-            <h2 class="mb-5">Media</h2>
-            <div class="table-responsive custom-table-responsive">
-                <table class="table custom-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">
-                                <label class="control control--checkbox">
-                                    <input type="checkbox" class="js-check-all" />
-                                    <div class="control__indicator"></div>
-                                </label>
-                            </th>
-                            <th scope="col">integranteId</th>
-                            <th scope="col">TiposMediaId</th>
-                            <th scope="col">Youtube URL</th>
-                            <th scope="col">Imagen</th>
-                            <th scope="col">Orden</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each media}}, 
-                        <tr>
-                            <th scope="row">
-                                <label class="control control--checkbox">
-                                    <input type="checkbox" />
-                                    <div class="control__indicator"></div>
-                                </label>
-                            </th>
-                            <td>{{this.integranteId}}</td>
-                            <td>{{this.tiposmediaId}}</td>
-                            <td><iframe id="videoFavorito" "width= 100px  height= 100 px" src="{{this.url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
-                            <td> 
-                                {{#if this.nombrearchivo}}
-                                    <img style="height: 100px; width: 100px; text-align: center; vertical-align: middle" src="{{this.nombrearchivo}}" alt="Media Image">
-                                {{/if}}
-                            </td> 
-                            <td>{{this.orden}}</td>
-                        </tr>
-                        <tr class="spacer"><td colspan="100"></td></tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
-
-    <body>
     <div class="header-bar">
         <a href="/" class="home-icon">
-            <span class="material-symbols-outlined">home</span>
+            <span class="material-symbols-outlined">home</span><b>Home</b>
         </a>
-        <div class="title-container">
-            <b>Tabla Media</b>
-        </div>
-        <div class="placeholder"></div> <!-- Un elemento de relleno para ayudar en la centración -->
+        <div class="title-container"><b>Tabla Media</b></div>
+        <button type="button" class="button-40" onclick="location.href='/admin/media/crear'">Crear Nuevo</button>
+    </div>
+
+    <div class="container">
+        <h2>Media</h2>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>ID Integrante</th>
+                    <th>TiposMediaId</th>
+                    <th>URL</th>
+                    <th>Nombre Archivo</th>
+                    <th>Orden</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each media}}
+                <tr>
+                    <td>{{this.integranteId}}</td>
+                    <td>{{this.tiposmediaId}}</td>
+                    <td><iframe style="width: 100px; height: 100px;" src="{{this.url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+                    <td>
+                        {{#if this.nombrearchivo}}
+                            <img style="height: 100px; width: 100px; text-align: center; vertical-align: middle" src="{{this.nombrearchivo}}" alt="Media Image">
+                        {{/if}}
+                    </td>
+                    <td>{{this.orden}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <a href="/admin" class="volver-button">
+            <span class="material-icons">arrow_back</span>Volver
+        </a>
     </div>
 </body>
-    <a href="/admin">Volver</a>
 </html>
