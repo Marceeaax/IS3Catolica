@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Integrante</title>
+    <title>Configurar Colores</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
@@ -25,7 +25,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            width: 300px;
+            width: 400px;
         }
 
         h1 {
@@ -43,8 +43,7 @@
         }
 
         input[type="text"],
-        input[type="number"],
-        input[type="checkbox"] {
+        select {
             padding: 10px;
             margin-bottom: 10px;
             border: none;
@@ -70,26 +69,23 @@
 </head>
 <body>
     <div class="container">
-        <h1>Nuevo integrante</h1>
-        <form action="/admin/integrantes/create" method="post">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
+        <h1>Configurar Colores de Integrante</h1>
+        <form action="/admin/colores/create" method="post">
+            <label for="integranteId">Integrante:</label>
+            <select id="integranteId" name="integranteId" required>
+                <!-- Opciones cargadas dinámicamente -->
+            </select>
 
-            <label for="apellido">Apellido:</label>
-            <input type="text" id="apellido" name="apellido" required>
+            <label for="background">Color de Fondo:</label>
+            <input type="text" id="background" name="background" placeholder="#ffffff">
 
-            <label for="matricula">Matrícula:</label>
-            <input type="text" id="matricula" name="matricula" required>
+            <label for="headerBackground">Color de Fondo del Encabezado:</label>
+            <input type="text" id="headerBackground" name="headerBackground" placeholder="#000000">
 
-            <!--
-            <label for="activo">Activo:</label>
-            <input type="checkbox" id="activo" name="activo" value="1">
-            -->
-            
-            <label for="orden">Orden:</label>
-            <input type="number" id="orden" name="orden" required>
+            <label for="sectionBackground">Color de Fondo de Secciones:</label>
+            <input type="text" id="sectionBackground" name="sectionBackground" placeholder="#cccccc">
 
-            <button type="submit" class="button-40">Crear Nuevo</button>
+            <button type="submit" class="button-40">Guardar Colores</button>
         </form>
     </div>
 </body>
