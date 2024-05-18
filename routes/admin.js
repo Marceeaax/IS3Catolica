@@ -65,4 +65,29 @@ router.get("/colores/listar", (req, res) => {
     });
 });
 
+
+router.post('/crearIntegrante/create', (req, res) => {
+    const { nombre, apellido, matricula, orden } = req.body;
+    const activo = req.body.activo ? 1 : 0; // Verificar si 'activo' está marcado
+
+    // Validación simple de ejemplo
+    if (!nombre || !apellido || !matricula || !orden) {
+        // Error: faltan datos
+        return res.redirect('/admin/entidad1/create?error=missingFields');
+    }
+
+    // Insertar en la base de datos (simulación)
+    // Aquí deberías usar tu lógica de acceso a datos para insertar el registro
+    console.log('Insertando en la base de datos:', { nombre, apellido, matricula, activo, orden });
+
+    // Simular inserción exitosa y redireccionar al listado
+    res.redirect('/admin/crearIntegrante?success=true');
+});
+
+
+router.get('/CrearIntegrante/create', (req, res) => {
+    res.render('CrearIntegrante');  // Asegúrate de que el nombre del archivo hbs sea correcto
+});
+
+
 module.exports = router;

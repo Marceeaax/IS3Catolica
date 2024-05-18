@@ -4,11 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Integrantes</title>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="fonts/icomoon/style.css">
     <link rel="stylesheet" href="/css/owl.carousel.min.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
+
+<style>
+    .header-bar {
+        background-color: #491D57;
+        color: white;
+        padding: 10px 13px; /* Ajusta el padding según necesites */
+        width: 100%;
+        display: flex;
+        align-items: center; /* Alinea verticalmente los elementos dentro del contenedor */
+        justify-content: flex-start; /* Alinea los elementos desde el inicio del contenedor */
+        position: fixed; /* Asegura que la cabecera permanezca fija en la parte superior */
+        top: 0; /* Posiciona la cabecera en la parte superior de la ventana */
+        z-index: 1000;
+    }
+
+    .button-container {
+        display: flex;
+        margin-top: 180px;
+        justify-content: center; /* Centra horizontalmente */
+        gap: 40px;
+        align-content: center; /* Centra verticalmente */
+        height: 100vh;
+    }
+
+    .home-icon, .placeholder {
+        flex: 1; /* Asegura que el ícono y el placeholder tengan la misma flexibilidad */
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-family: 'Arial', sans-serif; /* Establece la fuente del texto */
+        font-size: 14px; /* Establece el tamaño del texto */
+        gap: 8px;
+    }
+
+    .title-container {
+        flex: 5; /* Mayor flexibilidad para centrar el título */
+        text-align: center; /* Centra el texto dentro del contenedor */
+    }
+</style>
 </head>
 <body>
     <h1>Tablas</h1>
@@ -61,4 +102,23 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
 </body>
+    <div class="header-bar">
+        <a href="/" class="home-icon">
+            <span class="material-symbols-outlined">home</span>
+        </a>
+        <div class="title-container">
+            <b>Tabla Integrantes</b>
+        </div>
+        <div class="placeholder"></div> <!-- Un elemento de relleno para ayudar en la centración -->
+    </div>
+    <div class="container">
+    <h2 class="mb-5">Integrantes</h2>
+    <!-- Botón para crear un nuevo integrante -->
+    <button type="button" class="button-40" onclick="location.href='/admin/entidad1/create'">
+        <span class="text">Crear Nuevo</span>
+    </button>
+    <div class="table-responsive custom-table-responsive">
+        <!-- Tabla de integrantes -->
+    <a href="/admin">Volver</a>
+
 </html>
