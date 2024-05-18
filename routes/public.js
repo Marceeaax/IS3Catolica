@@ -120,14 +120,14 @@ router.get('/integrantes/:matricula', (request, response, next) => {
                         media.dibujo = m.nombrearchivo;
                     }
                 }
-
+                
                 // Consulta para obtener la configuración de colores del integrante
                 db.get('SELECT * FROM Colores WHERE integranteId = ?', integrante.id, (err, colores) => {
                     if (err) {
                         console.error('Error al obtener la configuración de colores:', err.message);
                         return response.status(500).send('Error al obtener la configuración de colores');
                     }
-
+                    
                     // Renderiza la vista de detalles del integrante, incluyendo toda la información relevante
                     response.render('integrantes', {
                         integrantes: allIntegrantes, // Lista completa de integrantes activos
