@@ -66,6 +66,10 @@ router.get("/colores/listar", (req, res) => {
 });
 
 
+router.get('/integrantes/crear', (req, res) => {
+    res.render('admin/integrantes/crearIntegrante');  // Asegúrate de que el nombre del archivo hbs sea correcto
+});
+
 router.post('/crearIntegrante/create', (req, res) => {
     const { nombre, apellido, matricula, orden } = req.body;
     const activo = req.body.activo ? 1 : 0; // Verificar si 'activo' está marcado
@@ -73,7 +77,7 @@ router.post('/crearIntegrante/create', (req, res) => {
     // Validación simple de ejemplo
     if (!nombre || !apellido || !matricula || !orden) {
         // Error: faltan datos
-        return res.redirect('/admin/entidad1/create?error=missingFields');
+        return res.redirect('/admin/crearIntegrante/create');
     }
 
     // Insertar en la base de datos (simulación)
@@ -83,11 +87,5 @@ router.post('/crearIntegrante/create', (req, res) => {
     // Simular inserción exitosa y redireccionar al listado
     res.redirect('/admin/crearIntegrante?success=true');
 });
-
-
-router.get('/CrearIntegrante/create', (req, res) => {
-    res.render('CrearIntegrante');  // Asegúrate de que el nombre del archivo hbs sea correcto
-});
-
 
 module.exports = router;
