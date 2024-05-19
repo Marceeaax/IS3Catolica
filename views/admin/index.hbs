@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Administrativa - Inicio</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
     <style>
         /* CSS */
         .button-49,
@@ -33,7 +35,7 @@
         --slice-4: inset(40% -6px 43% 0);
         --slice-5: inset(80% -6px 5% 0);
         
-        content: 'LUJAN TEXT';
+        content: 'Table';
         display: block;
         position: absolute;
         top: 0;
@@ -108,12 +110,12 @@
 
         .header-bar {
             background-color: #491D57;
-            color: rgb(255, 255, 255);
-            padding: 15px 0;
+            color: white;
+            padding: 10px 13px; /* Ajusta el padding según necesites */
             width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            display: flex;
+            align-items: center; /* Alinea verticalmente los elementos dentro del contenedor */
+            justify-content: flex-start; /* Alinea los elementos desde el inicio del contenedor */
         }
 
         body, html {
@@ -134,18 +136,50 @@
             height: 100vh;
         }
         
+        .home-icon, .placeholder {
+            flex: 1; /* Asegura que el ícono y el placeholder tengan la misma flexibilidad */
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-family: 'Arial', sans-serif; /* Establece la fuente del texto */
+            font-size: 14px; /* Establece el tamaño del texto */
+            gap: 8px;
+        }
+
+        .title-container {
+            flex: 5; /* Mayor flexibilidad para centrar el título */
+            text-align: center; /* Centra el texto dentro del contenedor */
+        }
+
     </style>
 </head>
 <body>
-    <div class="header-bar"><b>Tablas</b></div>
-    <div class="button-container">
-        <button class="button-49" role="button">Integrantes</button>
-        <button class="button-49" role="button">Colores</button>
-        <button class="button-49" role="button">Media</button>
-        <button class="button-49" role="button">TiposMedia</button>
+    <div class="header-bar">
+        <a href="/" class="home-icon">
+            <span class="material-symbols-outlined">home</span>
+            Volver
+        </a>
+        <div class="title-container">
+            <b>Tablas</b>
+        </div>
+        <div class="placeholder"></div> <!-- Un elemento de relleno para ayudar en la centración -->
     </div>
 
-    <a href="/">Volver</a>
+    <div class="button-container">
+        <a href="/admin/integrantes/listar" class="button-49" style="text-decoration: none; display: inline-block;">
+            Integrantes
+        </a>
+        <a href="/admin/colores/listar" class="button-49" style="text-decoration: none; display: inline-block;">
+            Colores
+        </a>
+        <a href="/admin/media/listar" class="button-49" style="text-decoration: none; display: inline-block;">
+            Media
+        </a>
+        <a href="/admin/tiposmedia/listar" class="button-49" style="text-decoration: none; display: inline-block;">
+            TiposMedia
+        </a>
+    </div>
 
     {{> footer }}
 </body>

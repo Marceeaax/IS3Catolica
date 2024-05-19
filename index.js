@@ -3,9 +3,44 @@ const express = require('express'); // Importa el framework Express
 const hbs = require('hbs'); // Importa Handlebars como motor de plantillas
 const publicRoutes = require('./routes/public'); // Importa las rutas públicas definidas en public.js
 const adminRoutes = require('./routes/admin'); // Importa las rutas públicas definidas en public.js
-const db = require('./db/conexion'); // Importa el módulo de conexión a la base de datos
+//const db = require('./db/conexion'); // Importa el módulo de conexión a la base de datos
 // Crea una nueva instancia de la aplicación Express
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+
+const session = require('express-session');
+
+app.use(session({
+  secret: 'lujan',  // Reemplaza 'lujan' con una clave secreta real
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
+
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        if (req.session.message) {
+            delete req.session.message;
+        }
+    });
+    next();
+});
+
+const flash = require('connect-flash');
+
+// Asegúrate de configurar esto después de haber inicializado express-session
+app.use(flash());
+
+// Configura un middleware para pasar mensajes flash a todas las vistas
+app.use((req, res, next) => {
+    res.locals.flashMessages = req.flash();
+    next();
+});
 
 // Carga las variables de entorno desde el archivo .env
 require('dotenv').config();
@@ -40,7 +75,6 @@ hbs.registerPartials(__dirname + '/views/partials'); // Registra los parciales p
 // Usa las rutas públicas importadas
 app.use(publicRoutes);
 app.use('/admin', adminRoutes);
-
 
 // Middleware para manejar errores 404 (Página no encontrada)
 /*Los middlewares son códigos que se ejecutan antes de que una petición HTTP
