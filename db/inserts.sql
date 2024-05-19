@@ -12,20 +12,20 @@ INSERT INTO Integrantes (nombre, apellido, matricula, orden) VALUES
 INSERT INTO Media (integranteId, tiposmediaId, url, nombrearchivo, orden) VALUES
 -- Lujan
 ((SELECT id FROM Integrantes WHERE matricula = 'Y18624'), (SELECT id FROM TiposMedia WHERE nombre = 'youtube'), 'https://www.youtube.com/embed/Ci5raxp37QE', NULL, 1),
-((SELECT id FROM Integrantes WHERE matricula = 'Y18624'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '../../images/isla.jpeg', 2),
-((SELECT id FROM Integrantes WHERE matricula = 'Y18624'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '../../images/paint_lujan.png', 3),
+((SELECT id FROM Integrantes WHERE matricula = 'Y18624'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '/images/isla.jpeg', 2),
+((SELECT id FROM Integrantes WHERE matricula = 'Y18624'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '/images/paint_lujan.png', 3),
 -- Christian
 ((SELECT id FROM Integrantes WHERE matricula = 'Y25366'), (SELECT id FROM TiposMedia WHERE nombre = 'youtube'), 'https://www.youtube.com/embed/ZDs_f_ZdluU', NULL, 4),
-((SELECT id FROM Integrantes WHERE matricula = 'Y25366'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '../../images/imgrepresentativa.jpg', 5),
-((SELECT id FROM Integrantes WHERE matricula = 'Y25366'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '../../images/imgpropia.png', 6),
+((SELECT id FROM Integrantes WHERE matricula = 'Y25366'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '/images/imgrepresentativa.jpg', 5),
+((SELECT id FROM Integrantes WHERE matricula = 'Y25366'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '/images/imgpropia.png', 6),
 -- Steven
 ((SELECT id FROM Integrantes WHERE matricula = 'Y12887'), (SELECT id FROM TiposMedia WHERE nombre = 'youtube'), 'https://www.youtube.com/embed/0aQPX_Iqu-A?si=yrpnMk0IUVFkQtif', NULL, 7),
-((SELECT id FROM Integrantes WHERE matricula = 'Y12887'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '../../images/mejores-anime-largos.webp', 8),
-((SELECT id FROM Integrantes WHERE matricula = 'Y12887'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '../../images/20240410_192335.jpg', 9),
+((SELECT id FROM Integrantes WHERE matricula = 'Y12887'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '/images/mejores-anime-largos.webp', 8),
+((SELECT id FROM Integrantes WHERE matricula = 'Y12887'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '/images/20240410_192335.jpg', 9),
 -- Marcio
 ((SELECT id FROM Integrantes WHERE matricula = '3850665'), (SELECT id FROM TiposMedia WHERE nombre = 'youtube'), 'https://www.youtube.com/embed/QcaZLO59Vpc?si=qS5-wBEcKhgr_DaM', NULL, 10),
-((SELECT id FROM Integrantes WHERE matricula = '3850665'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '../../images/mathi.jpg', 11),
-((SELECT id FROM Integrantes WHERE matricula = '3850665'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '../../images/imagen.png', 12);
+((SELECT id FROM Integrantes WHERE matricula = '3850665'), (SELECT id FROM TiposMedia WHERE nombre = 'imagen'), NULL, '/images/mathi.jpg', 11),
+((SELECT id FROM Integrantes WHERE matricula = '3850665'), (SELECT id FROM TiposMedia WHERE nombre = 'dibujo'), NULL, '/images/imagen.png', 12);
 
 -- Insertar configuraciones de colores
 INSERT INTO Colores (integranteId, background, headerBackground, sectionBackground) VALUES
