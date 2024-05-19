@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db/conexion');
 const multer = require('multer'); // Primero debes requerir multer antes de usarlo
 
+
 // Configuración del almacenamiento para multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -16,6 +17,15 @@ const storage = multer.diskStorage({
 
 // Crear la instancia de multer usando la configuración de almacenamiento
 const upload = multer({ storage: storage }); // Guarda archivos en la carpeta 'uploads'
+
+require('dotenv').config();
+
+// Define un objeto `info` con las variables de entorno importantes para las vistas
+const info = {
+    repo: process.env.GITLAB_REPO_URL,
+    nombre: process.env.FULL_NAME,
+    materia: process.env.SUBJECT_DETAILS
+};
 
 // Aquí continúan tus rutas...
 router.post('/media/create', upload.single('file'), (req, res) => {
