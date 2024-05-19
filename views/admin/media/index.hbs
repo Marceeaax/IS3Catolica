@@ -57,6 +57,22 @@
             flex-grow: 7;
         }
 
+                .button-40 {
+            padding: 10px 20px;
+            background-color: #55608f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-right: 40px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .button-40:hover {
+            background-color: #6f7bb6;
+            color: #222;
+        }
+
         .container {
             padding-top: 60px; /* Suficiente espacio para el encabezado */
             padding-bottom: 20px;
@@ -124,7 +140,7 @@
             <thead>
                 <tr>
                     <th>ID Integrante</th>
-                    <th>TiposMediaId</th>
+                    <th>Tipos Media Id</th>
                     <th>URL</th>
                     <th>Nombre Archivo</th>
                     <th>Orden</th>
@@ -150,5 +166,30 @@
             <span class="material-icons">arrow_back</span>Volver
         </a>
     </div>
+
+    {{#if flashMessages.error}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{flashMessages.error}}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
+
+    {{#if flashMessages.success}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Éxito',
+            text: '{{flashMessages.success}}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
+
 </body>
 </html>

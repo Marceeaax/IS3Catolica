@@ -30,7 +30,17 @@ app.use((req, res, next) => {
     });
     next();
 });
-    
+
+const flash = require('connect-flash');
+
+// Asegúrate de configurar esto después de haber inicializado express-session
+app.use(flash());
+
+// Configura un middleware para pasar mensajes flash a todas las vistas
+app.use((req, res, next) => {
+    res.locals.flashMessages = req.flash();
+    next();
+});
 
 // Carga las variables de entorno desde el archivo .env
 require('dotenv').config();

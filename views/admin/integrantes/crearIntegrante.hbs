@@ -74,27 +74,43 @@
             <h1>Nuevo integrante</h1>
             <form action="/admin/integrantes/create" method="post">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" value="{{integrante.nombre}}" required>
 
                 <label for="apellido">Apellido:</label>
-                <input type="text" id="apellido" name="apellido" required>
+                <input type="text" id="apellido" name="apellido" value="{{integrante.apellido}}" required>
 
                 <label for="matricula">Matrícula:</label>
-                <input type="text" id="matricula" name="matricula" required>
+                <input type="text" id="matricula" name="matricula" value="{{integrante.matricula}}" required>
 
-                <!--
                 <label for="activo">Activo:</label>
-                <input type="checkbox" id="activo" name="activo" value="1">
-                -->
-                
+                <input type="checkbox" id="activo" name="activo" {{#if integrante.activo}}checked{{/if}}>
+        
                 <label for="orden">Orden:</label>
-                <input type="number" id="orden" name="orden" required>
+                <input type="number" id="orden" name="orden" value="{{integrante.orden}}" required>
 
                 <button type="submit" class="button-40">Crear Nuevo</button>
             </form>
         </div>
     </body>
     
+    {{#if flashMessages.error}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{flashMessages.error}}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
+
+
+
+
+
+
+
     </html>
 
     

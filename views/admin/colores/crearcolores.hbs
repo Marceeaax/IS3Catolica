@@ -56,11 +56,18 @@
             color: white;
             border: none;
             border-radius: 10px;
+            margin-top:20px;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
             text-align: center;
         }
 
+        input[type="color"] {
+    width: 100%; /* Hace que el input ocupe todo el ancho disponible */ /* Añade un poco de padding para mejor visualización */
+    border: none; /* Remueve cualquier borde predefinido */
+    border-radius: 5px; /* Opcional: Añade bordes redondeados */
+    cursor: pointer; /* Cambia el cursor para indicar que el elemento es interactivo */
+}
         .button-40:hover {
             background-color: #6f7bb6;
             color: #222;
@@ -71,22 +78,34 @@
     <div class="container">
         <h1>Configurar Colores de Integrante</h1>
         <form action="/admin/colores/create" method="post">
+
             <label for="integranteId">Integrante:</label>
-            <select id="integranteId" name="integranteId" required>
-                <!-- Opciones cargadas dinámicamente -->
-            </select>
+            <input type="text" id="integranteId" name="integranteId" value="{{integranteId}}">
 
             <label for="background">Color de Fondo:</label>
-            <input type="text" id="background" name="background" placeholder="#ffffff">
+            <input type="color" id="background" name="background" value="{{background}}" placeholder="#ffffff">
 
             <label for="headerBackground">Color de Fondo del Encabezado:</label>
-            <input type="text" id="headerBackground" name="headerBackground" placeholder="#000000">
+            <input type="color" id="headerBackground" name="headerBackground" value="{{headerBackground}}" placeholder="#000000">
 
             <label for="sectionBackground">Color de Fondo de Secciones:</label>
-            <input type="text" id="sectionBackground" name="sectionBackground" placeholder="#cccccc">
-
+            <input type="color" id="sectionBackground" name="sectionBackground" value="{{sectionBackground}}" placeholder="#cccccc">
+            
             <button type="submit" class="button-40">Guardar Colores</button>
         </form>
     </div>
 </body>
+
+{{#if flashMessages.error}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{flashMessages.error}}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+{{/if}}
+
 </html>

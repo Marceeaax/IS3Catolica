@@ -163,25 +163,24 @@
     </a>
     </div>
 
-{{#if session.message}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-  Swal.fire({
-    title: '{{session.message.type}}',
-    text: '{{session.message.text}}',
-    icon: '{{session.message.type}}',
-    confirmButtonText: 'OK'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Elimina el mensaje de la sesión para evitar repeticiones
-      fetch('/clear-session-message').then(() => {
-        window.location.href = '/admin/integrantes/listar'; // Actualiza según sea necesario
-      });
-    }
-  });
-</script>
-{{/if}}
+    {{#if flashMessages.error}}
+        <div class="error">{{flashMessages.error}}</div>
+    {{/if}}
+    {{#if flashMessages.success}}
+        <div class="success">{{flashMessages.success}}</div>
+    {{/if}}
 
 
+    {{#if flashMessages.success}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Éxito',
+            text: '{{flashMessages.success}}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
 </body>
 </html>
