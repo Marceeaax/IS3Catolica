@@ -61,11 +61,81 @@
                 cursor: pointer;
                 transition: background-color 0.3s, color 0.3s;
                 text-align: center;
+                margin-top: 10px;
             }
 
             .button-40:hover {
                 background-color: #6f7bb6;
                 color: #222;
+            }
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+                
+            }
+
+            .switch input { 
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+             position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: #2196F3;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+            
+            .switch-container {
+                display: flex;
+                align-items: center; /* Alinea verticalmente el texto con el switch */
+                justify-content: center;
+                gap:10px; /* Centra horizontalmente el contenedor en el formulario */
+                margin-bottom: 10px; /* Espacio antes del siguiente campo del formulario */
             }
         </style>
     </head>
@@ -73,6 +143,15 @@
         <div class="container">
             <h1>Nuevo integrante</h1>
             <form action="/admin/integrantes/create" method="post">
+
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="activo" name="activo" {{#if integrante.activo}}checked{{/if}}>
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="switch-label" style="margin-top:5px">Activo</span>
+                </div>
+
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" value="{{integrante.nombre}}" required>
 
@@ -81,9 +160,6 @@
 
                 <label for="matricula">Matrícula:</label>
                 <input type="text" id="matricula" name="matricula" value="{{integrante.matricula}}" required>
-
-                <label for="activo">Activo:</label>
-                <input type="checkbox" id="activo" name="activo" {{#if integrante.activo}}checked{{/if}}>
         
                 <label for="orden">Orden:</label>
                 <input type="number" id="orden" name="orden" value="{{integrante.orden}}" required>
@@ -104,11 +180,6 @@
         });
     </script>
     {{/if}}
-
-
-
-
-
 
 
     </html>

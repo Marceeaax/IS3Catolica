@@ -8,6 +8,10 @@ const adminRoutes = require('./routes/admin'); // Importa las rutas públicas de
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
+hbs.registerHelper('json', function(context) {
+    return JSON.stringify(context);
+});
+
 const session = require('express-session');
 
 app.use(session({

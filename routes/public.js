@@ -92,12 +92,12 @@ router.get('/integrantes/:matricula', (request, response, next) => {
                 return next({ status: 404 }); // Llamar al middleware de error si no se encuentra el integrante
             }
 
-            // Consulta para obtener los medios asociados al integrante específico
+            // Consulta para obtener los medios asociados al integrante específico, solo los activos
             const queryMedia = `
                 SELECT tm.nombre AS tipo, m.url, m.nombrearchivo 
                 FROM Media m
                 JOIN TiposMedia tm ON m.tiposmediaId = tm.id
-                WHERE m.integranteId = ?
+                WHERE m.integranteId = ? AND m.activo = 1
             `;
             db.all(queryMedia, integrante.id, (err, medios) => {
                 if (err) {
@@ -142,6 +142,7 @@ router.get('/integrantes/:matricula', (request, response, next) => {
         });
     });
 });
+
 
 // Exporta el router para que pueda ser utilizado en otros archivos
 module.exports = router;

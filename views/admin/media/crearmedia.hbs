@@ -6,6 +6,7 @@
     <title>Crear Media</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
         body {
             margin: 0;
@@ -50,6 +51,7 @@
             margin-bottom: 10px;
             border: none;
             border-radius: 5px;
+            width: 100%;
         }
 
         .button-40 {
@@ -61,11 +63,95 @@
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
             text-align: center;
+            margin-top: 10px
         }
 
         .button-40:hover {
             background-color: #6f7bb6;
             color: #222;
+        }
+
+        .material-symbols-outlined {
+            color:#55608f;
+            transform: translate(1330%,-165%);
+        }
+
+        .input-group {
+            margin-bottom: -30px;
+            margin-top: 5px;
+        }
+
+        .button-icon {
+            cursor: pointer;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+                /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
+        .switch-container {
+            display: flex;
+            align-items: center; /* Alinea verticalmente el texto con el switch */
+            justify-content: center;
+            gap:10px; /* Centra horizontalmente el contenedor en el formulario */
+            margin-bottom: 10px; /* Espacio antes del siguiente campo del formulario */
         }
     </style>
 </head>
@@ -73,37 +159,45 @@
 <div class="container">
     <h1>Crear Nuevo Media</h1>
     <form action="/admin/media/create" method="post" enctype="multipart/form-data">
+
+        <div class="switch-container">
+            <label class="switch">
+                <input type="checkbox" id="activo" name="activo" {{#if integrante.activo}}checked{{/if}}>
+                <span class="slider round"></span>
+            </label>
+            <span class="switch-label" style="margin-top:5px">Activo</span>
+        </div>
+
         <label for="integranteId">Integrante:</label>
-        <select id="integranteId" name="integranteId" required>
+        <select id="integranteId" name="integranteId" required onchange="updateTiposMedia(this.value);">
             {{#each integrantes}}
-            <option value="{{this.id}}">{{this.nombre}}</option>
+            <option value="{{this.id}}" data-tipos="{{json this.tiposFaltantes}}">{{this.nombre}}</option>
             {{/each}}
         </select>
 
         <label for="tiposmediaId">Tipo de Media:</label>
-        <select id="tiposmediaId" name="tiposmediaId" required onchange="checkMediaType(this.value);">
-            {{#each tiposMedia}}
-            <option value="{{this.id}}">{{this.nombre}}</option>
-            {{/each}}
+        <select id="tiposmediaId" name="tiposmediaId" required>
+            <!-- Opciones de tipos de media se actualizarán mediante JavaScript -->
         </select>
 
-        <!-- Campo para subir archivo, inicialmente oculto -->
-        <div id="fileInput" style="display: none;">
-            <label for="file">Archivo:</label>
-            <input type="file" id="file" name="file">
+        <div id="urlLabel" style="display: none;">
+            <label for="url" style="margin-bottom:10px">URL:</label>
+        </div>
+        <div id="urlInput" style="display: none;">
+            <input type="text" style="width: 94%" id="url" name="url">
         </div>
 
-        <label for="url">URL:</label>
-        <input type="text" id="url" name="url">
-
-        <label for="nombrearchivo">Nombre del Archivo:</label>
-        <input type="text" id="nombrearchivo" name="nombrearchivo">
+        <div id="filenameInput">
+            <label for="nombrearchivo" style="margin-bottom:10px">Nombre del Archivo:</label>
+            <div class="input-group">
+                <input type="text" id="nombrearchivo" name="nombrearchivo" style="width: 94%">
+                <input type="file" id="file" name="file" style="display: none;">
+                <span class="material-symbols-outlined button-icon" onclick="document.getElementById('file').click();">open_in_new</span>
+            </div>
+        </div>
 
         <label for="orden">Orden:</label>
-        <input type="number" id="orden" name="orden">
-
-        <label for="activo">Activo:</label>
-        <input type="checkbox" id="activo" name="activo" value="1" checked>
+        <input type="number" id="orden" style="width: 94%" name="orden">
 
         <button type="submit" class="button-40">Crear Nuevo</button>
     </form>
@@ -120,13 +214,61 @@
     });
 </script>
 {{/if}}
-<script>
-    function checkMediaType(mediaTypeId) {
-        // Suponiendo que el ID para 'IMAGEN' es '1', ajusta según tu configuración real
-        const displayStyle = mediaTypeId === '1' ? 'block' : 'none';
-        document.getElementById('fileInput').style.display = displayStyle;
-    }
-</script>
 
+<script>
+function checkMediaType(value) {
+    var urlLabel = document.getElementById('urlLabel');
+    var urlInput = document.getElementById('urlInput');
+    var filenameInput = document.getElementById('filenameInput');
+    
+    // Esconde todos los campos primero
+    urlInput.style.display = 'none';
+    urlLabel.style.display = 'none';
+    filenameInput.style.display = 'none';
+
+    // Muestra los campos según la selección
+    if (value === 'youtube') {
+        urlInput.style.display = 'block';
+        urlLabel.style.display = 'block';
+    } else if (value === 'dibujo' || value === 'imagen') {
+        filenameInput.style.display = 'block';
+    }
+}
+
+function updateTiposMedia(integranteId) {
+    var integranteSelect = document.getElementById('integranteId');
+    var tiposMediaSelect = document.getElementById('tiposmediaId');
+    var selectedOption = integranteSelect.options[integranteSelect.selectedIndex];
+    var tiposFaltantes = JSON.parse(selectedOption.getAttribute('data-tipos'));
+
+    // Clear current options
+    tiposMediaSelect.innerHTML = '';
+
+    // Add new options
+    tiposFaltantes.forEach(function(tipo) {
+        var option = document.createElement('option');
+        option.value = tipo;
+        option.textContent = tipo;
+        tiposMediaSelect.appendChild(option);
+    });
+
+    // Trigger media type check on load
+    if (tiposMediaSelect.value) {
+        checkMediaType(tiposMediaSelect.value);
+    }
+}
+
+document.getElementById('file').addEventListener('change', function() {
+    var fileName = this.files[0].name;
+    document.getElementById('nombrearchivo').value = fileName;
+});
+
+window.onload = function() {
+    var integranteSelect = document.getElementById('integranteId');
+    if (integranteSelect.value) {
+        updateTiposMedia(integranteSelect.value);
+    }
+};
+</script>
 </body>
 </html>

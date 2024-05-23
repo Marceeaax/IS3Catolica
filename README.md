@@ -52,7 +52,7 @@ node db/inserts.js
 
 ### 3. Rescatar las variables de entorno
 
-Se debe renombrar el archivo `.env.example` a `.env`, para que las variables de entorno del proyecto puedan ser utilizadas
+Se debe renombrar el archivo `.env.example` a `.env`, para que las variables de entorno del proyecto puedan ser utilizadas (Una mejor técnica sería duplicar el `.env.example` y luego renombrarlo a `.env`)
 
 ### 4. Ejecutar la aplicacion
 

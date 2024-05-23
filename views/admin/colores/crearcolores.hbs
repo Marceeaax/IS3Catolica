@@ -62,6 +62,22 @@
             text-align: center;
         }
 
+        .button-39 {
+            padding: 10px 20px;
+            background-color: #A90969;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-top:15px;
+            margin-bottom:15px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+        }
+
         input[type="color"] {
     width: 100%; /* Hace que el input ocupe todo el ancho disponible */ /* Añade un poco de padding para mejor visualización */
     border: none; /* Remueve cualquier borde predefinido */
@@ -80,7 +96,13 @@
         <form action="/admin/colores/create" method="post">
 
             <label for="integranteId">Integrante:</label>
-            <input type="text" id="integranteId" name="integranteId" value="{{integranteId}}">
+            <select id="integranteId" name="integranteId" required>
+                {{#each integrantes}}
+                    <option value="{{this.id}}">{{this.nombre}}</option>
+                {{/each}}
+            </select>
+
+            <button type="button" class="button-39" id="generarColores">Colores Aleatorios</button>
 
             <label for="background">Color de Fondo:</label>
             <input type="color" id="background" name="background" value="{{background}}" placeholder="#ffffff">
@@ -109,3 +131,51 @@
 {{/if}}
 
 </html>
+
+<script>
+function hslToHex(h, s, l) {
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0'); // Convertir a Hex
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function generarPaletas(numPaletas) {
+    let paletas = {};
+
+    for (let i = 0; i < numPaletas; i++) {
+        const baseHue = Math.floor(Math.random() * 360);
+        const colores = [
+            hslToHex(baseHue, 100, 50),
+            hslToHex(baseHue + 10, 80, 35),
+            hslToHex(baseHue - 10, 80, 65)
+        ];
+        paletas[`paleta${i + 1}`] = colores;
+    }
+
+    return paletas;
+}
+
+// Función para aplicar colores aleatorios a los campos del formulario
+function generarColores() {
+    // Generar 200 paletas
+    const paletas = generarPaletas(200);
+
+    // Elegir una gama de colores al azar
+    const keys = Object.keys(paletas);
+    const gamaSeleccionada = paletas[keys[Math.floor(Math.random() * keys.length)]];
+
+    // Asignar los colores a los campos del formulario
+    document.getElementById('background').value = gamaSeleccionada[0];
+    document.getElementById('headerBackground').value = gamaSeleccionada[1];
+    document.getElementById('sectionBackground').value = gamaSeleccionada[2];
+}
+
+// Agregar el evento click al botón en el HTML
+document.getElementById('generarColores').addEventListener('click', generarColores);
+
+</script>
