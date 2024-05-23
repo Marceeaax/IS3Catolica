@@ -76,7 +76,7 @@ router.get("/tiposmedia/listar", (req, res) => {
 });
 
 router.get("/media/listar", (req, res) => {
-    db.all('SELECT * FROM Media ORDER BY orden', (err, results) => {
+    db.all('SELECT * FROM Media WHERE activo = 1 ORDER BY orden ', (err, results) => {
         if (err) {
             console.error('Error al obtener datos:', err);
             return res.status(500).send('Error al obtener datos de la base de datos');
@@ -388,3 +388,13 @@ router.post('/colores/create', (req, res) => {
 
 
 module.exports = router;
+
+// Imprimir en la consola los contenidos de la tabla media de la base de datos
+
+db.all('SELECT * FROM media', (err, rows) => {
+    if (err) {
+        console.error('Error al obtener los datos:', err.message);
+    } else {
+        console.log('Media:', rows);
+    }
+});
