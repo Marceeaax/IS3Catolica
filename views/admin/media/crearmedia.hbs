@@ -176,7 +176,7 @@
         </select>
 
         <label for="tiposmediaId">Tipo de Media:</label>
-        <select id="tiposmediaId" name="tiposmediaId" required>
+        <select id="tiposmediaId" name="tiposmediaId" required onchange="checkMediaType(this.value);">
             <!-- Opciones de tipos de media se actualizarán mediante JavaScript -->
         </select>
 
@@ -187,7 +187,7 @@
             <input type="text" style="width: 94%" id="url" name="url">
         </div>
 
-        <div id="filenameInput">
+        <div id="filenameInput" style="display: none;">
             <label for="nombrearchivo" style="margin-bottom:10px">Nombre del Archivo:</label>
             <div class="input-group">
                 <input type="text" id="nombrearchivo" name="nombrearchivo" style="width: 94%">
@@ -230,7 +230,7 @@ function checkMediaType(value) {
     if (value === 'youtube') {
         urlInput.style.display = 'block';
         urlLabel.style.display = 'block';
-    } else if (value === 'dibujo' || value === 'imagen') {
+    } else {
         filenameInput.style.display = 'block';
     }
 }
