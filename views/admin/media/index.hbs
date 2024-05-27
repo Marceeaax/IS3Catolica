@@ -157,8 +157,9 @@
         <table class="table custom-table">
             <thead>
                 <tr>
-                    <th>Integrante</th>
-                    <th>Tipo Media</th>
+                    <th>id</th>
+                    <th>ID Integrante</th>
+                    <th>Tipos Media Id</th>
                     <th>URL</th>
                     <th>Nombre Archivo</th>
                     <th>Orden</th>
@@ -168,6 +169,7 @@
             <tbody>
                 {{#each media}}
                 <tr>
+                    <td><a href="/admin/media/{{this.id}}/editar">{{this.id}}</a></td>
                     <td>{{this.integranteId}}</td>
                     <td>{{this.tiposmediaId}}</td>
                     <td><iframe style="width: 100px; height: 100px;" src="{{this.url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
