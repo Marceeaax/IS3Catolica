@@ -1,5 +1,18 @@
 const db = require('../../db/conexion');
 
+async function getNextOrder(tableName) {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT MAX(orden) as maxOrder FROM ${tableName}`;
+        db.get(query, (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row.maxOrder ? row.maxOrder + 1 : 1); // Si no hay registros, empezamos desde 1
+            }
+        });
+    });
+}
+
 const IntegrantesController = {
     // Método para listar los integrantes
     index: (req, res) => {
@@ -25,15 +38,17 @@ const IntegrantesController = {
     },
 
     // Método para guardar en la base de datos
-    store: (req, res) => {
-        const { nombre, apellido, matricula, orden } = req.body;
+    store: async (req, res) => {
+        const { nombre, apellido, matricula } = req.body;
         const activo = req.body.activo ? 1 : 0;
 
-        if (!nombre || !apellido || !matricula || !orden) {
+        if (!nombre || !apellido || !matricula) {
             req.flash('error', 'Todos los campos son obligatorios.');
             req.session.formData = req.body;
             return res.redirect('/admin/integrantes/crear');
         }
+
+        const orden = await getNextOrder('integrantes');
 
         const query = `INSERT INTO Integrantes (nombre, apellido, matricula, activo, orden) VALUES (?, ?, ?, ?, ?)`;
         db.run(query, [nombre, apellido, matricula, activo, orden], function(err) {
@@ -71,43 +86,41 @@ const IntegrantesController = {
 
     // Método para mostrar el formulario de edición
     edit: (req, res) => {
-        // const id = req.params.id;
-        // db.get('SELECT * FROM integrantes WHERE id = ?', [id], (err, row) => {
-        //     if (err) {
-        //         console.error('Error al obtener datos:', err);
-        //         return res.status(500).send('Error al obtener datos de la base de datos');
-        //     }
-        //     res.render('admin/integrantes/editarIntegrante', {
-        //         integrante: row,
-        //         error: req.flash('error')
-        //     });
-        // });
+        const id = req.params.id;
+        db.get('SELECT * FROM Integrantes WHERE id = ?', [id], (err, row) => {
+            if (err) {
+                console.error('Error al obtener datos:', err);
+                return res.status(500).send('Error al obtener datos de la base de datos');
+            }
+            res.render('admin/integrantes/editarIntegrante', {
+                integrante: row,
+                error: req.flash('error'),
+                success: req.flash('success')
+            });
+        });
     },
 
-    // Método para editar un registro
     update: (req, res) => {
-        // const { id, nombre, apellido, matricula, orden } = req.body;
-        // const activo = req.body.activo ? 1 : 0;
+        const { id } = req.params;
+        const { nombre, apellido, matricula} = req.body;
+        const activo = req.body.activo ? 1 : 0;
 
-        // if (!nombre || !apellido || !matricula || !orden) {
-        //     req.flash('error', 'Todos los campos son obligatorios.');
-        //     return res.redirect(`/admin/integrantes/editar/${id}`);
-        // }
 
-        // const query = `UPDATE Integrantes SET nombre = ?, apellido = ?, matricula = ?, activo = ?, orden = ? WHERE id = ?`;
-        // db.run(query, [nombre, apellido, matricula, activo, orden, id], function(err) {
-        //     if (err) {
-        //         let errorMessage = 'Error al actualizar en la base de datos.';
-        //         if (err.message && err.message.includes('UNIQUE constraint failed: Integrantes.matricula')) {
-        //             errorMessage = 'Error al actualizar en la base de datos: La matrícula ya existe.';
-        //         }
-        //         req.flash('error', errorMessage);
-        //         return res.redirect(`/admin/integrantes/editar/${id}`);
-        //     }
+        if (!nombre || !apellido || !matricula) {
+            req.flash('error', 'Todos los campos son obligatorios.');
+            return res.redirect(`/admin/integrantes/${id}/editar`);
+        }
 
-        //     req.flash('success', 'Integrante actualizado correctamente!');
-        //     res.redirect('/admin/integrantes/listar');
-        // });
+        const query = `UPDATE Integrantes SET nombre = ?, apellido = ?, matricula = ?, activo = ? WHERE id = ?`;
+        db.run(query, [nombre, apellido, matricula, activo, id], function(err) {
+            if (err) {
+                req.flash('error', 'Error al actualizar en la base de datos.');
+                return res.redirect(`/admin/integrantes/${id}/editar`);
+            }
+
+            req.flash('success', 'Integrante actualizado correctamente!');
+            res.redirect(`/admin/integrantes/listar`);
+        });
     },
 
     // Método para eliminar un registro
@@ -115,14 +128,14 @@ const IntegrantesController = {
         const id = req.params.id;
 
         // Verificar si el registro está siendo utilizado en las tablas Media y Colores
-        db.get('SELECT COUNT(*) AS count FROM Media WHERE integranteId = ?', [id], (err, mediaResult) => {
+        db.get('SELECT COUNT(*) AS count FROM Media WHERE integranteId = ? AND activo = 1', [id], (err, mediaResult) => {
             if (err) {
                 console.error('Error al verificar el uso del registro en Media:', err);
                 req.flash('error', 'Error al verificar el uso del registro en Media.');
                 return res.redirect('/admin/integrantes/listar');
             }
 
-            db.get('SELECT COUNT(*) AS count FROM Colores WHERE integranteId = ?', [id], (err, coloresResult) => {
+            db.get('SELECT COUNT(*) AS count FROM Colores WHERE integranteId = ? AND activo = 1', [id], (err, coloresResult) => {
                 if (err) {
                     console.error('Error al verificar el uso del registro en Colores:', err);
                     req.flash('error', 'Error al verificar el uso del registro en Colores.');

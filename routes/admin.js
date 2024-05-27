@@ -52,6 +52,8 @@ router.post("/integrantes/:id/delete", integrantesController.destroy);
 router.get("/colores/listar", coloresController.index);
 router.get("/colores/crear", coloresController.create);
 router.post("/colores/create", coloresController.store);
+router.get("/colores/:id/editar", coloresController.edit);
+router.post("/colores/:id/update", coloresController.update);
 router.post("/colores/:id/delete", coloresController.destroy); 
 
 // Rutas para tipos de media
@@ -60,8 +62,8 @@ router.get("/tiposmedia/crear", tiposmediaController.create);
 router.post("/tiposmedia/create", tiposmediaController.store);
 // Rutas para métodos aún no implementados
 // router.get("/tiposmedia/:id/ver", tiposmediaController.show);
-// router.get("/tiposmedia/:id/editar", tiposmediaController.edit);
-// router.post("/tiposmedia/:id/update", tiposmediaController.update);
+router.get("/tiposmedia/:id/editar", tiposmediaController.edit);
+router.post("/tiposmedia/:id/update", tiposmediaController.update);
 router.post("/tiposmedia/:id/delete", tiposmediaController.destroy);
 
 // Rutas para media
@@ -70,8 +72,8 @@ router.get("/media/crear", mediaController.create);
 router.post("/media/create", upload.single('file'), mediaController.store);
 // Rutas para métodos comentados
 // router.get("/media/:id/ver", mediaController.show);
-// router.get("/media/:id/editar", mediaController.edit);
-// router.post("/media/:id/update", mediaController.update);
+router.get("/media/:id/editar", mediaController.edit);
+router.post("/media/:id/update", upload.single('file'), mediaController.update);
 router.post("/media/:id/delete", mediaController.destroy);
 
 module.exports = router;
