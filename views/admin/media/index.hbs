@@ -57,7 +57,7 @@
             flex-grow: 7;
         }
 
-                .button-40 {
+        .button-40 {
             padding: 10px 20px;
             background-color: #55608f;
             color: white;
@@ -124,6 +124,24 @@
             margin-right: 8px; /* Espacio entre el ícono y el texto */
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esto",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${id}`).submit();
+                }
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="header-bar">
@@ -139,16 +157,19 @@
         <table class="table custom-table">
             <thead>
                 <tr>
+                    <th>id</th>
                     <th>ID Integrante</th>
                     <th>Tipos Media Id</th>
                     <th>URL</th>
                     <th>Nombre Archivo</th>
                     <th>Orden</th>
+                    <th>Acciones</th> <!-- Nueva columna para acciones -->
                 </tr>
             </thead>
             <tbody>
                 {{#each media}}
                 <tr>
+                    <td><a href="/admin/media/{{this.id}}/editar">{{this.id}}</a></td>
                     <td>{{this.integranteId}}</td>
                     <td>{{this.tiposmediaId}}</td>
                     <td><iframe style="width: 100px; height: 100px;" src="{{this.url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
@@ -158,6 +179,11 @@
                         {{/if}}
                     </td>
                     <td>{{this.orden}}</td>
+                    <td>
+                        <form id="delete-form-{{this.id}}" action="/admin/media/{{this.id}}/delete" method="POST" style="display: inline;">
+                            <button type="button" onclick="confirmDelete({{this.id}})" class="button-40">Eliminar</button> <!-- Botón de eliminación -->
+                        </form>
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>

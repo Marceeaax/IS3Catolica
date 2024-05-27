@@ -40,9 +40,9 @@
             align-items: center;
             justify-content: space-between;
         }
-        
+
         .home-icon, .placeholder {
-            flex:1; /* Asegura que el ícono y el placeholder tengan la misma flexibilidad */
+            flex: 1; /* Asegura que el ícono y el placeholder tengan la misma flexibilidad */
             color: white;
             text-decoration: none;
             display: flex;
@@ -124,6 +124,24 @@
             margin-right: 8px; /* Espacio entre el ícono y el texto */
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esto",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${id}`).submit();
+                }
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="header-bar">
@@ -143,15 +161,21 @@
                     <th>Color de Fondo</th>
                     <th>Color de Cabecera</th>
                     <th>Color de Sección</th>
+                    <th>Acciones</th> <!-- Nueva columna para acciones -->
                 </tr>
             </thead>
             <tbody>
                 {{#each colores}}
                 <tr>
-                    <td>{{this.integranteId}}</td>
+                    <td><a href="/admin/colores/{{this.integranteId}}/editar">{{this.integranteId}}</a></td>
                     <td style="background-color: {{this.background}};">{{this.background}}</td>
                     <td style="background-color: {{this.headerBackground}};">{{this.headerBackground}}</td>
                     <td style="background-color: {{this.sectionBackground}};">{{this.sectionBackground}}</td>
+                    <td>
+                        <form id="delete-form-{{this.integranteId}}" action="/admin/colores/{{this.integranteId}}/delete" method="POST" style="display: inline;">
+                            <button type="button" onclick="confirmDelete({{this.integranteId}})" class="button-40">Eliminar</button> <!-- Botón de eliminación -->
+                        </form>
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
@@ -160,7 +184,19 @@
             <span class="material-icons">arrow_back</span>Volver
         </a>
     </div>
-</body>
+
+{{#if flashMessages.error}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    Swal.fire({
+        title: 'Error',
+        text: '{{flashMessages.error}}',
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+</script>
+{{/if}}
+
 {{#if flashMessages.success}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -173,4 +209,5 @@
 </script>
 {{/if}}
 
+</body>
 </html>

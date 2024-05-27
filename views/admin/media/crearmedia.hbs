@@ -153,7 +153,32 @@
             gap:10px; /* Centra horizontalmente el contenedor en el formulario */
             margin-bottom: 10px; /* Espacio antes del siguiente campo del formulario */
         }
+        .volver-button {
+            background-color: #55608f;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .volver-button:hover {
+            background-color: #6f7bb6;
+        }
+
+        .material-icons {
+            margin-right: 8px; /* Espacio entre el ícono y el texto */
+        }
     </style>
+        <a href="/admin/media/listar" class="volver-button">
+        <span class="material-icons">arrow_back</span>
+        Volver
+    </a>
 </head>
 <body>
 <div class="container">
@@ -169,14 +194,14 @@
         </div>
 
         <label for="integranteId">Integrante:</label>
-        <select id="integranteId" name="integranteId" required onchange="updateTiposMedia(this.value);">
+        <select id="integranteId" name="integranteId"  onchange="updateTiposMedia(this.value);">
             {{#each integrantes}}
             <option value="{{this.id}}" data-tipos="{{json this.tiposFaltantes}}">{{this.nombre}}</option>
             {{/each}}
         </select>
 
         <label for="tiposmediaId">Tipo de Media:</label>
-        <select id="tiposmediaId" name="tiposmediaId" required onchange="checkMediaType(this.value);">
+        <select id="tiposmediaId" name="tiposmediaId" onchange="checkMediaType(this.value);">
             <!-- Opciones de tipos de media se actualizarán mediante JavaScript -->
         </select>
 
@@ -196,8 +221,8 @@
             </div>
         </div>
 
-        <label for="orden">Orden:</label>
-        <input type="number" id="orden" style="width: 94%" name="orden">
+        <label for="orden"></label>
+        <input type="number" id="orden" style="width: 94%" name="orden" hidden>
 
         <button type="submit" class="button-40">Crear Nuevo</button>
     </form>
