@@ -32,5 +32,6 @@ CREATE TABLE Colores (
     background TEXT,
     headerBackground TEXT,
     sectionBackground TEXT,
+    activo BOOLEAN DEFAULT 1,
     FOREIGN KEY (integranteId) REFERENCES Integrantes (id)
 );
