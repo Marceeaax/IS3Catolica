@@ -52,6 +52,7 @@ router.post("/integrantes/:id/delete", integrantesController.destroy);
 router.get("/colores/listar", coloresController.index);
 router.get("/colores/crear", coloresController.create);
 router.post("/colores/create", coloresController.store);
+router.post("/colores/:id/delete", coloresController.destroy); 
 
 // Rutas para tipos de media
 router.get("/tiposmedia/listar", tiposmediaController.index);
@@ -61,7 +62,7 @@ router.post("/tiposmedia/create", tiposmediaController.store);
 // router.get("/tiposmedia/:id/ver", tiposmediaController.show);
 // router.get("/tiposmedia/:id/editar", tiposmediaController.edit);
 // router.post("/tiposmedia/:id/update", tiposmediaController.update);
-// router.post("/tiposmedia/:id/delete", tiposmediaController.destroy);
+router.post("/tiposmedia/:id/delete", tiposmediaController.destroy);
 
 // Rutas para media
 router.get("/media/listar", mediaController.index);
@@ -71,7 +72,7 @@ router.post("/media/create", upload.single('file'), mediaController.store);
 // router.get("/media/:id/ver", mediaController.show);
 // router.get("/media/:id/editar", mediaController.edit);
 // router.post("/media/:id/update", mediaController.update);
-// router.post("/media/:id/delete", mediaController.destroy);
+router.post("/media/:id/delete", mediaController.destroy);
 
 module.exports = router;
 

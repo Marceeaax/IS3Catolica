@@ -112,16 +112,52 @@ const IntegrantesController = {
 
     // Método para eliminar un registro
     destroy: (req, res) => {
-        // const id = req.params.id;
-        // const query = 'DELETE FROM Integrantes WHERE id = ?';
-        // db.run(query, [id], function(err) {
-        //     if (err) {
-        //         console.error('Error al eliminar registro:', err);
-        //         return res.status(500).send('Error al eliminar registro de la base de datos');
-        //     }
-        //     req.flash('success', 'Integrante eliminado correctamente!');
-        //     res.redirect('/admin/integrantes/listar');
-        // });
+        const id = req.params.id;
+
+        // Verificar si el registro está siendo utilizado en las tablas Media y Colores
+        db.get('SELECT COUNT(*) AS count FROM Media WHERE integranteId = ?', [id], (err, mediaResult) => {
+            if (err) {
+                console.error('Error al verificar el uso del registro en Media:', err);
+                req.flash('error', 'Error al verificar el uso del registro en Media.');
+                return res.redirect('/admin/integrantes/listar');
+            }
+
+            db.get('SELECT COUNT(*) AS count FROM Colores WHERE integranteId = ?', [id], (err, coloresResult) => {
+                if (err) {
+                    console.error('Error al verificar el uso del registro en Colores:', err);
+                    req.flash('error', 'Error al verificar el uso del registro en Colores.');
+                    return res.redirect('/admin/integrantes/listar');
+                }
+
+                let errorMessage = '';
+
+                if (mediaResult.count > 0 && coloresResult.count > 0) {
+                    errorMessage = `No se puede eliminar el registro porque está siendo utilizado en la tabla Media (${mediaResult.count} ${mediaResult.count > 1 ? 'veces' : 'vez'}) y Colores (${coloresResult.count} ${coloresResult.count > 1 ? 'veces' : 'vez'}).`;
+                } else if (mediaResult.count > 0) {
+                    errorMessage = `No se puede eliminar el registro porque está siendo utilizado en la tabla Media (${mediaResult.count} ${mediaResult.count > 1 ? 'veces' : 'vez'}).`;
+                } else if (coloresResult.count > 0) {
+                    errorMessage = `No se puede eliminar el registro porque está siendo utilizado en la tabla Colores (${coloresResult.count} ${coloresResult.count > 1 ? 'veces' : 'vez'}).`;
+                }
+
+                if (errorMessage) {
+                    req.flash('error', errorMessage);
+                    return res.redirect('/admin/integrantes/listar');
+                }
+
+                // Borrado lógico del registro
+                const query = `UPDATE Integrantes SET activo = 0 WHERE id = ?`;
+                db.run(query, [id], function(err) {
+                    if (err) {
+                        console.error('Error al eliminar el registro:', err);
+                        req.flash('error', 'Error al eliminar el registro.');
+                        return res.redirect('/admin/integrantes/listar');
+                    }
+
+                    req.flash('success', 'Integrante eliminado correctamente!');
+                    res.redirect('/admin/integrantes/listar');
+                });
+            });
+        });
     }
 };
 
