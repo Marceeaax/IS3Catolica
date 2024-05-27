@@ -3,7 +3,7 @@ const db = require('../../db/conexion');
 const TiposMediaController = {
     // Método para listar los tipos de media
     index: (req, res) => {
-        db.all('SELECT * FROM TiposMedia ORDER BY orden', (err, results) => {
+        db.all('SELECT * FROM TiposMedia WHERE activo = 1 ORDER BY orden', (err, results) => {
             if (err) {
                 console.error('Error al obtener datos:', err);
                 return res.status(500).send('Error al obtener datos de la base de datos');
@@ -103,18 +103,37 @@ const TiposMediaController = {
     // },
 
     // Método para eliminar un registro
-    // destroy: (req, res) => {
-    //     const id = req.params.id;
-    //     const query = 'DELETE FROM TiposMedia WHERE id = ?';
-    //     db.run(query, [id], function(err) {
-    //         if (err) {
-    //             console.error('Error al eliminar registro:', err);
-    //             return res.status(500).send('Error al eliminar registro de la base de datos');
-    //         }
-    //         req.flash('success', 'Tipo de media eliminado correctamente!');
-    //         res.redirect('/admin/tiposmedia/listar');
-    //     });
-    // }
+    destroy: (req, res) => {
+        const id = req.params.id;
+
+        // Verificar si el registro está siendo utilizado en la tabla Media
+        db.get('SELECT COUNT(*) AS count FROM Media WHERE tiposmediaId = ?', [id], (err, mediaResult) => {
+            if (err) {
+                console.error('Error al verificar el uso del registro en Media:', err);
+                req.flash('error', 'Error al verificar el uso del registro en Media.');
+                return res.redirect('/admin/tiposmedia/listar');
+            }
+
+            if (mediaResult.count > 0) {
+                const message = `No se puede eliminar el registro porque está siendo utilizado en la tabla Media (${mediaResult.count} ${mediaResult.count > 1 ? 'veces' : 'vez'}).`;
+                req.flash('error', message);
+                return res.redirect('/admin/tiposmedia/listar');
+            }
+
+            // Borrado lógico del registro
+            const query = `UPDATE TiposMedia SET activo = 0 WHERE id = ?`;
+            db.run(query, [id], function(err) {
+                if (err) {
+                    console.error('Error al eliminar el registro:', err);
+                    req.flash('error', 'Error al eliminar el registro.');
+                    return res.redirect('/admin/tiposmedia/listar');
+                }
+
+                req.flash('success', 'Tipo de media eliminado correctamente!');
+                res.redirect('/admin/tiposmedia/listar');
+            });
+        });
+    }
 };
 
 module.exports = TiposMediaController;

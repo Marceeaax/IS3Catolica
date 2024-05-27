@@ -1,9 +1,8 @@
 const db = require('../../db/conexion');
 
 const ColoresController = {
-    // Método para listar los colores
     index: (req, res) => {
-        db.all('SELECT * FROM Colores', (err, results) => {
+        db.all('SELECT * FROM Colores WHERE activo = 1', (err, results) => {
             if (err) {
                 console.error('Error al obtener datos:', err);
                 return res.status(500).send('Error al obtener datos de la base de datos');
@@ -16,7 +15,6 @@ const ColoresController = {
         });
     },
 
-    // Método para mostrar el formulario de creación
     create: async (req, res) => {
         try {
             const integrantesSinColores = await new Promise((resolve, reject) => {
@@ -42,11 +40,10 @@ const ColoresController = {
         } catch (error) {
             console.error('Error al obtener integrantes sin colores:', error);
             req.flash('error', 'Error al obtener la lista de integrantes sin colores.');
-            res.redirect('/ruta/de/error'); // Redirigir a una página de error adecuada
+            res.redirect('/ruta/de/error');
         }
     },
 
-    // Método para guardar en la base de datos
     store: (req, res) => {
         const { integranteId, background, headerBackground, sectionBackground } = req.body;
 
@@ -63,6 +60,23 @@ const ColoresController = {
             }
 
             req.flash('success', 'Colores asignados correctamente!');
+            res.redirect('/admin/colores/listar');
+        });
+    },
+
+    destroy: (req, res) => {
+        const id = req.params.id;
+
+        // Borrado lógico del registro
+        const query = `UPDATE Colores SET activo = 0 WHERE integranteId = ?`;
+        db.run(query, [id], function(err) {
+            if (err) {
+                console.error('Error al eliminar el registro:', err);
+                req.flash('error', 'Error al eliminar el registro.');
+                return res.redirect('/admin/colores/listar');
+            }
+
+            req.flash('success', 'Color eliminado correctamente!');
             res.redirect('/admin/colores/listar');
         });
     }

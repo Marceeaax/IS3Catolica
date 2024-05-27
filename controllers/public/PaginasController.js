@@ -97,7 +97,7 @@ const PaginasController = {
                         }
                     }
 
-                    db.get('SELECT * FROM Colores WHERE integranteId = ?', integrante.id, (err, colores) => {
+                    db.get('SELECT * FROM Colores WHERE integranteId = ? AND activo = 1', integrante.id, (err, colores) => {
                         if (err) {
                             console.error('Error al obtener la configuración de colores:', err.message);
                             return res.status(500).send('Error al obtener la configuración de colores');
