@@ -226,18 +226,23 @@ const MediaController = {
     // },
 
     // Método para eliminar un registro
-    // destroy: (req, res) => {
-    //     const id = req.params.id;
-    //     const query = 'DELETE FROM Media WHERE id = ?';
-    //     db.run(query, [id], function(err) {
-    //         if (err) {
-    //             console.error('Error al eliminar registro:', err);
-    //             return res.status(500).send('Error al eliminar registro de la base de datos');
-    //         }
-    //         req.flash('success', 'Media eliminada correctamente!');
-    //         res.redirect('/admin/media/listar');
-    //     });
-    // }
+    destroy: (req, res) => {
+        const id = req.params.id;
+
+        console.log('Eliminando registro con ID:', id);
+        // Borrado lógico del registro
+        const query = `UPDATE Media SET activo = 0 WHERE id = ?`;
+        db.run(query, [id], function(err) {
+            if (err) {
+                console.error('Error al eliminar el registro:', err);
+                req.flash('error', 'Error al eliminar el registro.');
+                return res.redirect('/admin/media/listar');
+            }
+
+            req.flash('success', 'Media eliminada correctamente!');
+            res.redirect('/admin/media/listar');
+        });
+    }
 };
 
 module.exports = MediaController;
