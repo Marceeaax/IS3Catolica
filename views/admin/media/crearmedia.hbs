@@ -153,7 +153,11 @@
             gap:10px; /* Centra horizontalmente el contenedor en el formulario */
             margin-bottom: 10px; /* Espacio antes del siguiente campo del formulario */
         }
-    </style>
+    </style>  
+    <a href="/admin/media/listar" class="volver-button">
+        <span class="material-icons">arrow_back</span>
+        Volver
+    </a>
 </head>
 <body>
 <div class="container">
@@ -169,7 +173,7 @@
         </div>
 
         <label for="integranteId">Integrante:</label>
-        <select id="integranteId" name="integranteId" required onchange="updateTiposMedia(this.value);">
+        <select id="integranteId" name="integranteId" onchange="updateTiposMedia(this.value);">
             {{#each integrantes}}
             <option value="{{this.id}}" data-tipos="{{json this.tiposFaltantes}}">{{this.nombre}}</option>
             {{/each}}
