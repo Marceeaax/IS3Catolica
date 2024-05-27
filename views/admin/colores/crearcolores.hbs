@@ -79,16 +79,36 @@
         }
 
         input[type="color"] {
-    width: 100%; /* Hace que el input ocupe todo el ancho disponible */ /* Añade un poco de padding para mejor visualización */
-    border: none; /* Remueve cualquier borde predefinido */
-    border-radius: 5px; /* Opcional: Añade bordes redondeados */
-    cursor: pointer; /* Cambia el cursor para indicar que el elemento es interactivo */
-}
+            width: 100%; /* Hace que el input ocupe todo el ancho disponible */ /* Añade un poco de padding para mejor visualización */
+            border: none; /* Remueve cualquier borde predefinido */
+            border-radius: 5px; /* Opcional: Añade bordes redondeados */
+            cursor: pointer; /* Cambia el cursor para indicar que el elemento es interactivo */
+        }
         .button-40:hover {
             background-color: #6f7bb6;
             color: #222;
         }
+                        .volver-button {
+            background-color: #55608f;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none; /* Quitar subrayado de los enlaces */
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .volver-button:hover {
+            background-color: #6f7bb6;
+        }
     </style>
+            <a href="/admin/colores/listar" class="volver-button">
+                <span class="material-icons">arrow_back</span>
+                Volver
+            </a>
 </head>
 <body>
     <div class="container">
@@ -96,7 +116,7 @@
         <form action="/admin/colores/create" method="post">
 
             <label for="integranteId">Integrante:</label>
-            <select id="integranteId" name="integranteId" required>
+            <select id="integranteId" name="integranteId" >
                 {{#each integrantes}}
                     <option value="{{this.id}}">{{this.nombre}}</option>
                 {{/each}}

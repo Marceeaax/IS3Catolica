@@ -40,6 +40,19 @@ function getYouTubeEmbedUrl(url) {
     return match ? `https://www.youtube.com/embed/${match[1]}` : null;
 }
 
+async function getNextOrder(tableName) {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT MAX(orden) as maxOrder FROM ${tableName}`;
+        db.get(query, (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row.maxOrder ? row.maxOrder + 1 : 1); // Si no hay registros, empezamos desde 1
+            }
+        });
+    });
+}
+
 router.get("/", (req, res) => {
     res.render("admin/index",{
         mostrarAdmin: true,
@@ -76,7 +89,7 @@ router.get("/tiposmedia/listar", (req, res) => {
 });
 
 router.get("/media/listar", (req, res) => {
-    db.all('SELECT * FROM Media ORDER BY orden', (err, results) => {
+    db.all('SELECT CONCAT((select nombre from integrantes where id = media.integranteid), " - ",(select matricula from integrantes where id = media.integranteid)) AS integranteId, (select nombre from tiposmedia where id = media.tiposmediaid) AS tiposmediaId, URL, nombrearchivo, orden FROM Media ORDER BY orden', (err, results) => {
         if (err) {
             console.error('Error al obtener datos:', err);
             return res.status(500).send('Error al obtener datos de la base de datos');
@@ -110,34 +123,49 @@ router.get('/integrantes/crear', (req, res) => {
     });
 });
 
-router.post('/integrantes/create', (req, res) => {
-    const { nombre, apellido, matricula, orden } = req.body;
+router.post('/integrantes/create', async (req, res) => {
+    const { nombre, apellido, matricula } = req.body;
     const activo = req.body.activo ? 1 : 0;
 
-    if (!nombre || !apellido || !matricula || !orden) {
-        req.flash('error', 'Todos los campos son obligatorios.');
-        req.session.formData = req.body; // Guardar datos del formulario en la sesión
+    const errores = [];
+
+    if (!nombre.trim()) {
+        errores.push('El nombre es obligatorio.');
+    }
+    if (!apellido.trim()) {
+        errores.push('El apellido es obligatorio.');
+    }
+    if (!matricula.trim()) {
+        errores.push('La matrícula es obligatoria.');
+    }
+
+    if (errores.length > 0) {
+        req.flash('error', errores.join(', '));
         return res.redirect('/admin/integrantes/crear');
     }
 
-    const query = `INSERT INTO Integrantes (nombre, apellido, matricula, activo, orden) VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [nombre, apellido, matricula, activo, orden], function(err) {
-        if (err) {
-            let errorMessage = 'Error al insertar en la base de datos.';
-            if (err.message && err.message.includes('UNIQUE constraint failed: Integrantes.matricula')) {
-                errorMessage = 'Error al insertar en la base de datos: La matrícula ya existe.';
+    try {
+        const orden = await getNextOrder('integrantes');
+
+        const query = `INSERT INTO Integrantes (nombre, apellido, matricula, activo, orden) VALUES (?, ?, ?, ?, ?)`;
+        db.run(query, [nombre, apellido, matricula, activo, orden], function(err) {
+            if (err) {
+                req.flash('error', 'Error al insertar en la base de datos: ' + err.message); 
+                if (err.message && err.message.includes('UNIQUE constraint failed: Integrantes.matricula')) {
+                    errorMessage = 'Error al insertar en la base de datos: La matrícula ya existe.';
+                } 
+                req.session.formData = req.body; // Guardar datos del formulario en la sesión
+                return res.redirect('/admin/integrantes/crear');   
             }
-            req.flash('error', errorMessage);
-            req.session.formData = req.body; // Guardar datos del formulario en la sesión
-            return res.redirect('/admin/integrantes/crear');
-        }
-
-        delete req.session.formData; // Limpiar los datos del formulario de la sesión
-        req.flash('success', 'Integrante creado correctamente!');
-        res.redirect('/admin/integrantes/listar');
-    });
+            req.flash('success', 'Integrante creado correctamente!');
+            res.redirect('/admin/integrantes/listar');
+        });
+    } catch (error) {
+        console.error('Error al obtener el próximo orden:', error);
+        req.flash('error', 'Error al obtener el próximo orden.');
+        res.redirect('/admin/integrantes/crear');
+    }
 });
-
 
 
 router.get('/tiposmedia/crear', (req, res) => {
@@ -151,26 +179,96 @@ router.get('/tiposmedia/crear', (req, res) => {
 });
 
 
-router.post('/tiposmedia/create', (req, res) => {
-    const { nombre, orden } = req.body;
+router.post('/tiposmedia/create', async (req, res) => {
+    const { nombre } = req.body;
     const activo = req.body.activo ? 1 : 0;
 
-    if (!nombre || !orden) {
-        req.flash('error', 'Todos los campos son obligatorios.');
-        // Guarda los datos ingresados para rellenar el formulario nuevamente
-        return res.redirect(`/admin/tiposmedia/crear?nombre=${encodeURIComponent(nombre)}&orden=${encodeURIComponent(orden)}&activo=${activo}`);
+    if (!nombre.trim()) {
+        req.flash('error', 'El nombre es obligatorio.');
+        return res.redirect('/admin/tiposmedia/crear');
     }
 
-    const query = `INSERT INTO TiposMedia (nombre, activo, orden) VALUES (?, ?, ?)`;
-    db.run(query, [nombre, activo, orden], function(err) {
-        if (err) {
-            req.flash('error', 'Error al insertar en la base de datos.');
-            return res.redirect(`/admin/tiposmedia/crear?nombre=${encodeURIComponent(nombre)}&orden=${encodeURIComponent(orden)}&activo=${activo}`);
-        }
+    try {
+        const orden = await getNextOrder('TiposMedia');
 
-        req.flash('success', 'Tipo de media creado correctamente!');
-        res.redirect('/admin/tiposmedia/listar');
-    });
+        const query = `INSERT INTO TiposMedia (nombre, activo, orden) VALUES (?, ?, ?)`;
+        db.run(query, [nombre, activo, orden], function(err) {
+            if (err) {
+                req.flash('error', 'Error al insertar en la base de datos: ' + err.message);
+                return res.redirect('/admin/tiposmedia/crear');
+            }
+            req.flash('success', 'Tipo de media creado correctamente!');
+            res.redirect('/admin/tiposmedia/listar');
+        });
+    } catch (error) {
+        console.error('Error al obtener el próximo orden:', error);
+        req.flash('error', 'Error al obtener el próximo orden.');
+        res.redirect('/admin/tiposmedia/crear');
+    }
+});
+
+
+router.get('/media/crear', async (req, res) => {
+    try {
+        const allIntegrantes = await new Promise((resolve, reject) => {
+            db.all('SELECT id, nombre FROM Integrantes WHERE activo = 1 ORDER BY nombre', (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            });
+        });
+
+        const allTiposMedia = await new Promise((resolve, reject) => {
+            db.all('SELECT id, nombre FROM TiposMedia ORDER BY nombre', (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            });
+        });
+
+        const mediaByIntegrante = await new Promise((resolve, reject) => {
+            db.all('SELECT integranteId, tiposmediaId FROM Media WHERE activo = 1', (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            });
+        });
+
+        const tiposMediaMap = {};
+        allTiposMedia.forEach(tipo => {
+            tiposMediaMap[tipo.id] = tipo.nombre;
+        });
+
+        const integrantesFaltantes = [];
+        const integrantesMap = {};
+
+        allIntegrantes.forEach(integrante => {
+            integrantesMap[integrante.id] = {
+                ...integrante,
+                tiposFaltantes: new Set(Object.values(tiposMediaMap))
+            };
+        });
+
+        mediaByIntegrante.forEach(media => {
+            if (integrantesMap[media.integranteId]) {
+                integrantesMap[media.integranteId].tiposFaltantes.delete(tiposMediaMap[media.tiposmediaId]);
+            }
+        });
+
+        Object.values(integrantesMap).forEach(integrante => {
+            if (integrante.tiposFaltantes.size > 0) {
+                integrantesFaltantes.push({
+                    id: integrante.id,
+                    nombre: integrante.nombre,
+                    tiposFaltantes: Array.from(integrante.tiposFaltantes)
+                });
+            }
+        });
+
+        res.render('admin/media/crearMedia', { 
+            integrantes: integrantesFaltantes
+        });
+    } catch (error) {
+        console.error('Error al obtener datos:', error);
+        res.status(500).send('Error al obtener datos de la base de datos');
+    }
 });
 
 
@@ -239,7 +337,7 @@ router.get('/media/crear', async (req, res) => {
 
 
 router.post('/media/create', upload.single('file'), async (req, res) => {
-    const { integranteId, tiposmediaId, url, orden } = req.body;
+    const { integranteId, tiposmediaId, url } = req.body;
     const activo = req.body.activo ? 1 : 0;
     const file = req.file;
 
@@ -249,31 +347,9 @@ router.post('/media/create', upload.single('file'), async (req, res) => {
     }
 
     try {
-        // Consulta para obtener los datos del integrante
-        const integrante = await new Promise((resolve, reject) => {
-            db.get(`SELECT nombre, apellido FROM Integrantes WHERE id = ?`, integranteId, (err, row) => {
-                if (err) reject(err);
-                resolve(row);
-            });
-        });
-
-        if (!integrante) {
-            req.flash('error', 'Integrante no encontrado.');
-            return res.redirect('/admin/media/crear');
-        }
-
-        // Consulta para obtener el ID del tipo de media
-        const tipoMedia = await new Promise((resolve, reject) => {
-            db.get(`SELECT id FROM TiposMedia WHERE nombre = ?`, tiposmediaId, (err, row) => {
-                if (err) reject(err);
-                resolve(row);
-            });
-        });
-
-        if (!tipoMedia) {
-            req.flash('error', 'Tipo de media no encontrado.');
-            return res.redirect('/admin/media/crear');
-        }
+        // Consulta para obtener el próximo valor de orden
+        const result = await db.get('SELECT MAX(orden) as maxOrder FROM Media');
+        const newOrder = (result.maxOrder || 0) + 1;
 
         let finalUrl = url;
         if (tiposmediaId === 'youtube') {
@@ -319,16 +395,25 @@ router.post('/media/create', upload.single('file'), async (req, res) => {
                 });
             });
         }
-    } catch (error) {
-        console.error('Error al realizar consultas:', error);
-        req.flash('error', 'Error al realizar consultas. ' + error.message);
-        res.redirect('/admin/media/crear');
-    }
-});
+        
+        function handleDatabaseResponse(err) {
+            if (err) {
+                req.flash('error', 'Error al insertar en la base de datos: ' + err.message);
+                return res.redirect('/admin/media/crear');
+            }
+            req.flash('success', 'Media creada correctamente!');
+            res.redirect('/admin/media/listar');
+        }
+
+        } catch (error) {
+            console.error('Error al realizar consultas:', error);
+            req.flash('error', 'Error al realizar consultas. ' + error.message);
+            res.redirect('/admin/media/crear');
+        }
+    });
+
 
 module.exports = router;
-
-
 
 router.get('/colores/crear', async (req, res) => {
     try {
