@@ -64,6 +64,47 @@ const ColoresController = {
         });
     },
 
+    edit: (req, res) => {
+        const id = req.params.id;
+        const query = `SELECT * FROM Colores WHERE integranteId = ?`;
+
+        db.get(query, [id], (err, color) => {
+            if (err) {
+                console.error('Error al obtener datos:', err);
+                req.flash('error', 'Error al obtener los datos del registro.');
+                return res.redirect('/admin/colores/listar');
+            }
+
+            res.render('admin/colores/editarColores', {
+                color,
+                success: req.flash('success')
+            });
+        });
+    },
+
+    update: (req, res) => {
+
+        const activo = req.body.activo ? 1 : 0;
+        const { id } = req.params;
+        const { background, headerBackground, sectionBackground } = req.body;
+
+        if (!background || !headerBackground || !sectionBackground) {
+            req.flash('error', 'Todos los campos son obligatorios.');
+            return res.redirect(`/admin/colores/${id}/editar`);
+        }
+
+        const query = `UPDATE Colores SET background = ?, headerBackground = ?, sectionBackground = ?, activo = ? WHERE integranteId = ?`;
+        db.run(query, [background, headerBackground, sectionBackground, activo, id], function(err) {
+            if (err) {
+                req.flash('error', 'Error al actualizar en la base de datos.');
+                return res.redirect(`/admin/colores/${id}/editar`);
+            }
+
+            req.flash('success', 'Colores actualizados correctamente!');
+            res.redirect(`/admin/colores/listar`);
+        });
+    },
+    
     destroy: (req, res) => {
         const id = req.params.id;
 
