@@ -22,7 +22,7 @@ Ejecuta el siguiente comando para instalar la librería `sqlite3`, que es el mot
 npm install sqlite3
 ```
 
-Es probable que tambien necesites instalar `express`, que es un framework de Node.js utilizado para construir aplicaciones web, y `hbs`, que es un motor de plantillas para Express.js utilizado para generar vistas dinámicas en HTML. Puedes hacerlo utilizando los dos comandos anteriores
+Es probable que tambien necesites instalar `express`, que es un framework de Node.js utilizado para construir aplicaciones web, `molten`, que es un middleware para contemplar la subida de archivos al servidor y `hbs`, que es un motor de plantillas para Express.js utilizado para generar vistas dinámicas en HTML. Puedes hacerlo utilizando los dos comandos anteriores
 
 ## Proceso de implementación
 
