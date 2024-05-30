@@ -194,3 +194,23 @@
     {{/if}}
 </body>
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var formData = {{{formData}}};  // Inserta formData como JSON
+    
+      console.log(formData);
+      if (Object.keys(formData).length) {
+        Object.keys(formData).forEach(function(key) {
+          var field = document.querySelector(`[name="${key}"]`);
+          if (field) {
+            if (field.type === 'checkbox') {
+              field.checked = formData[key] === 'on';
+            } else {
+              field.value = formData[key];
+            }
+          }
+        });
+      }
+    });
+  </script>

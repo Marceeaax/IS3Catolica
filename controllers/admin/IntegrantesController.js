@@ -92,34 +92,50 @@ const IntegrantesController = {
                 console.error('Error al obtener datos:', err);
                 return res.status(500).send('Error al obtener datos de la base de datos');
             }
+
+            // Comprobar si hay datos del formulario previamente enviados
+            const formData = req.session.formData || {};
+            delete req.session.formData;
+            const errors = req.flash('error');
+
+            console.log('formData en edit:', formData);  // Debugging
+            console.log('errors en edit:', errors);      // Debugging
+
+            // Mezclar datos originales con datos enviados
+            const integrante = { ...row, ...formData };
+
             res.render('admin/integrantes/editarIntegrante', {
-                integrante: row,
-                error: req.flash('error'),
+                integrante: integrante,
+                formData: JSON.stringify(formData),  // Pasar formData como JSON
+                errors: errors,
                 success: req.flash('success')
             });
         });
     },
 
     update: (req, res) => {
-        const { id } = req.params;
-        const { nombre, apellido, matricula} = req.body;
-        const activo = req.body.activo ? 1 : 0;
-
+        const id = req.params.id;
+        const { nombre, apellido, matricula, activo } = req.body;
 
         if (!nombre || !apellido || !matricula) {
-            req.flash('error', 'Todos los campos son obligatorios.');
+            req.flash('error', 'Todos los campos son obligatorios');
+            req.session.formData = req.body;
             return res.redirect(`/admin/integrantes/${id}/editar`);
         }
 
-        const query = `UPDATE Integrantes SET nombre = ?, apellido = ?, matricula = ?, activo = ? WHERE id = ?`;
-        db.run(query, [nombre, apellido, matricula, activo, id], function(err) {
+        const activoEstado = activo === 'on' ? 1 : 0;
+
+        db.run('UPDATE Integrantes SET nombre = ?, apellido = ?, matricula = ?, activo = ? WHERE id = ?', 
+        [nombre, apellido, matricula, activoEstado, id], (err) => {
             if (err) {
-                req.flash('error', 'Error al actualizar en la base de datos.');
+                console.error('Error al actualizar datos:', err);
+                req.flash('error', 'Error al actualizar los datos');
+                req.session.formData = req.body;
+                console.log('req.body en update:', req.body);  // Debugging
                 return res.redirect(`/admin/integrantes/${id}/editar`);
             }
-
-            req.flash('success', 'Integrante actualizado correctamente!');
-            res.redirect(`/admin/integrantes/listar`);
+            req.flash('success', 'Integrante actualizado correctamente');
+            res.redirect('/admin/integrantes/listar');
         });
     },
 
