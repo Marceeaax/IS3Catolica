@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <style>
-        /* CSS */
+          /* Esconde scrollbars */
+        html {
+            overflow-y: scroll; /* Permite el desplazamiento vertical. */
+            scrollbar-width: none; /* Para Firefox */
+        }
+
+        html::-webkit-scrollbar {
+            display: none; /* Para Safari y Chrome */
+        }
+              /* CSS */
         .button-49,
         .button-49:after {
         width: 150px;
@@ -123,6 +132,10 @@
             background-color: #ffffff;
             color: #000000;
             text-align: center;
+            margin: 0; /* Elimina los márgenes */
+            padding: 0; /* Elimina el relleno */
+            height: 100%; /* Asegura que ocupe toda la altura */
+            width: 100%; 
         }
 
         .button-container {

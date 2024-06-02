@@ -15,6 +15,7 @@
             font-weight: 100;
             color: #fff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -78,6 +79,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
+            margin-top: 15px;
         }
 
         .volver-button:hover {
@@ -88,10 +90,6 @@
             margin-right: 8px; /* Espacio entre el ícono y el texto */
         }
     </style>
-        <a href="/admin/tiposmedia/listar" class="volver-button">
-        <span class="material-icons">arrow_back</span>
-        Volver
-    </a>
 </head>
 <body>
     <div class="container">
@@ -114,6 +112,10 @@
             <button type="submit" class="button-40">Crear Nuevo</button>
         </form>
     </div>
+    <a href="/admin/tiposmedia/listar" class="volver-button">
+        <span class="material-icons">arrow_back</span>
+        Volver
+    </a>
 </body>
 
 {{#if flashMessages.error}}
