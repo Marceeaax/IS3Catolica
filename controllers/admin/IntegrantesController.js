@@ -98,8 +98,6 @@ const IntegrantesController = {
             delete req.session.formData;
             const errors = req.flash('error');
 
-            console.log('formData en edit:', formData);  // Debugging
-            console.log('errors en edit:', errors);      // Debugging
 
             // Mezclar datos originales con datos enviados
             const integrante = { ...row, ...formData };
@@ -131,7 +129,6 @@ const IntegrantesController = {
                 console.error('Error al actualizar datos:', err);
                 req.flash('error', 'Error al actualizar los datos');
                 req.session.formData = req.body;
-                console.log('req.body en update:', req.body);  // Debugging
                 return res.redirect(`/admin/integrantes/${id}/editar`);
             }
             req.flash('success', 'Integrante actualizado correctamente');

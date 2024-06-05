@@ -46,7 +46,6 @@ const TiposMediaController = {
         const activo = req.body.activo ? 1 : 0;
 
         const orden = await getNextOrder('TiposMedia');
-        console.log(orden);
         if (!nombre) {
             req.flash('error', 'Todos los campos son obligatorios.');
             return res.redirect(`/admin/tiposmedia/crear?nombre=${encodeURIComponent(nombre)}&orden=${encodeURIComponent(orden)}&activo=${activo}`);
@@ -111,8 +110,6 @@ const TiposMediaController = {
     update: async (req, res) => {
         const { id, nombre } = req.body;
         const activo = req.body.activo ? 1 : 0;
-
-        console.log('req.body:', req.body);
 
         try {
             const query = `UPDATE TiposMedia SET nombre = ?, activo = ? WHERE id = ?`;

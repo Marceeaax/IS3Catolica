@@ -210,7 +210,6 @@ const MediaController = {
     // Método para mostrar el formulario de edición
     edit: async (req, res) => {
         const id = req.params.id;
-        console.log('Editando registro con ID:', id);
 
         try {
             const media = await new Promise((resolve, reject) => {
@@ -241,8 +240,6 @@ const MediaController = {
         const activo = req.body.activo ? 1 : 0;
         const file = req.file; // Este es el archivo nuevo si se proporciona
     
-        console.log('req.body:', req.body);
-        console.log('req.file:', req.file); // Aquí se recibe el archivo si se proporciona uno nuevo
     
         try {
             const media = await new Promise((resolve, reject) => {
@@ -260,7 +257,6 @@ const MediaController = {
             let finalUrl = url;
             if (tiposmediaId === '1') {
                 finalUrl = getYouTubeEmbedUrl(url);
-                console.log('finalUrl:', finalUrl);
                 if (!finalUrl) {
                     req.flash('error', 'URL de YouTube no válida.');
                     return res.redirect(`/admin/media/${id}/editar`);
@@ -275,7 +271,6 @@ const MediaController = {
                         return res.redirect(`/admin/media/${id}/editar`);
                     }
                     req.flash('success', 'Media actualizada correctamente!');
-                    console.log('Redirigiendo a /admin/media/listar después de actualizar URL');
                     return res.redirect('/admin/media/listar');
                 });
             } else if (file) {
@@ -299,7 +294,6 @@ const MediaController = {
                             return res.redirect(`/admin/media/${id}/editar`);
                         }
                         req.flash('success', 'Media actualizada correctamente!');
-                        console.log('Redirigiendo a /admin/media/listar después de actualizar archivo');
                         return res.redirect('/admin/media/listar');
                     });
                 });
