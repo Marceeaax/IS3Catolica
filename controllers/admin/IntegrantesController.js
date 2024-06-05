@@ -15,8 +15,35 @@ async function getNextOrder(tableName) {
 
 const IntegrantesController = {
     // Método para listar los integrantes
-    index: (req, res) => {
-        db.all('SELECT * FROM integrantes WHERE activo = 1 ORDER BY orden', (err, results) => {
+    index: function (req, res) {
+        let sql = "SELECT * FROM integrantes WHERE activo = 1";
+        let queryParams = [];
+        
+        // Construcción dinámica de la consulta SQL
+        if (req.query.id) {
+            sql += " AND id = ?";
+            queryParams.push(req.query.id);
+        }
+        if (req.query.nombre) {
+            sql += " AND nombre LIKE ?";
+            queryParams.push('%' + req.query.nombre + '%');
+        }
+        if (req.query.apellido) {
+            sql += " AND apellido LIKE ?";
+            queryParams.push('%' + req.query.apellido + '%');
+        }
+        if (req.query.matricula) {
+            sql += " AND matricula LIKE ?";
+            queryParams.push('%' + req.query.matricula + '%');
+        }
+        if (req.query.orden) {
+            sql += " AND orden = ?";
+            queryParams.push(req.query.orden);
+        }
+    
+        console.log("SQL query:", sql);
+    
+        db.all(sql, queryParams, (err, results) => {
             if (err) {
                 console.error('Error al obtener datos:', err);
                 return res.status(500).send('Error al obtener datos de la base de datos');
@@ -28,6 +55,7 @@ const IntegrantesController = {
             });
         });
     },
+    
 
     // Método para mostrar el formulario de creación
     create: (req, res) => {

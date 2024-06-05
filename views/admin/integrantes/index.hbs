@@ -70,7 +70,7 @@
         th, td {
             padding: 15px;
             background-color: rgba(255,255,255,0.2);
-            text-align: left;
+            text-align: center;
         }
 
         thead th {
@@ -116,6 +116,69 @@
         .material-icons {
             margin-right: 8px; /* Espacio entre el ícono y el texto */
         }
+
+        .filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.filter-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.filter-group {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.filter-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter-input.id {
+    width: 6%;
+    margin-left: 6px;
+}
+
+.filter-input.nombre {
+    width: 10%;
+}
+
+.filter-input.apellido {
+    width: 10%;
+}
+
+.filter-input.matricula {
+    width: 10%;
+}
+
+.filter-input.orden {
+    width: 5%;
+}
+
+.filter-form .button-40 {
+    padding: 10px 20px;
+    background-color: #55608f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.filter-form .button-40:hover {
+    background-color: #6f7bb6;
+    color: #222;
+}
+
     </style>
 </head>
 <body>
@@ -127,41 +190,61 @@
         <button type="button" class="button-40" onclick="location.href='/admin/integrantes/crear'" style="margin-right: 50px">Crear Nuevo</button>
     </div>
 
-    <div class="container">
-        <h2>Integrantes</h2>
-        <table class="table custom-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Matricula</th>
-                    <th>Orden</th>
-                    <th style="text-align: center;">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each integrantes}}
-                <tr>
-                    <td><a href="/admin/integrantes/{{this.id}}/editar">{{this.id}}</a></td>
-                    <td>{{this.nombre}}</td>
-                    <td>{{this.apellido}}</td>
-                    <td>{{this.matricula}}</td>
-                    <td>{{this.orden}}</td>
-                    <td style="text-align: center;">
-                        <form id="delete-form-{{this.id}}" action="/admin/integrantes/{{this.id}}/delete" method="POST" style="display: inline;">
-                            <button type="button" onclick="confirmDelete({{this.id}})" class="button-40">Eliminar</button> <!-- Botón de eliminación -->
-                        </form>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-            <a href="/admin" class="volver-button">
+<div class="container">
+    <h2>Integrantes</h2>
+    
+    <div class="filter-container">
+        <form method="GET" action="/admin/integrantes/listar" class="filter-form">
+            <div class="filter-group">
+                <input type="text" name="id" placeholder="ID" class="filter-input id">
+                <input type="text" name="nombre" placeholder="Nombre" class="filter-input nombre">
+                <input type="text" name="apellido" placeholder="Apellido" class="filter-input apellido">
+                <input type="text" name="matricula" placeholder="Matricula" class="filter-input matricula">
+                <input type="text" name="orden" placeholder="Orden" class="filter-input orden">
+                <button type="submit" class="button-40">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    {{#if integrantes.length}}
+    <table class="table custom-table">
+        <thead>
+            <tr>
+                <th class="col-id">ID</th>
+                <th class="col-nombre">Nombre</th>
+                <th class="col-apellido">Apellido</th>
+                <th class="col-matricula">Matricula</th>
+                <th class="col-orden">Orden</th>
+                <th style="text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each integrantes}}
+            <tr>
+                <td class="col-id"><a href="/admin/integrantes/{{this.id}}/editar">{{this.id}}</a></td>
+                <td class="col-nombre">{{this.nombre}}</td>
+                <td class="col-apellido">{{this.apellido}}</td>
+                <td class="col-matricula">{{this.matricula}}</td>
+                <td class="col-orden">{{this.orden}}</td>
+                <td style="text-align: center;">
+                    <form id="delete-form-{{this.id}}" action="/admin/integrantes/{{this.id}}/delete" method="POST" style="display: inline;">
+                        <button type="button" onclick="confirmDelete({{this.id}})" class="button-40">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <h3>No se han encontrado integrantes</h3>
+    {{/if}}
+
+    <a href="/admin" class="volver-button">
         <span class="material-icons">arrow_back</span>
         Volver
     </a>
-    </div>
+</div>
+
 
     {{#if flashMessages.success}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
