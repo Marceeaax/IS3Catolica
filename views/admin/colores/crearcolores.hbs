@@ -118,11 +118,15 @@
         <form action="/admin/colores/create" method="post">
 
             <label for="integranteId">Integrante:</label>
-            <select id="integranteId" name="integranteId" >
-                {{#each integrantes}}
-                    <option value="{{this.id}}">{{this.nombre}}</option>
-                {{/each}}
-            </select>
+                {{#if integrantes.length}}
+                <select id="integranteId" name="integranteId" >
+                    {{#each integrantes}}
+                        <option value="{{this.id}}">{{this.nombre}}</option>
+                    {{/each}}
+                </select>
+                {{else}}
+                    <input type="text" id="integranteId" name="integranteId" style="margin-top: 10px; text-align:center" value="Todos los integrantes tienen colores asignados" disabled>
+                {{/if}}
 
             <button type="button" class="button-39" id="generarColores">Colores Aleatorios</button>
 
@@ -135,7 +139,11 @@
             <label for="sectionBackground">Color de Fondo de Secciones:</label>
             <input type="color" id="sectionBackground" name="sectionBackground" value="{{sectionBackground}}" placeholder="#cccccc">
             
-            <button type="submit" class="button-40">Guardar Colores</button>
+            {{#if integrantes.length}}
+                <button type="submit" class="button-40">Guardar Colores</button>
+            {{else}}
+                <button type="submit" class="button-40" style="background-color: #808080; cursor: not-allowed;" disabled >Guardar Colores</button>
+            {{/if}}
         </form>
     </div>
         <a href="/admin/colores/listar" class="volver-button" style="margin-top:15px"> 

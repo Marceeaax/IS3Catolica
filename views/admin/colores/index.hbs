@@ -160,10 +160,34 @@
             background-color: #6f7bb6;
             color: #222;
         }
-
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tinycolor2@1.4.2/dist/tinycolor-min.js"></script>
     <script>
+        function calcularContraste(foregroundColor, backgroundColor) {
+            const fgColor = tinycolor(foregroundColor);
+            const bgColor = tinycolor(backgroundColor);
+            return fgColor.getBrightness() / bgColor.getBrightness();
+        }
+
+        function rgbAHex(rgb) {
+            const rgbArr = rgb.match(/\d+/g);
+            return `#${((1 << 24) + (parseInt(rgbArr[0]) << 16) + (parseInt(rgbArr[1]) << 8) + parseInt(rgbArr[2])).toString(16).slice(1)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const whiteColor = '#FFFFFF';
+
+            document.querySelectorAll('td').forEach(td => {
+                const backgroundColor = window.getComputedStyle(td).backgroundColor;
+                const bgColorHex = backgroundColor.startsWith('rgb') ? rgbAHex(backgroundColor) : backgroundColor;
+                const contrast = calcularContraste(whiteColor, bgColorHex);
+                if (contrast < 1.5) {
+                    td.style.color = '#000000'; // Cambiar el color del texto a negro
+                }
+            });
+        });
+
         function confirmDelete(id) {
             Swal.fire({
                 title: '¿Estás seguro?',
@@ -241,7 +265,6 @@
     </div>
 
     {{#if flashMessages.error}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         Swal.fire({
             title: 'Error',
@@ -253,7 +276,6 @@
     {{/if}}
 
     {{#if flashMessages.success}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         Swal.fire({
             title: 'Éxito',
