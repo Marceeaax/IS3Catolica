@@ -134,34 +134,14 @@
 .filter-group {
     display: flex;
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 15px;
 }
 
 .filter-input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-}
-
-.filter-input.id {
-    width: 6%;
-    margin-left: 6px;
-}
-
-.filter-input.nombre {
-    width: 10%;
-}
-
-.filter-input.apellido {
-    width: 10%;
-}
-
-.filter-input.matricula {
-    width: 10%;
-}
-
-.filter-input.orden {
-    width: 5%;
 }
 
 .filter-form .button-40 {
@@ -236,7 +216,7 @@
         </tbody>
     </table>
     {{else}}
-    <h3>No se han encontrado integrantes</h3>
+    <h3 style="text-align: center; margin-top: 50px">No se han encontrado coincidencias</h3>
     {{/if}}
 
     <a href="/admin" class="volver-button">

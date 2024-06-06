@@ -41,7 +41,6 @@ const IntegrantesController = {
             queryParams.push(req.query.orden);
         }
     
-        console.log("SQL query:", sql);
     
         db.all(sql, queryParams, (err, results) => {
             if (err) {

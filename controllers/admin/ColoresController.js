@@ -1,8 +1,93 @@
 const db = require('../../db/conexion');
+const Color = require('color');
+
+// Mapa de colores en español a inglés
+const coloresEspañolAIngles = {
+    rojo: 'red',
+    azul: 'blue',
+    verde: 'green',
+    amarillo: 'yellow',
+    negro: 'black',
+    blanco: 'white',
+    morado: 'purple',
+    naranja: 'orange',
+    rosa: 'pink',
+    gris: 'gray',
+    marrón: 'brown',
+    cian: 'cyan',
+    lima: 'lime',
+    magenta: 'magenta',
+    plata: 'silver',
+    dorado: 'gold',
+    // Añade más colores según sea necesario
+};
+
+function nombreAHexadecimal(nombreColor) {
+    // Primero, intentar directamente convertir el nombre del color
+    try {
+        const color = Color(nombreColor.toLowerCase());
+        return color.hex();
+    } catch (e) {
+        // Si falla, intentar convertir del español al inglés
+        const nombreIngles = coloresEspañolAIngles[nombreColor.toLowerCase()];
+        if (nombreIngles) {
+            try {
+                const color = Color(nombreIngles);
+                return color.hex();
+            } catch (e) {
+                return null; // El color no es válido
+            }
+        } else {
+            return null; // El color no está en el mapa ni es un color inglés válido
+        }
+    }
+}
 
 const ColoresController = {
-    index: (req, res) => {
-        db.all('SELECT * FROM Colores WHERE activo = 1', (err, results) => {
+    index: function (req, res) {
+        let sql = "SELECT * FROM Colores WHERE activo = 1";
+        let queryParams = [];
+    
+        console.log("Cuerpo de la solicitud", req.query);
+        // Construcción dinámica de la consulta SQL
+        if (req.query.id) {
+            sql += " AND integranteId = ?";
+            queryParams.push(req.query.id);
+        }
+        if (req.query.background) {
+            const hexColor = nombreAHexadecimal(req.query.background);
+            console.log(hexColor);
+            if (hexColor) {
+                sql += " AND background = ?";
+                queryParams.push(hexColor);
+            } else {
+                sql += " AND (background LIKE ? OR background LIKE ?)";
+                queryParams.push('%' + req.query.background + '%', '%' + req.query.background.toLowerCase() + '%');
+            }
+        }
+        if (req.query.headerBackground) {
+            const hexColor = nombreAHexadecimal(req.query.headerBackground);
+            if (hexColor) {
+                sql += " AND headerBackground = ?";
+                queryParams.push(hexColor);
+            } else {
+                sql += " AND (headerBackground LIKE ? OR headerBackground LIKE ?)";
+                queryParams.push('%' + req.query.headerBackground + '%', '%' + req.query.headerBackground.toLowerCase() + '%');
+            }
+        }
+        if (req.query.sectionBackground) {
+            const hexColor = nombreAHexadecimal(req.query.sectionBackground);
+            if (hexColor) {
+                sql += " AND sectionBackground = ?";
+                queryParams.push(hexColor);
+            } else {
+                sql += " AND (sectionBackground LIKE ? OR sectionBackground LIKE ?)";
+                queryParams.push('%' + req.query.sectionBackground + '%', '%' + req.query.sectionBackground.toLowerCase() + '%');
+            }
+        }
+    
+    
+        db.all(sql, queryParams, (err, results) => {
             if (err) {
                 console.error('Error al obtener datos:', err);
                 return res.status(500).send('Error al obtener datos de la base de datos');
@@ -14,6 +99,7 @@ const ColoresController = {
             });
         });
     },
+    
 
     create: async (req, res) => {
         try {

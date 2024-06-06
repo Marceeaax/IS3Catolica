@@ -24,8 +24,43 @@ function getYouTubeEmbedUrl(url) {
 const MediaController = {
 
     // Método para listar todos los registros
-    index: (req, res) => {
-        db.all('SELECT id, CONCAT((select nombre from integrantes where id = media.integranteid), " - ",(select matricula from integrantes where id = media.integranteid)) AS integranteId, (select nombre from tiposmedia where id = media.tiposmediaid) AS tiposmediaId, URL, nombrearchivo, orden FROM Media ORDER BY orden', (err, results) => {
+    index: function (req, res) {
+        let sql = `
+            SELECT 
+                id, 
+                CONCAT((SELECT nombre FROM integrantes WHERE id = media.integranteid), " - ", (SELECT matricula FROM integrantes WHERE id = media.integranteid)) AS integranteId, 
+                (SELECT nombre FROM tiposmedia WHERE id = media.tiposmediaid) AS tiposmediaId, 
+                URL, 
+                nombrearchivo, 
+                orden 
+            FROM 
+                Media 
+            WHERE 
+                activo = 1 
+        `;
+        let queryParams = [];
+    
+        // Construcción dinámica de la consulta SQL
+        if (req.query.id) {
+            sql += " AND id = ?";
+            queryParams.push(req.query.id);
+        }
+        if (req.query.integrante) {
+            sql += " AND (CONCAT((SELECT nombre FROM integrantes WHERE id = media.integranteid), ' - ', (SELECT matricula FROM integrantes WHERE id = media.integranteid)) LIKE ?)";
+            queryParams.push('%' + req.query.integrante + '%');
+        }
+        if (req.query.tipomedia) {
+            sql += " AND (SELECT nombre FROM tiposmedia WHERE id = media.tiposmediaid) LIKE ?";
+            queryParams.push('%' + req.query.tipomedia + '%');
+        }
+        if (req.query.orden) {
+            sql += " AND orden LIKE ?";
+            queryParams.push('%' + req.query.orden + '%');
+        }
+    
+        sql += " ORDER BY orden";
+    
+        db.all(sql, queryParams, (err, results) => {
             if (err) {
                 console.error('Error al obtener datos:', err);
                 return res.status(500).send('Error al obtener datos de la base de datos');
@@ -37,6 +72,7 @@ const MediaController = {
             });
         });
     },
+    
 
     // Método para mostrar el formulario de creación
     create: async (req, res) => {

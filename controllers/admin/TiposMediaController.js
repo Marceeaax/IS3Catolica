@@ -15,8 +15,26 @@ async function getNextOrder(tableName) {
 
 const TiposMediaController = {
     // Método para listar los tipos de media
-    index: (req, res) => {
-        db.all('SELECT * FROM TiposMedia WHERE activo = 1 ORDER BY orden', (err, results) => {
+    index: function (req, res) {
+        let sql = "SELECT * FROM TiposMedia WHERE activo = 1";
+        let queryParams = [];
+    
+        // Construcción dinámica de la consulta SQL
+        if (req.query.id) {
+            sql += " AND id = ?";
+            queryParams.push(req.query.id);
+        }
+        if (req.query.nombre) {
+            sql += " AND nombre LIKE ?";
+            queryParams.push('%' + req.query.nombre + '%');
+        }
+        if (req.query.orden) {
+            sql += " AND orden LIKE ?";
+            queryParams.push('%' + req.query.orden + '%');
+        }
+    
+    
+        db.all(sql, queryParams, (err, results) => {
             if (err) {
                 console.error('Error al obtener datos:', err);
                 return res.status(500).send('Error al obtener datos de la base de datos');
@@ -28,6 +46,7 @@ const TiposMediaController = {
             });
         });
     },
+    
 
     // Método para mostrar el formulario de creación
     create: (req, res) => {
