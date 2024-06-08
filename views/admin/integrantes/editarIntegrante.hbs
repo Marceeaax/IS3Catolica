@@ -17,6 +17,7 @@
             color: #fff;
             display: flex;
             justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
         }
@@ -136,6 +137,24 @@
             gap: 10px;
             margin-bottom: 10px;
         }
+        .volver-button {
+                background-color: #55608f;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border: none;
+                display: inline-flex;
+                align-items: center;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+                margin-top: 20px;
+        }
+
+        .volver-button:hover {
+            background-color: #6f7bb6;
+        }
     </style>
 </head>
 <body>
@@ -192,6 +211,10 @@
         });
     </script>
     {{/if}}
+        <a href="/admin/integrantes/listar" class="volver-button" style="margin-top:15px"> 
+            <span class="material-icons">arrow_back</span>
+            Volver
+        </a>
 </body>
 </html>
 
@@ -199,17 +222,17 @@
     document.addEventListener('DOMContentLoaded', function() {
       var formData = {{formData}};  // Inserta formData como JSON
     
-      if (Object.keys(formData).length) {
+    if (Object.keys(formData).length) {
         Object.keys(formData).forEach(function(key) {
-          var field = document.querySelector(`[name="${key}"]`);
-          if (field) {
-            if (field.type === 'checkbox') {
-              field.checked = formData[key] === 'on';
-            } else {
-              field.value = formData[key];
-            }
-          }
-        });
-      }
+        var field = document.querySelector(`[name="${key}"]`);
+        if (field) {
+        if (field.type === 'checkbox') {
+            field.checked = formData[key] === 'on';
+        } else {
+            field.value = formData[key];
+        }
+        }
     });
-  </script>
+    }
+});
+</script>
