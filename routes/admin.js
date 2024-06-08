@@ -16,6 +16,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 require('dotenv').config();
+const authControl = (req, res, next) => {
+    if (!req.session.logueado) {
+        return res.redirect("/login");
+    } else {
+        next();
+    }
+};
+
+router.use(authControl);
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

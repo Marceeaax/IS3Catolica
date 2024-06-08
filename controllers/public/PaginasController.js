@@ -1,3 +1,4 @@
+// controllers/public/PaginasController.js
 const db = require('../../db/conexion');
 require('dotenv').config();
 
@@ -17,7 +18,7 @@ const PaginasController = {
             res.render("index", { 
                 integrantes: rows,
                 info,
-                mostrarAdmin: true,
+                mostrarAdmin: req.session.logueado,
                 footerfijo: true
             });
         });
@@ -32,6 +33,7 @@ const PaginasController = {
             res.render("info_curso", { 
                 integrantes: rows,
                 info,
+                mostrarAdmin: req.session.logueado,
                 footerfijo: true
             });
         });
@@ -46,6 +48,7 @@ const PaginasController = {
             res.render("wordcloud", { 
                 integrantes: rows,
                 info,
+                mostrarAdmin: req.session.logueado,
                 footerfijo: true
             });
         });
@@ -109,6 +112,7 @@ const PaginasController = {
                             media,
                             info,
                             colores,
+                            mostrarAdmin: req.session.logueado,
                             footerfijo: false
                         });
                     });
