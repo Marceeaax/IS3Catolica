@@ -18,7 +18,7 @@ app.use(express.json());
 require('dotenv').config();
 const authControl = (req, res, next) => {
     if (!req.session.logueado) {
-        return res.redirect("/login");
+        return res.redirect("/");
     } else {
         next();
     }

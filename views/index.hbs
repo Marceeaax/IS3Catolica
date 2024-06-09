@@ -127,8 +127,13 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <a href="/login">Iniciar Sesión</a>
-        <a href="/register">Registrarse</a>
+        {{#if session.username}}
+            <p>Bienvenido, {{session.username}}</p>
+            <a href="/logout">Cerrar Sesión</a>
+        {{else}}
+            <a href="/login">Iniciar Sesión</a>
+            <a href="/register">Registrarse</a>
+        {{/if}}
     </div>
 
     <div>

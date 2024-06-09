@@ -1,56 +1,73 @@
-// controllers/public/AutenticacionController.js
 const bcrypt = require('bcrypt');
-
-const users = [
-    {
-        username: 'admin',
-        password: '$2b$10$VnE7.6W67KdJq9Z9wYGhRO1nN.zow3iZOVvPQ9/c9VPAQOxLZ/6vi' // 'password' hashed
-    }
-];
+const dbUsuarios = require('../../db/conexionUsuario'); // Asegúrate de que la ruta sea correcta a tu archivo de conexión a la base de datos
 
 const AutenticacionController = {
     showLogin: (req, res) => {
-        res.render('login', { flashMessages: req.flash() });
+        res.render('login', {
+            error: req.flash('error'),
+            success: req.flash('success')
+        });
     },
 
-    login: async (req, res) => {
+    login: (req, res) => {
         const { username, password } = req.body;
-        const user = users.find(u => u.username === username);
 
-        if (user && await bcrypt.compare(password, user.password)) {
-            req.session.logueado = true;
-            req.session.username = username;
-            req.flash('success', 'Login successful');
-            res.redirect('/');
-        } else {
-            req.flash('error', 'Invalid username or password');
-            res.redirect('/login');
-        }
+        dbUsuarios.get('SELECT * FROM usuarios WHERE username = ?', [username], async (err, user) => {
+            if (err) {
+                console.error('Error al buscar el usuario:', err.message);
+                req.flash('error', 'Error interno del servidor');
+                return res.redirect('/login');
+            }
+
+            if (user && await bcrypt.compare(password, user.password)) {
+                req.session.logueado = true;
+                req.session.username = username;
+                req.flash('success', 'Login exitoso');
+                res.redirect('/');
+            } else {
+                req.flash('error', 'Usuario o contraseña incorrectos');
+                res.redirect('/login');
+            }
+        });
     },
 
     logout: (req, res) => {
         req.session.destroy((err) => {
             if (err) {
-                console.error('Error destroying session:', err);
+                console.error('Error destruyendo la sesión:', err);
             }
             res.redirect('/login');
         });
     },
 
     showRegister: (req, res) => {
-        res.render('register', { flashMessages: req.flash() });
+        res.render('register', {
+            error: req.flash('error'),
+        });
     },
 
     register: async (req, res) => {
         const { username, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Aquí puedes guardar el usuario en tu base de datos.
-        // Por simplicidad, estamos agregándolo al array de usuarios.
-        users.push({ username, password: hashedPassword });
-
-        req.flash('success', 'Registro exitoso');
-        res.redirect('/');
+        dbUsuarios.run('INSERT INTO usuarios (username, password) VALUES (?, ?)', [username, hashedPassword], (err) => {
+            if (err) {
+                if (err.code === 'SQLITE_CONSTRAINT') {
+                    console.log('El usuario ya existe:', err.message);
+                    req.flash('error', 'El usuario ya existe');
+                    res.redirect('/register');
+                } else {
+                    console.error('Error al registrar el usuario:', err.message);
+                    req.flash('error', 'Error interno del servidor');
+                    res.redirect('/register');
+                }
+                console.log(req.flash());
+            }
+            else {
+                req.flash('success', 'Registro exitoso');
+                res.redirect('/');
+            }
+        });
     }
 };
 
