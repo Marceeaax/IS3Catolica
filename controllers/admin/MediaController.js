@@ -1,7 +1,7 @@
-const db = require('../../db/conexion');
+const MediaModel = require('../../models/media.model');
 const path = require('path');
 const fs = require('fs');
-const mediaSchema = require('../../validators/media/create.js');
+const mediaSchema = require('../../validators/media/validatorsmedia.js');
 
 async function getNextOrder(tableName) {
     return new Promise((resolve, reject) => {
@@ -10,66 +10,31 @@ async function getNextOrder(tableName) {
             if (err) {
                 reject(err);
             } else {
-                resolve(row.maxOrder ? row.maxOrder + 1 : 1); // Si no hay registros, empezamos desde 1
+                resolve(row.maxOrder ? row.maxOrder + 1 : 1);
             }
         });
     });
 }
 
-function getYouTubeEmbedUrl(url) {
-    const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = url.match(regex);
-    return match ? `https://www.youtube.com/embed/${match[1]}` : null;
-}
-
 const MediaController = {
-    index: function (req, res) {
-        let sql = `
-            SELECT 
-                id, 
-                CONCAT((SELECT nombre FROM integrantes WHERE id = media.integranteid), " - ", (SELECT matricula FROM integrantes WHERE id = media.integranteid)) AS integranteId, 
-                (SELECT nombre FROM tiposmedia WHERE id = media.tiposmediaid) AS tiposmediaId, 
-                URL, 
-                nombrearchivo, 
-                orden 
-            FROM 
-                Media 
-            WHERE 
-                activo = 1 
-        `;
-        let queryParams = [];
-    
-        // Construcción dinámica de la consulta SQL
-        if (req.query.id) {
-            sql += " AND id = ?";
-            queryParams.push(req.query.id);
-        }
-        if (req.query.integrante) {
-            sql += " AND (CONCAT((SELECT nombre FROM integrantes WHERE id = media.integranteid), ' - ', (SELECT matricula FROM integrantes WHERE id = media.integranteid)) LIKE ?)";
-            queryParams.push('%' + req.query.integrante + '%');
-        }
-        if (req.query.tipomedia) {
-            sql += " AND (SELECT nombre FROM tiposmedia WHERE id = media.tiposmediaid) LIKE ?";
-            queryParams.push('%' + req.query.tipomedia + '%');
-        }
-        if (req.query.orden) {
-            sql += " AND orden LIKE ?";
-            queryParams.push('%' + req.query.orden + '%');
-        }
-    
-        sql += " ORDER BY orden";
-    
-        db.all(sql, queryParams, (err, results) => {
-            if (err) {
-                console.error('Error al obtener datos:', err);
-                return res.status(500).send('Error al obtener datos de la base de datos');
-            }
+    index: async (req, res) => {
+        try {
+            const filters = {
+                id: req.query.id,
+                integrante: req.query.integrante,
+                tipomedia: req.query.tipomedia,
+                orden: req.query.orden
+            };
+            const media = await MediaModel.getAll(filters);
             res.render("admin/media/index", {
-                media: results,
+                media: media,
                 mostrarAdmin: true,
                 footerfijo: true
             });
-        });
+        } catch (err) {
+            console.error('Error al obtener datos:', err);
+            res.status(500).send('Error al obtener datos de la base de datos');
+        }
     },
 
     create: async (req, res) => {
@@ -143,84 +108,14 @@ const MediaController = {
             return res.redirect('/admin/media/crear');
         }
 
-        const { integranteId, tiposmediaId, url, nombrearchivo, activo } = value;
         const file = req.file;
 
-        const orden = await getNextOrder('media');
-
         try {
-            const integrante = await new Promise((resolve, reject) => {
-                db.get(`SELECT nombre, apellido FROM Integrantes WHERE id = ?`, integranteId, (err, row) => {
-                    if (err) reject(err);
-                    resolve(row);
-                });
-            });
-
-            if (!integrante) {
-                req.flash('error', 'Integrante no encontrado.');
-                return res.redirect('/admin/media/crear');
-            }
-
-            const tipoMedia = await new Promise((resolve, reject) => {
-                db.get(`SELECT id FROM TiposMedia WHERE nombre = ?`, tiposmediaId, (err, row) => {
-                    if (err) reject(err);
-                    resolve(row);
-                });
-            });
-
-            if (!tipoMedia) {
-                req.flash('error', 'Tipo de media no encontrado.');
-                return res.redirect('/admin/media/crear');
-            }
-            
-            let finalUrl = url;
-            if (tipoMedia.id === 1 && finalUrl) { // Assuming id 1 is for YouTube
-                finalUrl = getYouTubeEmbedUrl(url);
-                if (!finalUrl) {
-                    req.flash('error', 'URL de YouTube no válida.');
-                    return res.redirect('/admin/media/crear');
-                }
-            }
-
-            const query = `INSERT INTO Media (integranteId, tiposmediaId, url, nombrearchivo, orden, activo) VALUES (?, ?, ?, ?, ?, ?)`;
-            if (tipoMedia.id === 1) {
-                db.run(query, [integranteId, tipoMedia.id, finalUrl, null, orden, activo], function(err) {
-                    if (err) {
-                        req.flash('error', 'Error al insertar en la base de datos. ' + err.message);
-                        return res.redirect('/admin/media/crear');
-                    }
-                    req.flash('success', 'Media creada correctamente!');
-                    res.redirect('/admin/media/listar');
-                });
-            } else {
-                if (!file) {
-                    req.flash('error', 'No existe nombre de archivo.');
-                    return res.redirect('/admin/media/crear');
-                }
-                const newFileName = `${tipoMedia.id}-${integrante.nombre}-${integrante.apellido}-${Date.now()}${path.extname(file.originalname)}`;
-                const newFilePath = path.join('public/images', newFileName);
-
-                fs.rename(file.path, newFilePath, (err) => {
-                    if (err) {
-                        req.flash('error', 'Error al renombrar el archivo. ' + err.message);
-                        return res.redirect('/admin/media/crear');
-                    }
-
-                    const nombrearchivo = `/images/${newFileName}`;
-
-                    db.run(query, [integranteId, tipoMedia.id, finalUrl, nombrearchivo, orden, activo], function(err) {
-                        if (err) {
-                            req.flash('error', 'Error al insertar en la base de datos. ' + err.message);
-                            return res.redirect('/admin/media/crear');
-                        }
-                        req.flash('success', 'Media creada correctamente!');
-                        res.redirect('/admin/media/listar');
-                    });
-                });
-            }
-        } catch (error) {
-            console.error('Error al realizar consultas:', error);
-            req.flash('error', 'Error al realizar consultas. ' + error.message);
+            await MediaModel.create(value, file);
+            req.flash('success', 'Media creada correctamente!');
+            res.redirect('/admin/media/listar');
+        } catch (err) {
+            req.flash('error', 'Error al insertar en la base de datos. ' + err.message);
             res.redirect('/admin/media/crear');
         }
     },
@@ -229,13 +124,7 @@ const MediaController = {
         const id = req.params.id;
 
         try {
-            const media = await new Promise((resolve, reject) => {
-                db.get('SELECT * FROM Media WHERE id = ?', [id], (err, row) => {
-                    if (err) reject(err);
-                    resolve(row);
-                });
-            });
-
+            const media = await MediaModel.getById(id);
             if (!media) {
                 req.flash('error', 'Media no encontrada.');
                 return res.redirect('/admin/media/listar');
@@ -259,99 +148,30 @@ const MediaController = {
             return res.redirect(`/admin/media/${req.params.id}/editar`);
         }
 
-        const { id, url, tiposmediaId, integranteId, nombrearchivo, activo } = value;
         const file = req.file; // Este es el archivo nuevo si se proporciona
 
         try {
-            const media = await new Promise((resolve, reject) => {
-                db.get('SELECT * FROM Media WHERE id = ?', [id], (err, row) => {
-                    if (err) reject(err);
-                    resolve(row);
-                });
-            });
-
-            if (!media) {
-                req.flash('error', 'Media no encontrada.');
-                return res.redirect('/admin/media/listar');
-            }
-
-            let finalUrl = url;
-            if (tiposmediaId === 1 && finalUrl) {
-                finalUrl = getYouTubeEmbedUrl(url);
-                if (!finalUrl) {
-                    req.flash('error', 'URL de YouTube no válida.');
-                    return res.redirect(`/admin/media/${id}/editar`);
-                }
-            }
-
-            if (url) {
-                const query = `UPDATE Media SET url = ?, activo = ? WHERE id = ?`;
-                db.run(query, [finalUrl, activo, id], function (err) {
-                    if (err) {
-                        req.flash('error', 'Error al actualizar en la base de datos. ' + err.message);
-                        return res.redirect(`/admin/media/${id}/editar`);
-                    }
-                    req.flash('success', 'Media actualizada correctamente!');
-                    return res.redirect('/admin/media/listar');
-                });
-            } else if (file) {
-                // Si se proporciona un nuevo archivo, renómbralo y actualiza el campo nombrearchivo
-                const newFileName = `${tiposmediaId}-${integranteId}-${Date.now()}${path.extname(file.originalname)}`;
-                const newFilePath = path.join('public/images', newFileName);
-
-                fs.rename(file.path, newFilePath, (err) => {
-                    if (err) {
-                        req.flash('error', 'Error al renombrar el archivo. ' + err.message);
-                        return res.redirect(`/admin/media/${id}/editar`);
-                    }
-
-                    const newFileNamePath = `/images/${newFileName}`;
-
-                    const query = `UPDATE Media SET nombrearchivo = ?, activo = ? WHERE id = ?`;
-
-                    db.run(query, [newFileNamePath, activo, id], function (err) {
-                        if (err) {
-                            req.flash('error', 'Error al actualizar en la base de datos. ' + err.message);
-                            return res.redirect(`/admin/media/${id}/editar`);
-                        }
-                        req.flash('success', 'Media actualizada correctamente!');
-                        return res.redirect('/admin/media/listar');
-                    });
-                });
-            } else {
-                // Si no se proporciona ni URL ni archivo nuevo, solo actualizar el estado activo
-                const query = `UPDATE Media SET activo = ? WHERE id = ?`;
-                db.run(query, [activo, id], function (err) {
-                    if (err) {
-                        req.flash('error', 'Error al actualizar en la base de datos. ' + err.message);
-                        return res.redirect(`/admin/media/${id}/editar`);
-                    }
-                    req.flash('success', 'Media actualizada correctamente!');
-                    return res.redirect('/admin/media/listar');
-                });
-            }
-        } catch (error) {
-            console.error('Error al realizar consultas:', error);
-            req.flash('error', 'Error al realizar consultas. ' + error.message);
-            return res.redirect(`/admin/media/${id}/editar`);
+            await MediaModel.update(req.params.id, value, file);
+            req.flash('success', 'Media actualizada correctamente!');
+            res.redirect('/admin/media/listar');
+        } catch (err) {
+            req.flash('error', 'Error al actualizar en la base de datos. ' + err.message);
+            res.redirect(`/admin/media/${req.params.id}/editar`);
         }
     },
 
-    destroy: (req, res) => {
+    destroy: async (req, res) => {
         const id = req.params.id;
 
-        // Borrado lógico del registro
-        const query = `UPDATE Media SET activo = 0 WHERE id = ?`;
-        db.run(query, [id], function(err) {
-            if (err) {
-                console.error('Error al eliminar el registro:', err);
-                req.flash('error', 'Error al eliminar el registro.');
-                return res.redirect('/admin/media/listar');
-            }
-
+        try {
+            await MediaModel.delete(id);
             req.flash('success', 'Media eliminada correctamente!');
             res.redirect('/admin/media/listar');
-        });
+        } catch (err) {
+            console.error('Error al eliminar el registro:', err);
+            req.flash('error', 'Error al eliminar el registro.');
+            res.redirect('/admin/media/listar');
+        }
     }
 };
 

@@ -36,11 +36,14 @@ CREATE TABLE Colores (
     FOREIGN KEY (integranteId) REFERENCES Integrantes (id)
 );
 
-CREATE TABLE usuarios (
-    usuarioId INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE,
-    pass TEXT,
-    superAdmin TEXT,
-    integranteId TEXT NOT NULL,
-    FOREIGN KEY (integranteId) REFERENCES Integrantes (id)
+CREATE TABLE Usuarios (
+    usuarioid INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    sysadmin BOOLEAN DEFAULT false,
+    integranteId TEXT,
+    FOREIGN KEY (
+        integranteId
+    )
+    REFERENCES Integrantes (matricula) ON DELETE SET NULL
 );

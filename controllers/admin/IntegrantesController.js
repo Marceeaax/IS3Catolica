@@ -1,5 +1,5 @@
 const IntegranteModel = require('../../models/integrante.model');
-const integranteSchema = require('../../validators/integrantes/create');
+const integranteSchema = require('../../validators/integrantes/validatorsintegrantes');
 
 const IntegrantesController = {
     index: async (req, res) => {

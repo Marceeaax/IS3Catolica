@@ -1,5 +1,5 @@
 const ColoresModel = require('../../models/color.model');
-const coloresSchema = require('../../validators/colores/create');
+const coloresSchema = require('../../validators/colores/validatorscolores');
 const db = require('../../db/conexion');
 const Color = require('color');
 

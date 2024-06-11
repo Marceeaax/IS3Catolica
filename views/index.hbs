@@ -128,7 +128,7 @@
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         {{#if session.username}}
-            <p>Bienvenido, {{session.username}}</p>
+            <p>Bienvenido, {{session.email}}</p>
             <a href="/logout">Cerrar Sesión</a>
         {{else}}
             <a href="/login">Iniciar Sesión</a>
