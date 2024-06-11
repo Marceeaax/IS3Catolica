@@ -22,9 +22,6 @@
             color: rgb(255, 255, 255);
             padding: 15px 0;
             width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
         }
 
         img {
@@ -37,19 +34,50 @@
             transform: scale(1.1);
         }
 
-        nav li a {
-            display: inline-block;
-            padding: 9px 15px;
-            color: #555;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s, transform 0.3s, background-color 0.3s;
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            background-color: #491D57;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
         }
 
-        nav li a:hover {
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 15px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #1e90ff;
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #491D57;
             color: white;
-            background-color: #fbfbfb;
-            transform: translateY(-3px);
+            border: none;
+        }
+
+        .openbtn:hover {
+            background-color: #6f2c82;
         }
 
         .info-links {
@@ -60,7 +88,6 @@
             border: 1px solid #ccc;
             gap: 20px; 
         }
-
 
         .info-links a:hover {
             background-color: #efeff4fe;
@@ -84,96 +111,69 @@
             }
         }
 
-        nav a {
-            color: #555;
-            text-decoration: none;
-            font-weight: 400;
-            transition: color 0.3s, transform 0.2s;
-        }
-    
-        nav a:hover {
-            color: #1e90ff; 
-            transform: translateY(-5px) scale(1.1);
-        }
-    
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(-100px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-
-        nav li a {
-            display: inline-block;
-            padding: 7px 13px; 
-            font-size: 12px; 
-            background-color: #e0e0e0; 
-            border-radius: 8px; 
-            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
-            transition: transform 0.2s ease, background-color 0.3s ease; 
-        }
-
-        nav li a:hover, li a:focus {
-            transform: translateY(2px); /* Efecto "pop up" al pasar el ratón */
-            background-color: #491D57; 
-            color: white; 
-        }
-
-        .button-link {
-            display: inline-block;
-            padding: 7px 13px; 
-            font-size: 12px; 
-            font-weight: 600;
-            background-color: #e0e0e0; 
-            border-radius: 8px; 
-            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
-            transition: transform 0.2s ease, background-color 0.3s ease; 
-        }
-
-        li a {
-            display: inline-block;
-            padding: 7px 13px; 
-            font-size: 12px; 
-            font-weight: 600;
-            background-color: #e0e0e0; 
-            border-radius: 8px; 
-            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2); 
-            transition: transform 0.2s ease, background-color 0.3s ease; 
-        }
-
-        li a:hover, li a:focus {
-            transform: translateY(2px); /* Efecto "pop up" al pasar el ratón */
-            background-color: #491D57; 
-            color: white; 
-        }
-
-        a {
-            color: #555;
-            text-decoration: none;
-            font-weight: 400;
-            transition: color 0.3s, transform 0.2s;
-        }
-    
-        a:hover {
-            color: #1e90ff; 
-            transform: translateY(-5px) scale(1.1);
-        }
-        
         .button-container {
-    display: flex;
-    justify-content: center; /* Centra horizontalmente el contenido */
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 20px; /* Espacio superior para separar del resto del contenido */
-}
-
+            display: flex;
+            justify-content: center; /* Centra horizontalmente el contenido */
+            gap: 10px; /* Espacio entre los botones */
+            margin-top: 20px; /* Espacio superior para separar del resto del contenido */
+        }
     </style>
 </head>
 <body>
-    <div class="header-bar"><b>Página Principal</b></div>
+    <div class="header-bar">
+        <button class="openbtn" onclick="openNav()">☰</button>
+        <b>Página Principal</b>
+    </div>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        {{#if session.username}}
+            <p>Bienvenido, {{session.email}}</p>
+            <a href="/logout">Cerrar Sesión</a>
+        {{else}}
+            <a href="/login">Iniciar Sesión</a>
+            <a href="/register">Registrarse</a>
+        {{/if}}
+    </div>
+
     <div>
         {{> nav }}
         <img src="../../images/logo.png" alt="Logo del Grupo"> 
     </div>
-        {{> footer }}
-</body>
+    {{> footer }}
 
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "150px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+        }
+    </script>
+
+    {{#if flashMessages.error}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{flashMessages.error}}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
+
+    {{#if flashMessages.success}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Éxito',
+            text: '{{flashMessages.success}}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
+</body>
 </html>

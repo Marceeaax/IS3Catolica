@@ -123,6 +123,48 @@
         .material-icons {
             margin-right: 8px; /* Espacio entre el ícono y el texto */
         }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .filter-group {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .filter-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .filter-form .button-40 {
+            padding: 10px 20px;
+            background-color: #55608f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .filter-form .button-40:hover {
+            background-color: #6f7bb6;
+            color: #222;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -154,40 +196,58 @@
 
     <div class="container">
         <h2>Media</h2>
+
+        <div class="filter-container">
+            <form method="GET" action="/admin/media/listar" class="filter-form">
+                <div class="filter-group">
+                    <input type="text" name="id" placeholder="ID" class="filter-input col-id">
+                    <input type="text" name="integrante" placeholder="Integrante" class="filter-input col-integrante">
+                    <input type="text" name="tipomedia" placeholder="Tipo de Media" class="filter-input col-tipo-media">
+                    <input type="text" name="orden" placeholder="Orden" class="filter-input col-orden">
+                    <button type="submit" class="button-40">Filtrar</button>
+                </div>
+            </form>
+        </div>
+
+        {{#if media.length}}
         <table class="table custom-table">
             <thead>
                 <tr>
-                    <th>id</th>
-                    <th>ID Integrante</th>
-                    <th>Tipos Media Id</th>
-                    <th>URL</th>
-                    <th>Nombre Archivo</th>
-                    <th>Orden</th>
-                    <th>Acciones</th> <!-- Nueva columna para acciones -->
+                    <th class="col-id">ID</th>
+                    <th class="col-integrante">Integrante</th>
+                    <th class="col-tipo-media">Tipo de Media</th>
+                    <th class="col-url">URL</th>
+                    <th class="col-nombre-archivo">Nombre Archivo</th>
+                    <th class="col-orden">Orden</th>
+                    <th style="text-align: center;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each media}}
                 <tr>
-                    <td><a href="/admin/media/{{this.id}}/editar">{{this.id}}</a></td>
-                    <td>{{this.integranteId}}</td>
-                    <td>{{this.tiposmediaId}}</td>
-                    <td><iframe style="width: 100px; height: 100px;" src="{{this.url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
-                    <td>
+                    <td class="col-id"><a href="/admin/media/{{this.id}}/editar">{{this.id}}</a></td>
+                    <td class="col-integrante">{{this.integranteId}}</td>
+                    <td class="col-tipo-media">{{this.tiposmediaId}}</td>
+                    <td class="col-url"><iframe style="width: 100px; height: 100px;" src="{{this.url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+                    <td class="col-nombre-archivo">
                         {{#if this.nombrearchivo}}
                             <img style="height: 100px; width: 100px; text-align: center; vertical-align: middle" src="{{this.nombrearchivo}}" alt="Media Image">
                         {{/if}}
                     </td>
-                    <td>{{this.orden}}</td>
-                    <td>
+                    <td class="col-orden">{{this.orden}}</td>
+                    <td style="text-align: center">
                         <form id="delete-form-{{this.id}}" action="/admin/media/{{this.id}}/delete" method="POST" style="display: inline;">
-                            <button type="button" onclick="confirmDelete({{this.id}})" class="button-40">Eliminar</button> <!-- Botón de eliminación -->
+                            <button type="button" onclick="confirmDelete({{this.id}})" class="button-40">Eliminar</button>
                         </form>
                     </td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
+        {{else}}
+        <h3 style="text-align: center; margin-top: 50px">No se han encontrado coincidencias</h3>
+        {{/if}}
+
         <a href="/admin" class="volver-button" style="margin-top:15px"> 
             <span class="material-icons">arrow_back</span>Volver
         </a>

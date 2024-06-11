@@ -35,3 +35,15 @@ CREATE TABLE Colores (
     activo BOOLEAN DEFAULT 1,
     FOREIGN KEY (integranteId) REFERENCES Integrantes (id)
 );
+
+CREATE TABLE Usuarios (
+    usuarioid INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    sysadmin BOOLEAN DEFAULT false,
+    integranteId TEXT,
+    FOREIGN KEY (
+        integranteId
+    )
+    REFERENCES Integrantes (matricula) ON DELETE SET NULL
+);

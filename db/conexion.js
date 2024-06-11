@@ -1,6 +1,5 @@
-// database.js
-const sqlite3 = require('sqlite3').verbose(); // Importa el módulo sqlite3 para trabajar con bases de datos SQLite
-const path = require('path'); // Importa el módulo path para manejar rutas de archivos
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
 // Define la ruta de la base de datos dentro del directorio actual, usando `integrantes.sqlite` como nombre del archivo
 const dbPath = path.join(__dirname, 'integrantes.sqlite');

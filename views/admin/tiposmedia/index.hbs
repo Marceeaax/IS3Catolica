@@ -123,6 +123,49 @@
         .material-icons {
             margin-right: 8px; /* Espacio entre el ícono y el texto */
         }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .filter-group {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .filter-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .filter-form .button-40 {
+            padding: 10px 20px;
+            background-color: #55608f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .filter-form .button-40:hover {
+            background-color: #6f7bb6;
+            color: #222;
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -154,21 +197,34 @@
 
     <div class="container">
         <h2>TiposMedia</h2>
+        
+        <div class="filter-container">
+            <form method="GET" action="/admin/tiposmedia/listar" class="filter-form">
+                <div class="filter-group">
+                    <input type="text" name="id" placeholder="ID" class="filter-input col-id">
+                    <input type="text" name="nombre" placeholder="Nombre" class="filter-input col-nombre">
+                    <input type="text" name="orden" placeholder="Orden" class="filter-input col-orden">
+                    <button type="submit" class="button-40">Filtrar</button>
+                </div>
+            </form>
+        </div>
+
+        {{#if tiposMedia.length}}
         <table class="table custom-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Orden</th>
+                    <th class="col-id">ID</th>
+                    <th class="col-nombre">Nombre</th>
+                    <th class="col-orden">Orden</th>
                     <th>Acciones</th> <!-- Nueva columna para acciones -->
                 </tr>
             </thead>
             <tbody>
                 {{#each tiposMedia}}
                 <tr>
-                    <td><a href="/admin/tiposmedia/{{this.id}}/editar">{{this.id}}</a></td>
-                    <td>{{this.nombre}}</td>
-                    <td>{{this.orden}}</td>
+                    <td class="col-id"><a href="/admin/tiposmedia/{{this.id}}/editar">{{this.id}}</a></td>
+                    <td class="col-nombre">{{this.nombre}}</td>
+                    <td class="col-orden">{{this.orden}}</td>
                     <td>
                         <form id="delete-form-{{this.id}}" action="/admin/tiposmedia/{{this.id}}/delete" method="POST" style="display: inline;">
                             <button type="button" onclick="confirmDelete({{this.id}})" class="button-40">Eliminar</button> <!-- Botón de eliminación -->
@@ -178,34 +234,36 @@
                 {{/each}}
             </tbody>
         </table>
+        {{else}}
+        <h3 style="text-align: center; margin-top: 50px">No se han encontrado coincidencias</h3>
+        {{/if}}
         <a href="/admin" class="volver-button" style="margin-top:15px">
             <span class="material-icons">arrow_back</span>Volver
         </a>
     </div>
 
-{{#if flashMessages.error}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    Swal.fire({
-        title: 'Error',
-        text: '{{flashMessages.error}}',
-        icon: 'error',
-        confirmButtonText: 'OK'
-    });
-</script>
-{{/if}}
+    {{#if flashMessages.error}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{flashMessages.error}}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
 
-{{#if flashMessages.success}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    Swal.fire({
-        title: 'Éxito',
-        text: '{{flashMessages.success}}',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-</script>
-{{/if}}
-
+    {{#if flashMessages.success}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            title: 'Éxito',
+            text: '{{flashMessages.success}}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
 </body>
 </html>

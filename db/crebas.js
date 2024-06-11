@@ -1,7 +1,6 @@
-// createDatabase.js
-const fs = require('fs'); // Importa el módulo de sistema de archivos para leer archivos locales
-const path = require('path'); // Importa el módulo de rutas para manejar rutas de archivos
-const db = require('./conexion'); // Importa el módulo de conexión a la base de datos
+const fs = require('fs');
+const path = require('path');
+const db = require('./conexion');
 
 // Define la ruta completa del archivo SQL que contiene las instrucciones de creación de la base de datos
 const sqlPath = path.join(__dirname, 'crebas.sql');

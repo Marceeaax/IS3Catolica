@@ -16,6 +16,7 @@
             color: #fff;
             display: flex;
             justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
         }
@@ -70,6 +71,24 @@
             background-color: #6f7bb6;
             color: #222;
         }
+        .volver-button {
+                background-color: #55608f;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border: none;
+                display: inline-flex;
+                align-items: center;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+                margin-top: 20px;
+        }
+
+        .volver-button:hover {
+            background-color: #6f7bb6;
+        }
     </style>
 </head>
 <body>
@@ -93,6 +112,10 @@
             <button type="submit" class="button-40">Actualizar</button>
         </form>
     </div>
+        <a href="/admin/tiposmedia/listar" class="volver-button" style="margin-top:15px"> 
+            <span class="material-icons">arrow_back</span>
+            Volver
+        </a>
 </body>
 
 {{#if flashMessages.error}}

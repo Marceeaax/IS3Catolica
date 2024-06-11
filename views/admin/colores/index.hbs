@@ -50,7 +50,6 @@
 
         .title-container {
             text-align: center;
-            
         }
 
         .button-40 {
@@ -119,10 +118,76 @@
         .material-icons {
             margin-right: 8px; /* Espacio entre el ícono y el texto */
         }
-    
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .filter-group {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .filter-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .filter-form .button-40 {
+            padding: 10px 20px;
+            background-color: #55608f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .filter-form .button-40:hover {
+            background-color: #6f7bb6;
+            color: #222;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tinycolor2@1.4.2/dist/tinycolor-min.js"></script>
     <script>
+        function calcularContraste(foregroundColor, backgroundColor) {
+            const fgColor = tinycolor(foregroundColor);
+            const bgColor = tinycolor(backgroundColor);
+            return fgColor.getBrightness() / bgColor.getBrightness();
+        }
+
+        function rgbAHex(rgb) {
+            const rgbArr = rgb.match(/\d+/g);
+            return `#${((1 << 24) + (parseInt(rgbArr[0]) << 16) + (parseInt(rgbArr[1]) << 8) + parseInt(rgbArr[2])).toString(16).slice(1)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const whiteColor = '#FFFFFF';
+
+            document.querySelectorAll('td').forEach(td => {
+                const backgroundColor = window.getComputedStyle(td).backgroundColor;
+                const bgColorHex = backgroundColor.startsWith('rgb') ? rgbAHex(backgroundColor) : backgroundColor;
+                const contrast = calcularContraste(whiteColor, bgColorHex);
+                if (contrast < 1.5) {
+                    td.style.color = '#000000'; // Cambiar el color del texto a negro
+                }
+            });
+        });
+
         function confirmDelete(id) {
             Swal.fire({
                 title: '¿Estás seguro?',
@@ -151,60 +216,74 @@
 
     <div class="container">
         <h2>Colores</h2>
+        
+        <div class="filter-container">
+            <form method="GET" action="/admin/colores/listar" class="filter-form">
+                <div class="filter-group">
+                    <input type="text" name="id" placeholder="ID Integrante" class="filter-input col-id-integrante">
+                    <input type="text" name="background" placeholder="Color de Fondo" class="filter-input col-color-fondo">
+                    <input type="text" name="headerBackground" placeholder="Color de Cabecera" class="filter-input col-color-cabecera">
+                    <input type="text" name="sectionBackground" placeholder="Color de Sección" class="filter-input col-color-seccion">
+                    <button type="submit" class="button-40">Filtrar</button>
+                </div>
+            </form>
+        </div>
+
+        {{#if colores.length}}
         <table class="table custom-table">
             <thead>
                 <tr>
-                    <th>ID Integrante</th>
-                    <th>Color de Fondo</th>
-                    <th>Color de Cabecera</th>
-                    <th>Color de Sección</th>
-                    <th>Acciones</th> <!-- Nueva columna para acciones -->
+                    <th class="col-id-integrante">ID Integrante</th>
+                    <th class="col-color-fondo">Color de Fondo</th>
+                    <th class="col-color-cabecera">Color de Cabecera</th>
+                    <th class="col-color-seccion">Color de Sección</th>
+                    <th style="text-align: center;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each colores}}
                 <tr>
-                    <td><a href="/admin/colores/{{this.integranteId}}/editar">{{this.integranteId}}</a></td>
-                    <td style="background-color: {{this.background}};">{{this.background}}</td>
-                    <td style="background-color: {{this.headerBackground}};">{{this.headerBackground}}</td>
-                    <td style="background-color: {{this.sectionBackground}};">{{this.sectionBackground}}</td>
+                    <td class="col-id-integrante"><a href="/admin/colores/{{this.integranteId}}/editar">{{this.integranteId}}</a></td>
+                    <td class="col-color-fondo" style="background-color: {{this.background}};">{{this.background}}</td>
+                    <td class="col-color-cabecera" style="background-color: {{this.headerBackground}};">{{this.headerBackground}}</td>
+                    <td class="col-color-seccion" style="background-color: {{this.sectionBackground}};">{{this.sectionBackground}}</td>
                     <td style="text-align: center">
                         <form id="delete-form-{{this.integranteId}}" action="/admin/colores/{{this.integranteId}}/delete" method="POST" style="display: inline;">
-                            <button type="button" onclick="confirmDelete({{this.integranteId}})" class="button-40">Eliminar</button> <!-- Botón de eliminación -->
+                            <button type="button" onclick="confirmDelete({{this.integranteId}})" class="button-40">Eliminar</button>
                         </form>
                     </td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
+        {{else}}
+        <h3 style="text-align: center; margin-top: 50px">No se han encontrado coincidencias</h3>
+        {{/if}}
         <a href="/admin" class="volver-button">
             <span class="material-icons">arrow_back</span>Volver
         </a>
     </div>
 
-{{#if flashMessages.error}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    Swal.fire({
-        title: 'Error',
-        text: '{{flashMessages.error}}',
-        icon: 'error',
-        confirmButtonText: 'OK'
-    });
-</script>
-{{/if}}
+    {{#if flashMessages.error}}
+    <script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{flashMessages.error}}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
 
-{{#if flashMessages.success}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    Swal.fire({
-        title: 'Éxito',
-        text: '{{flashMessages.success}}',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-</script>
-{{/if}}
-
+    {{#if flashMessages.success}}
+    <script>
+        Swal.fire({
+            title: 'Éxito',
+            text: '{{flashMessages.success}}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
 </body>
 </html>
