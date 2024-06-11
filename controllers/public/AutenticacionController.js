@@ -1,3 +1,4 @@
+// controllers/public/AutenticacionController.js
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const uuid = require('uuid');
@@ -43,7 +44,7 @@ const AutenticacionController = {
 
                 req.session.logueado = true;
                 req.session.email = email;
-                req.session.username = user.email; // Asegúrate de almacenar el username en la sesión
+                req.session.username = user.email;
                 req.flash('success', 'Login exitoso');
                 res.redirect('/');
             } else {
@@ -75,7 +76,7 @@ const AutenticacionController = {
                     return res.redirect('/register');
                 }
 
-                console.log('Matrículas disponibles:', rows); // Mensaje de depuración
+                console.log('Matrículas disponibles:', rows); 
                 res.render('register', {
                     error: req.flash('error'),
                     integrantes: rows
@@ -171,31 +172,35 @@ const AutenticacionController = {
     forgotPassword: (req, res) => {
         const { email } = req.body;
 
+        console.log('Recibida solicitud de forgotPassword con email:', email); // Mensaje de depuración
+
         if (!email) {
-            req.flash('error', 'El correo electrónico es obligatorio');
-            return res.redirect('/login');
+            console.log('El correo electrónico es obligatorio'); // Mensaje de depuración
+            return res.status(400).json({ success: false, error: 'El correo electrónico es obligatorio' });
         }
+
+        console.log(`Buscando usuario con email: ${email}`); // Mensaje de depuración
 
         db.get('SELECT * FROM usuarios WHERE email = ?', [email], (err, user) => {
             if (err) {
                 console.error('Error al buscar el usuario:', err.message);
-                req.flash('error', 'Error interno del servidor');
-                return res.redirect('/login');
+                return res.status(500).json({ success: false, error: 'Error interno del servidor' });
             }
 
             if (!user) {
-                req.flash('error', 'No se encontró un usuario con ese correo electrónico');
-                return res.redirect('/login');
+                console.log(`No se encontró un usuario con el email: ${email}`); // Mensaje de depuración
+                return res.status(404).json({ success: false, error: 'No se encontró un usuario con ese correo electrónico' });
             }
 
             const resetToken = uuid.v4();
             const resetLink = `http://localhost:3000/resetpassword/${resetToken}`;
 
+            console.log(`Generando resetToken: ${resetToken} para email: ${email}`); // Mensaje de depuración
+
             db.run('UPDATE usuarios SET resetToken = ? WHERE email = ?', [resetToken, email], (err) => {
                 if (err) {
                     console.error('Error al generar el token de restablecimiento:', err.message);
-                    req.flash('error', 'Error interno del servidor');
-                    return res.redirect('/login');
+                    return res.status(500).json({ success: false, error: 'Error interno del servidor' });
                 }
 
                 const mailOptions = {
@@ -205,15 +210,16 @@ const AutenticacionController = {
                     html: `<p>Haga clic en el siguiente enlace para restablecer su contraseña: <a href="${resetLink}">Restablecer contraseña</a></p>`
                 };
 
+                console.log(`Enviando correo a: ${email}`); // Mensaje de depuración
+
                 transporter.sendMail(mailOptions, (error, info) => {
                     if (error) {
                         console.error('Error al enviar el correo electrónico:', error);
-                        req.flash('error', 'Error al enviar el correo electrónico');
-                        return res.redirect('/login');
+                        return res.status(500).json({ success: false, error: 'Error al enviar el correo electrónico' });
                     }
                     console.log('Correo enviado:', info.response); // Mensaje de depuración
                     req.flash('success', 'Se ha enviado un correo con las instrucciones para restablecer la contraseña');
-                    res.redirect('/login');
+                    return res.redirect('/login');
                 });
             });
         });
@@ -247,29 +253,50 @@ const AutenticacionController = {
 
             if (!errors.isEmpty()) {
                 req.flash('error', errors.array().map(err => err.msg).join(', '));
-                return res.redirect(`/resetpassword/${token}`);
+                return res.redirect(`/reset-password/${token}`);
             }
 
             try {
-                const hashedPassword = await bcrypt.hash(password, 10);
-
-                db.run('UPDATE usuarios SET password = ?, resetToken = NULL WHERE resetToken = ?', 
-                    [hashedPassword, token], 
-                    (err) => {
-                        if (err) {
-                            console.error('Error al actualizar la contraseña:', err.message);
-                            req.flash('error', 'Error interno del servidor');
-                            return res.redirect(`/resetpassword/${token}`);
-                        }
-
-                        req.flash('success', 'Contraseña restablecida con éxito. Ahora puede iniciar sesión.');
-                        res.redirect('/login');
+                // Obtener el usuario con el token de restablecimiento
+                db.get('SELECT * FROM usuarios WHERE resetToken = ?', [token], async (err, user) => {
+                    if (err) {
+                        console.error('Error al verificar el token:', err.message);
+                        req.flash('error', 'Error interno del servidor');
+                        return res.redirect('/login');
                     }
-                );
+
+                    if (!user) {
+                        req.flash('error', 'Token de restablecimiento no válido');
+                        return res.redirect('/login');
+                    }
+
+                    // Comparar la nueva contraseña con la contraseña actual
+                    const isSamePassword = await bcrypt.compare(password, user.password);
+                    if (isSamePassword) {
+                        req.flash('error', 'La nueva contraseña no puede ser la misma que la anterior.');
+                        return res.redirect(`/reset-password/${token}`);
+                    }
+
+                    // Hashear la nueva contraseña y actualizarla en la base de datos
+                    const hashedPassword = await bcrypt.hash(password, 10);
+                    db.run('UPDATE usuarios SET password = ?, resetToken = NULL WHERE resetToken = ?', 
+                        [hashedPassword, token], 
+                        (err) => {
+                            if (err) {
+                                console.error('Error al actualizar la contraseña:', err.message);
+                                req.flash('error', 'Error interno del servidor');
+                                return res.redirect(`/reset-password/${token}`);
+                            }
+
+                            req.flash('success', 'Contraseña restablecida con éxito. Ahora puede iniciar sesión.');
+                            res.redirect('/login');
+                        }
+                    );
+                });
             } catch (error) {
                 console.error('Error al hashear la contraseña:', error.message);
                 req.flash('error', 'Error interno del servidor');
-                res.redirect(`/resetpassword/${token}`);
+                res.redirect(`/reset-password/${token}`);
             }
         }
     ]

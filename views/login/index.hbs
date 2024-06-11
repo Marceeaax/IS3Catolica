@@ -9,6 +9,9 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         body {
             font-family: 'Lato', sans-serif;
@@ -124,19 +127,19 @@
         <div class="icon d-flex align-items-center justify-content-center">
             <span class="fa fa-user-o"></span>
         </div>
-        <h3 class="heading-section">Login</h3>
+        <h3 class="heading-section">Iniciar sesión</h3>
         <form action="/login" method="post">
             <div class="form-group">
                 <input type="text" id="email" name="email" class="form-control rounded-left" placeholder="Email" required>
             </div>
             <div class="form-group d-flex">
-                <input type="password" id="password" name="password" class="form-control rounded-left" placeholder="Password" required>
+                <input type="password" id="password" name="password" class="form-control rounded-left" placeholder="Contraseña" required>
             </div>
             <div class="text-md-center">
-                <a href="#" id="forgot-password">Olvide mi contraseña</a>
+                <a href="#" data-toggle="modal" data-target="#forgotPasswordModal">Olvidé mi contraseña</a>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Login</button>
+                <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Iniciar sesión</button>
             </div>
         </form>
     </div>
@@ -166,47 +169,27 @@
         Volver
     </a>
 
-    <script>
-        document.getElementById('forgot-password').addEventListener('click', function() {
-            Swal.fire({
-                title: 'Ingrese su correo electrónico',
-                input: 'email',
-                inputLabel: 'Correo electrónico',
-                inputPlaceholder: 'Ingrese su correo electrónico',
-                showCancelButton: true,
-                confirmButtonText: 'Enviar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const email = result.value;
-
-                    fetch('/forgot-password', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ email })
-                    }).then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                title: 'Correo enviado',
-                                text: `Se ha enviado un correo a ${email} con las instrucciones para cambiar su contraseña.`,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: data.error,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
+    <!-- Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align: center;">
+                    <h5 class="modal-title" id="forgotPasswordModalLabel">¿Te olvidaste piko de tu contraseña?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="forgotPasswordForm" action="/forgot-password" method="post">
+                        <div class="form-group">
+                            <label for="forgotPasswordEmail">Puedes solicitar un cambio de contraseña a través de tu dirección de correo electrónico</label>
+                            <input type="email" class="form-control" id="forgotPasswordEmail" name="email" placeholder="Inserta aqui tu email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

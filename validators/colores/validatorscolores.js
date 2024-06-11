@@ -5,7 +5,6 @@ const coloresSchema = Joi.object({
     integranteId: Joi.number()
         .integer()
         .positive()
-        .required()
         .messages({
             'number.base': 'El ID del integrante debe ser un número.',
             'number.integer': 'El ID del integrante debe ser un número entero.',

@@ -16,7 +16,7 @@ const tiposMediaSchema = Joi.object({
         .messages({
             'boolean.base': 'El estado activo debe ser un valor booleano.',
             'any.required': 'El estado activo es obligatorio.'
-        })
-});
+        }),
+}).unknown(); // Permitir campos adicionales como 'orden'
 
 module.exports = tiposMediaSchema;

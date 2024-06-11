@@ -1,4 +1,5 @@
 const MediaModel = require('../../models/media.model');
+const db = require('../../db/conexion');
 const path = require('path');
 const fs = require('fs');
 const mediaSchema = require('../../validators/media/validatorsmedia.js');
