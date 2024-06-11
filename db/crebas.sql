@@ -42,6 +42,9 @@ CREATE TABLE Usuarios (
     password TEXT NOT NULL,
     sysadmin BOOLEAN DEFAULT false,
     integranteId TEXT,
+    confirmationCode TEXT,
+    confirmed INTEGER DEFAULT 0,
+    resetToken TEXT,
     FOREIGN KEY (
         integranteId
     )

@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const PaginasController = require('../controllers/public/PaginasController');
@@ -24,5 +23,17 @@ router.get('/logout', AutenticacionController.logout);
 // Ruta para el registro
 router.get('/register', AutenticacionController.showRegister);
 router.post('/register', AutenticacionController.register);
+
+// Ruta para confirmar la cuenta
+router.get('/confirm/:confirmationCode', AutenticacionController.confirm);
+
+// Ruta para solicitar restablecimiento de contraseña
+router.post('/forgot-password', AutenticacionController.forgotPassword);
+
+// Ruta para mostrar formulario de restablecimiento de contraseña
+router.get('/resetpassword/:token', AutenticacionController.showResetPassword);
+
+// Ruta para actualizar la contraseña
+router.post('/resetpassword/:token', AutenticacionController.resetPassword);
 
 module.exports = router;

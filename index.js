@@ -1,4 +1,3 @@
-// index.js
 const express = require('express');
 const session = require('express-session');
 const hbs = require('hbs');
@@ -42,16 +41,6 @@ app.use(session({
 // Middleware para pasar variables de sesión a todas las vistas
 app.use((req, res, next) => {
     res.locals.session = req.session;
-    next();
-});
-
-// Middleware para eliminar mensajes de sesión después de ser enviados
-app.use((req, res, next) => {
-    res.on('finish', () => {
-        if (req.session && req.session.message) {
-            delete req.session.message;
-        }
-    });
     next();
 });
 

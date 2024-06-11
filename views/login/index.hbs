@@ -179,12 +179,30 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     const email = result.value;
-                    // Aquí puedes agregar el código para enviar el correo
-                    Swal.fire({
-                        title: 'Correo enviado',
-                        text: `Se ha enviado un correo a ${email} con las instrucciones para cambiar su contraseña.`,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
+
+                    fetch('/forgot-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email })
+                    }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Correo enviado',
+                                text: `Se ha enviado un correo a ${email} con las instrucciones para cambiar su contraseña.`,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: data.error,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
                     });
                 }
             });

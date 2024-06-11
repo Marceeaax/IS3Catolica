@@ -34,5 +34,4 @@ INSERT INTO Colores (integranteId, background, headerBackground, sectionBackgrou
 ((SELECT id FROM Integrantes WHERE matricula = 'Y12887'), '#a298da', '#1d2857', '#1d2857'),
 ((SELECT id FROM Integrantes WHERE matricula = '3850665'), '#FF6347', '#a53737', '#a53737');
 
-INSERT INTO usuarios (email, password, superAdmin, integranteId) VALUES
-('cacereslujan183@gmail.com', '12345', 1, 'Y18624');
+-- INSERT INTO usuarios (email, password, superAdmin, integranteId) VALUES ('cacereslujan183@gmail.com', '12345', 1, 'Y18624');
