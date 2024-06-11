@@ -12,14 +12,9 @@ const mediaSchema = Joi.object({
             'number.positive': 'El ID del integrante debe ser un número positivo.',
             'any.required': 'El ID del integrante es obligatorio.'
         }),
-    tiposmediaId: Joi.number()
-        .integer()
-        .positive()
+    tiposmediaId: Joi.string()
         .required()
         .messages({
-            'number.base': 'El ID del tipo de media debe ser un número.',
-            'number.integer': 'El ID del tipo de media debe ser un número entero.',
-            'number.positive': 'El ID del tipo de media debe ser un número positivo.',
             'any.required': 'El ID del tipo de media es obligatorio.'
         }),
     url: Joi.string()
@@ -39,6 +34,6 @@ const mediaSchema = Joi.object({
             'boolean.base': 'El estado activo debe ser un valor booleano.',
             'any.required': 'El estado activo es obligatorio.'
         })
-});
+}).unknown();
 
 module.exports = mediaSchema;

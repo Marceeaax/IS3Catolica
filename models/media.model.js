@@ -67,7 +67,7 @@ const MediaModel = {
         
         return new Promise((resolve, reject) => {
             const query = `INSERT INTO Media (integranteId, tiposmediaId, url, nombrearchivo, orden, activo) VALUES (?, ?, ?, ?, ?, ?)`;
-            if (tiposmediaId === 1 && url) { // Assuming id 1 is for YouTube
+            if (tiposmediaId == 1 && url) { // Assuming id 1 is for YouTube
                 const finalUrl = getYouTubeEmbedUrl(url);
                 if (!finalUrl) {
                     return reject(new Error('URL de YouTube no válida.'));
@@ -103,7 +103,7 @@ const MediaModel = {
     update: async (id, data, file) => {
         const { url, tiposmediaId, activo } = data;
         let finalUrl = url;
-        if (tiposmediaId === 1 && url) { // Assuming id 1 is for YouTube
+        if (tiposmediaId == 1 && url) { // Assuming id 1 is for YouTube
             finalUrl = getYouTubeEmbedUrl(url);
             if (!finalUrl) {
                 return new Promise((_, reject) => reject(new Error('URL de YouTube no válida.')));

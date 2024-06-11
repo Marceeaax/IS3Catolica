@@ -92,6 +92,8 @@ const MediaController = {
                 }
             });
 
+            console.log('Integrantes faltantes:', integrantesFaltantes); // Mensaje de depuración
+
             res.render('admin/media/crearMedia', { 
                 integrantes: integrantesFaltantes
             });
@@ -103,19 +105,23 @@ const MediaController = {
 
     store: async (req, res) => {
         req.body.activo = req.body.activo === 'on';
+        console.log('Datos recibidos en store:', req.body); // Mensaje de depuración
         const { error, value } = mediaSchema.validate(req.body);
         if (error) {
+            console.log('Error de validación:', error.details); // Mensaje de depuración
             req.flash('error', error.details[0].message);
             return res.redirect('/admin/media/crear');
         }
 
         const file = req.file;
+        console.log('Archivo recibido:', file); // Mensaje de depuración
 
         try {
             await MediaModel.create(value, file);
             req.flash('success', 'Media creada correctamente!');
             res.redirect('/admin/media/listar');
         } catch (err) {
+            console.error('Error al insertar en la base de datos:', err.message); // Mensaje de depuración
             req.flash('error', 'Error al insertar en la base de datos. ' + err.message);
             res.redirect('/admin/media/crear');
         }
@@ -143,19 +149,23 @@ const MediaController = {
 
     update: async (req, res) => {
         req.body.activo = req.body.activo === 'on';
+        console.log('Datos recibidos en update:', req.body); // Mensaje de depuración
         const { error, value } = mediaSchema.validate(req.body);
         if (error) {
+            console.log('Error de validación:', error.details); // Mensaje de depuración
             req.flash('error', error.details[0].message);
             return res.redirect(`/admin/media/${req.params.id}/editar`);
         }
 
         const file = req.file; // Este es el archivo nuevo si se proporciona
+        console.log('Archivo recibido para actualización:', file); // Mensaje de depuración
 
         try {
             await MediaModel.update(req.params.id, value, file);
             req.flash('success', 'Media actualizada correctamente!');
             res.redirect('/admin/media/listar');
         } catch (err) {
+            console.error('Error al actualizar en la base de datos:', err.message); // Mensaje de depuración
             req.flash('error', 'Error al actualizar en la base de datos. ' + err.message);
             res.redirect(`/admin/media/${req.params.id}/editar`);
         }
