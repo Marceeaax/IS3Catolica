@@ -62,7 +62,6 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.flashMessages = req.flash();
     res.locals.username = req.session.username || null;
-    console.log('Flash Messages:', res.locals.flashMessages);
     next();
 });
 

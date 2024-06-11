@@ -1,3 +1,5 @@
+const ColoresModel = require('../../models/color.model');
+const coloresSchema = require('../../validators/colores/create');
 const db = require('../../db/conexion');
 const Color = require('color');
 
@@ -23,83 +25,44 @@ const coloresEspañolAIngles = {
 };
 
 function nombreAHexadecimal(nombreColor) {
-    // Primero, intentar directamente convertir el nombre del color
     try {
         const color = Color(nombreColor.toLowerCase());
         return color.hex();
     } catch (e) {
-        // Si falla, intentar convertir del español al inglés
         const nombreIngles = coloresEspañolAIngles[nombreColor.toLowerCase()];
         if (nombreIngles) {
             try {
                 const color = Color(nombreIngles);
                 return color.hex();
             } catch (e) {
-                return null; // El color no es válido
+                return null;
             }
         } else {
-            return null; // El color no está en el mapa ni es un color inglés válido
+            return null;
         }
     }
 }
 
 const ColoresController = {
-    index: function (req, res) {
-        let sql = "SELECT * FROM Colores WHERE activo = 1";
-        let queryParams = [];
-    
-        console.log("Cuerpo de la solicitud", req.query);
-        // Construcción dinámica de la consulta SQL
-        if (req.query.id) {
-            sql += " AND integranteId = ?";
-            queryParams.push(req.query.id);
-        }
-        if (req.query.background) {
-            const hexColor = nombreAHexadecimal(req.query.background);
-            console.log(hexColor);
-            if (hexColor) {
-                sql += " AND background = ?";
-                queryParams.push(hexColor);
-            } else {
-                sql += " AND (background LIKE ? OR background LIKE ?)";
-                queryParams.push('%' + req.query.background + '%', '%' + req.query.background.toLowerCase() + '%');
-            }
-        }
-        if (req.query.headerBackground) {
-            const hexColor = nombreAHexadecimal(req.query.headerBackground);
-            if (hexColor) {
-                sql += " AND headerBackground = ?";
-                queryParams.push(hexColor);
-            } else {
-                sql += " AND (headerBackground LIKE ? OR headerBackground LIKE ?)";
-                queryParams.push('%' + req.query.headerBackground + '%', '%' + req.query.headerBackground.toLowerCase() + '%');
-            }
-        }
-        if (req.query.sectionBackground) {
-            const hexColor = nombreAHexadecimal(req.query.sectionBackground);
-            if (hexColor) {
-                sql += " AND sectionBackground = ?";
-                queryParams.push(hexColor);
-            } else {
-                sql += " AND (sectionBackground LIKE ? OR sectionBackground LIKE ?)";
-                queryParams.push('%' + req.query.sectionBackground + '%', '%' + req.query.sectionBackground.toLowerCase() + '%');
-            }
-        }
-    
-    
-        db.all(sql, queryParams, (err, results) => {
-            if (err) {
-                console.error('Error al obtener datos:', err);
-                return res.status(500).send('Error al obtener datos de la base de datos');
-            }
+    index: async (req, res) => {
+        try {
+            const filters = {
+                id: req.query.id,
+                background: req.query.background ? nombreAHexadecimal(req.query.background) : null,
+                headerBackground: req.query.headerBackground ? nombreAHexadecimal(req.query.headerBackground) : null,
+                sectionBackground: req.query.sectionBackground ? nombreAHexadecimal(req.query.sectionBackground) : null
+            };
+            const colores = await ColoresModel.getAll(filters);
             res.render("admin/colores/index", {
-                colores: results,
+                colores: colores,
                 mostrarAdmin: true,
                 footerfijo: true
             });
-        });
+        } catch (err) {
+            console.error('Error al obtener datos:', err);
+            res.status(500).send('Error al obtener datos de la base de datos');
+        }
     },
-    
 
     create: async (req, res) => {
         try {
@@ -108,7 +71,7 @@ const ColoresController = {
                     SELECT i.id, i.nombre
                     FROM Integrantes i
                     LEFT JOIN Colores c ON i.id = c.integranteId
-                    WHERE c.integranteId IS NULL;
+                    WHERE c.integranteId IS NULL AND i.activo = 1;
                 `, (err, rows) => {
                     if (err) reject(err);
                     resolve(rows);
@@ -130,82 +93,68 @@ const ColoresController = {
         }
     },
 
-    store: (req, res) => {
-        const { integranteId, background, headerBackground, sectionBackground } = req.body;
-
-        if (!integranteId || !background || !headerBackground || !sectionBackground) {
-            req.flash('error', 'Todos los campos son obligatorios.');
-            return res.redirect(`/admin/colores/crear?integranteId=${encodeURIComponent(integranteId)}&background=${encodeURIComponent(background)}&headerBackground=${encodeURIComponent(headerBackground)}&sectionBackground=${encodeURIComponent(sectionBackground)}`);
+    store: async (req, res) => {
+        req.body.activo = true;
+        const { error, value } = coloresSchema.validate(req.body);
+        if (error) {
+            req.flash('error', error.details[0].message);
+            return res.redirect(`/admin/colores/crear`);
         }
 
-        const query = `INSERT INTO Colores (integranteId, background, headerBackground, sectionBackground) VALUES (?, ?, ?, ?)`;
-        db.run(query, [integranteId, background, headerBackground, sectionBackground], function(err) {
-            if (err) {
-                req.flash('error', 'Error al insertar en la base de datos.');
-                return res.redirect(`/admin/colores/crear?integranteId=${encodeURIComponent(integranteId)}&background=${encodeURIComponent(background)}&headerBackground=${encodeURIComponent(headerBackground)}&sectionBackground=${encodeURIComponent(sectionBackground)}`);
-            }
-
+        try {
+            await ColoresModel.create(value);
             req.flash('success', 'Colores asignados correctamente!');
             res.redirect('/admin/colores/listar');
-        });
+        } catch (err) {
+            req.flash('error', 'Error al insertar en la base de datos.');
+            res.redirect(`/admin/colores/crear`);
+        }
     },
 
-    edit: (req, res) => {
+    edit: async (req, res) => {
         const id = req.params.id;
-        const query = `SELECT * FROM Colores WHERE integranteId = ?`;
-
-        db.get(query, [id], (err, color) => {
-            if (err) {
-                console.error('Error al obtener datos:', err);
-                req.flash('error', 'Error al obtener los datos del registro.');
-                return res.redirect('/admin/colores/listar');
-            }
-
+        try {
+            const color = await ColoresModel.getById(id);
             res.render('admin/colores/editarColores', {
                 color,
                 success: req.flash('success')
             });
-        });
+        } catch (err) {
+            console.error('Error al obtener datos:', err);
+            req.flash('error', 'Error al obtener los datos del registro.');
+            res.redirect('/admin/colores/listar');
+        }
     },
 
-    update: (req, res) => {
-
-        const activo = req.body.activo ? 1 : 0;
-        const { id } = req.params;
-        const { background, headerBackground, sectionBackground } = req.body;
-
-        if (!background || !headerBackground || !sectionBackground) {
-            req.flash('error', 'Todos los campos son obligatorios.');
-            return res.redirect(`/admin/colores/${id}/editar`);
+    update: async (req, res) => {
+        req.body.activo = req.body.activo === 'on';
+        const { error, value } = coloresSchema.validate(req.body);
+        if (error) {
+            req.flash('error', error.details[0].message);
+            return res.redirect(`/admin/colores/${req.params.id}/editar`);
         }
 
-        const query = `UPDATE Colores SET background = ?, headerBackground = ?, sectionBackground = ?, activo = ? WHERE integranteId = ?`;
-        db.run(query, [background, headerBackground, sectionBackground, activo, id], function(err) {
-            if (err) {
-                req.flash('error', 'Error al actualizar en la base de datos.');
-                return res.redirect(`/admin/colores/${id}/editar`);
-            }
-
+        try {
+            await ColoresModel.update(req.params.id, value);
             req.flash('success', 'Colores actualizados correctamente!');
-            res.redirect(`/admin/colores/listar`);
-        });
+            res.redirect('/admin/colores/listar');
+        } catch (err) {
+            req.flash('error', 'Error al actualizar en la base de datos.');
+            res.redirect(`/admin/colores/${req.params.id}/editar`);
+        }
     },
     
-    destroy: (req, res) => {
+    destroy: async (req, res) => {
         const id = req.params.id;
-
-        // Borrado lógico del registro
-        const query = `UPDATE Colores SET activo = 0 WHERE integranteId = ?`;
-        db.run(query, [id], function(err) {
-            if (err) {
-                console.error('Error al eliminar el registro:', err);
-                req.flash('error', 'Error al eliminar el registro.');
-                return res.redirect('/admin/colores/listar');
-            }
-
+        try {
+            await ColoresModel.delete(id);
             req.flash('success', 'Color eliminado correctamente!');
             res.redirect('/admin/colores/listar');
-        });
+        } catch (err) {
+            console.error('Error al eliminar el registro:', err);
+            req.flash('error', 'Error al eliminar el registro.');
+            res.redirect('/admin/colores/listar');
+        }
     }
 };
 

@@ -1,4 +1,5 @@
 const db = require('../../db/conexion');
+const tiposMediaSchema = require('../../validators/tiposmedia/create.js');
 
 async function getNextOrder(tableName) {
     return new Promise((resolve, reject) => {
@@ -33,7 +34,6 @@ const TiposMediaController = {
             queryParams.push('%' + req.query.orden + '%');
         }
     
-    
         db.all(sql, queryParams, (err, results) => {
             if (err) {
                 console.error('Error al obtener datos:', err);
@@ -46,7 +46,6 @@ const TiposMediaController = {
             });
         });
     },
-    
 
     // Método para mostrar el formulario de creación
     create: (req, res) => {
@@ -61,14 +60,15 @@ const TiposMediaController = {
 
     // Método para guardar en la base de datos
     store: async (req, res) => {
-        const {nombre} = req.body;
-        const activo = req.body.activo ? 1 : 0;
-
-        const orden = await getNextOrder('TiposMedia');
-        if (!nombre) {
-            req.flash('error', 'Todos los campos son obligatorios.');
-            return res.redirect(`/admin/tiposmedia/crear?nombre=${encodeURIComponent(nombre)}&orden=${encodeURIComponent(orden)}&activo=${activo}`);
+        req.body.activo = req.body.activo === 'on';
+        const { error, value } = tiposMediaSchema.validate(req.body);
+        if (error) {
+            req.flash('error', error.details[0].message);
+            return res.redirect(`/admin/tiposmedia/crear?nombre=${encodeURIComponent(req.body.nombre)}&orden=${encodeURIComponent(req.body.orden)}&activo=${req.body.activo ? 1 : 0}`);
         }
+
+        const { nombre, activo } = value;
+        const orden = await getNextOrder('TiposMedia');
 
         const query = `INSERT INTO TiposMedia (nombre, activo, orden) VALUES (?, ?, ?)`;
         db.run(query, [nombre, activo, orden], function(err) {
@@ -77,26 +77,10 @@ const TiposMediaController = {
                 return res.redirect(`/admin/tiposmedia/crear?nombre=${encodeURIComponent(nombre)}&orden=${encodeURIComponent(orden)}&activo=${activo}`);
             }
 
-            req.flash('success', 'Tipo de media creado correctamente! Espera a que los programadores implementen la funciondalidad para usarlo');
+            req.flash('success', 'Tipo de media creado correctamente! Espera a que los programadores implementen la funcionalidad para usarlo');
             res.redirect('/admin/tiposmedia/listar');
         });
     },
-
-    // Método para mostrar un registro
-    // show: (req, res) => {
-    //     const id = req.params.id;
-    //     db.get('SELECT * FROM TiposMedia WHERE id = ?', [id], (err, row) => {
-    //         if (err) {
-    //             console.error('Error al obtener datos:', err);
-    //             return res.status(500).send('Error al obtener datos de la base de datos');
-    //         }
-    //         res.render('admin/tiposmedia/showTiposMedia', {
-    //             tipoMedia: row,
-    //             mostrarAdmin: true,
-    //             footerfijo: true
-    //         });
-    //     });
-    // },
 
     // Método para mostrar el formulario de edición
     edit: async (req, res) => {
@@ -116,7 +100,9 @@ const TiposMediaController = {
             }
 
             res.render('admin/tiposmedia/editarTipoMedia', {
-                tiposmedia
+                tiposmedia,
+                error: req.flash('error'),
+                success: req.flash('success')
             });
         } catch (error) {
             console.error('Error al obtener datos:', error);
@@ -127,15 +113,21 @@ const TiposMediaController = {
 
     // Método para actualizar el registro
     update: async (req, res) => {
-        const { id, nombre } = req.body;
-        const activo = req.body.activo ? 1 : 0;
+        req.body.activo = req.body.activo === 'on';
+        const { error, value } = tiposMediaSchema.validate(req.body);
+        if (error) {
+            req.flash('error', error.details[0].message);
+            return res.redirect(`/admin/tiposmedia/${req.params.id}/editar`);
+        }
+
+        const { nombre, activo } = value;
 
         try {
             const query = `UPDATE TiposMedia SET nombre = ?, activo = ? WHERE id = ?`;
-            db.run(query, [nombre, activo, id], function(err) {
+            db.run(query, [nombre, activo, req.params.id], function(err) {
                 if (err) {
                     req.flash('error', 'Error al actualizar en la base de datos. ' + err.message);
-                    return res.redirect(`/admin/tiposmedia/${id}/editar`);
+                    return res.redirect(`/admin/tiposmedia/${req.params.id}/editar`);
                 }
                 req.flash('success', 'Tipo de media actualizado correctamente!');
                 res.redirect(`/admin/tiposmedia/listar`);
@@ -143,7 +135,7 @@ const TiposMediaController = {
         } catch (error) {
             console.error('Error al realizar consultas:', error);
             req.flash('error', 'Error al realizar consultas. ' + error.message);
-            res.redirect(`/admin/tiposmedia/${id}/editar`);
+            res.redirect(`/admin/tiposmedia/${req.params.id}/editar`);
         }
     },
 

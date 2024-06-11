@@ -52,7 +52,7 @@ router.get("/", paginasController.index);
 router.get("/integrantes/listar", integrantesController.index);
 router.get("/integrantes/crear", integrantesController.create);
 router.post("/integrantes/create", integrantesController.store);
-router.get("/integrantes/:id/ver", integrantesController.show);
+//router.get("/integrantes/:id/ver", integrantesController.show);
 router.get("/integrantes/:id/editar", integrantesController.edit);
 router.post("/integrantes/:id/update", integrantesController.update);
 router.post("/integrantes/:id/delete", integrantesController.destroy);

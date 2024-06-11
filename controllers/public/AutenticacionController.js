@@ -36,7 +36,7 @@ const AutenticacionController = {
             if (err) {
                 console.error('Error destruyendo la sesión:', err);
             }
-            res.redirect('/login');
+            res.redirect('/');
         });
     },
 

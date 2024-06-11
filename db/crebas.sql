@@ -35,3 +35,12 @@ CREATE TABLE Colores (
     activo BOOLEAN DEFAULT 1,
     FOREIGN KEY (integranteId) REFERENCES Integrantes (id)
 );
+
+CREATE TABLE usuarios (
+    usuarioId INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE,
+    pass TEXT,
+    superAdmin TEXT,
+    integranteId TEXT NOT NULL,
+    FOREIGN KEY (integranteId) REFERENCES Integrantes (id)
+);
