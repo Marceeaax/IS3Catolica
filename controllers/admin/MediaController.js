@@ -1,21 +1,7 @@
 const MediaModel = require('../../models/media.model');
-const db = require('../../db/conexion');
+const mediaSchema = require('../../validators/media/validatorsmedia.js');
 const path = require('path');
 const fs = require('fs');
-const mediaSchema = require('../../validators/media/validatorsmedia.js');
-
-async function getNextOrder(tableName) {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT MAX(orden) as maxOrder FROM ${tableName}`;
-        db.get(query, (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(row.maxOrder ? row.maxOrder + 1 : 1);
-            }
-        });
-    });
-}
 
 const MediaController = {
     index: async (req, res) => {
@@ -40,26 +26,9 @@ const MediaController = {
 
     create: async (req, res) => {
         try {
-            const allIntegrantes = await new Promise((resolve, reject) => {
-                db.all('SELECT id, nombre FROM Integrantes WHERE activo = 1 ORDER BY nombre', (err, rows) => {
-                    if (err) reject(err);
-                    resolve(rows);
-                });
-            });
-
-            const allTiposMedia = await new Promise((resolve, reject) => {
-                db.all('SELECT id, nombre FROM TiposMedia WHERE activo = 1 ORDER BY nombre', (err, rows) => {
-                    if (err) reject(err);
-                    resolve(rows);
-                });
-            });
-
-            const mediaByIntegrante = await new Promise((resolve, reject) => {
-                db.all('SELECT integranteId, tiposmediaId FROM Media WHERE activo = 1', (err, rows) => {
-                    if (err) reject(err);
-                    resolve(rows);
-                });
-            });
+            const allIntegrantes = await MediaModel.getAllIntegrantes();
+            const allTiposMedia = await MediaModel.getAllTiposMedia();
+            const mediaByIntegrante = await MediaModel.getMediaByIntegrante();
 
             const tiposMediaMap = {};
             allTiposMedia.forEach(tipo => {
@@ -119,7 +88,7 @@ const MediaController = {
         console.log('URL:', value.url); // Mensaje de depuración
         
         // Verificar si es un enlace de YouTube y modificar los datos en consecuencia
-        if (value.tiposmediaId == "youtube" && value.url) { // Assuming id 1 is for YouTube
+        if (value.tiposmediaId == "youtube" && value.url) { // Assuming id "youtube" is for YouTube
             const youtubeUrl = getYouTubeEmbedUrl(value.url);
             if (!youtubeUrl) {
                 req.flash('error', 'URL de YouTube no válida.');
@@ -174,7 +143,7 @@ const MediaController = {
         console.log('Archivo recibido para actualización:', file); // Mensaje de depuración
 
         // Verificar si es un enlace de YouTube y modificar los datos en consecuencia
-        if (value.tiposmediaId == 1 && value.url) { // Assuming id 1 is for YouTube
+        if (value.tiposmediaId == "youtube" && value.url) { // Assuming id "youtube" is for YouTube
             const youtubeUrl = getYouTubeEmbedUrl(value.url);
             if (!youtubeUrl) {
                 req.flash('error', 'URL de YouTube no válida.');

@@ -62,29 +62,13 @@ const MediaModel = {
     },
 
     create: async (data, file) => {
-        let { integranteId, tiposmediaId, url, nombrearchivo, activo } = data;
-        console.log(data);
+        const { integranteId, tiposmediaId, url, nombrearchivo, activo } = data;
         const orden = await getNextOrder('Media');
         
         return new Promise((resolve, reject) => {
             const query = `INSERT INTO Media (integranteId, tiposmediaId, url, nombrearchivo, orden, activo) VALUES (?, ?, ?, ?, ?, ?)`;
-            if (tiposmediaId == "youtube" && url) { // Assuming id 1 is for YouTube
-                const finalUrl = getYouTubeEmbedUrl(url);
-                tiposmediaId = 1;
-                if (!finalUrl) {
-                    return reject(new Error('URL de YouTube no válida.'));
-                }
-                db.run(query, [integranteId, tiposmediaId, finalUrl, null, orden, activo], function(err) {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(this.lastID);
-                });
-            } else {
-                tiposmediaId == "imagen" ? tiposmediaId = 2 : tiposmediaId = 3;
-                if (!file) {
-                    return reject(new Error('No existe nombre de archivo.'));
-                }
+            
+            if (file) {
                 const newFileName = `${tiposmediaId}-${integranteId}-${Date.now()}${path.extname(file.originalname)}`;
                 const newFilePath = path.join('public/images', newFileName);
                 fs.rename(file.path, newFilePath, (err) => {
@@ -99,24 +83,24 @@ const MediaModel = {
                         resolve(this.lastID);
                     });
                 });
+            } else {
+                db.run(query, [integranteId, tiposmediaId, url, null, orden, activo], function(err) {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(this.lastID);
+                });
             }
         });
     },
 
     update: async (id, data, file) => {
         const { url, tiposmediaId, activo } = data;
-        let finalUrl = url;
-        if (tiposmediaId == 1 && url) { // Assuming id 1 is for YouTube
-            finalUrl = getYouTubeEmbedUrl(url);
-            if (!finalUrl) {
-                return new Promise((_, reject) => reject(new Error('URL de YouTube no válida.')));
-            }
-        }
 
         return new Promise((resolve, reject) => {
             if (url) {
                 const query = `UPDATE Media SET url = ?, activo = ? WHERE id = ?`;
-                db.run(query, [finalUrl, activo, id], function (err) {
+                db.run(query, [url, activo, id], function (err) {
                     if (err) {
                         return reject(err);
                     }
@@ -160,6 +144,33 @@ const MediaModel = {
                 resolve(this.changes);
             });
         });
+    },
+
+    getAllIntegrantes: () => {
+        return new Promise((resolve, reject) => {
+            db.all('SELECT id, nombre FROM Integrantes WHERE activo = 1 ORDER BY nombre', (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            });
+        });
+    },
+
+    getAllTiposMedia: () => {
+        return new Promise((resolve, reject) => {
+            db.all('SELECT id, nombre FROM TiposMedia WHERE activo = 1 ORDER BY nombre', (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            });
+        });
+    },
+
+    getMediaByIntegrante: () => {
+        return new Promise((resolve, reject) => {
+            db.all('SELECT integranteId, tiposmediaId FROM Media WHERE activo = 1', (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            });
+        });
     }
 };
 
@@ -174,12 +185,6 @@ async function getNextOrder(tableName) {
             }
         });
     });
-}
-
-function getYouTubeEmbedUrl(url) {
-    const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = url.match(regex);
-    return match ? `https://www.youtube.com/embed/${match[1]}` : null;
 }
 
 module.exports = MediaModel;
