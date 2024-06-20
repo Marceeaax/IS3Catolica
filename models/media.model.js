@@ -62,13 +62,15 @@ const MediaModel = {
     },
 
     create: async (data, file) => {
-        const { integranteId, tiposmediaId, url, nombrearchivo, activo } = data;
+        let { integranteId, tiposmediaId, url, nombrearchivo, activo } = data;
+        console.log(data);
         const orden = await getNextOrder('Media');
         
         return new Promise((resolve, reject) => {
             const query = `INSERT INTO Media (integranteId, tiposmediaId, url, nombrearchivo, orden, activo) VALUES (?, ?, ?, ?, ?, ?)`;
-            if (tiposmediaId == 1 && url) { // Assuming id 1 is for YouTube
+            if (tiposmediaId == "youtube" && url) { // Assuming id 1 is for YouTube
                 const finalUrl = getYouTubeEmbedUrl(url);
+                tiposmediaId = 1;
                 if (!finalUrl) {
                     return reject(new Error('URL de YouTube no válida.'));
                 }
@@ -79,6 +81,7 @@ const MediaModel = {
                     resolve(this.lastID);
                 });
             } else {
+                tiposmediaId == "imagen" ? tiposmediaId = 2 : tiposmediaId = 3;
                 if (!file) {
                     return reject(new Error('No existe nombre de archivo.'));
                 }

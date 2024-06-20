@@ -113,8 +113,21 @@ const MediaController = {
             return res.redirect('/admin/media/crear');
         }
 
-        const file = req.file;
+        let file = req.file;
         console.log('Archivo recibido:', file); // Mensaje de depuración
+
+        console.log('URL:', value.url); // Mensaje de depuración
+        
+        // Verificar si es un enlace de YouTube y modificar los datos en consecuencia
+        if (value.tiposmediaId == "youtube" && value.url) { // Assuming id 1 is for YouTube
+            const youtubeUrl = getYouTubeEmbedUrl(value.url);
+            if (!youtubeUrl) {
+                req.flash('error', 'URL de YouTube no válida.');
+                return res.redirect('/admin/media/crear');
+            }
+            value.url = youtubeUrl;
+            file = null; // No hay archivo cuando se trata de un enlace de YouTube
+        }
 
         try {
             await MediaModel.create(value, file);
@@ -157,8 +170,19 @@ const MediaController = {
             return res.redirect(`/admin/media/${req.params.id}/editar`);
         }
 
-        const file = req.file; // Este es el archivo nuevo si se proporciona
+        let file = req.file; // Este es el archivo nuevo si se proporciona
         console.log('Archivo recibido para actualización:', file); // Mensaje de depuración
+
+        // Verificar si es un enlace de YouTube y modificar los datos en consecuencia
+        if (value.tiposmediaId == 1 && value.url) { // Assuming id 1 is for YouTube
+            const youtubeUrl = getYouTubeEmbedUrl(value.url);
+            if (!youtubeUrl) {
+                req.flash('error', 'URL de YouTube no válida.');
+                return res.redirect(`/admin/media/${req.params.id}/editar`);
+            }
+            value.url = youtubeUrl;
+            file = null; // No hay archivo cuando se trata de un enlace de YouTube
+        }
 
         try {
             await MediaModel.update(req.params.id, value, file);
@@ -185,5 +209,12 @@ const MediaController = {
         }
     }
 };
+
+// Función para obtener el URL embebido de YouTube
+function getYouTubeEmbedUrl(url) {
+    const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
 
 module.exports = MediaController;
