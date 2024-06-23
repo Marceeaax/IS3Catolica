@@ -58,7 +58,7 @@ const TiposMediaModel = {
 
     update: (id, data) => {
         const { nombre, activo } = data;
-
+        const activoEstado = activo ? 1 : 0;
         return new Promise((resolve, reject) => {
             const query = `UPDATE TiposMedia SET nombre = ?, activo = ? WHERE id = ?`;
             db.run(query, [nombre, activo, id], function(err) {
@@ -69,6 +69,7 @@ const TiposMediaModel = {
             });
         });
     },
+
 
     delete: (id) => {
         return new Promise((resolve, reject) => {

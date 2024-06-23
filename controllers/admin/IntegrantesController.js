@@ -99,8 +99,8 @@ const IntegrantesController = {
     destroy: async (req, res) => {
         const id = req.params.id;
         try {
-            const mediaCount = await IntegranteModel.getByField('integranteId', id);
-            const coloresCount = await IntegranteModel.getByField('integranteId', id);
+            const mediaCount = await IntegranteModel.getByField('id', id);
+            const coloresCount = await IntegranteModel.getByField('id', id);
             
             let errorMessage = '';
             if (mediaCount > 0 && coloresCount > 0) {

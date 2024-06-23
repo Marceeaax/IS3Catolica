@@ -1,3 +1,4 @@
+const db = require('../../db/conexion');
 const TiposMediaModel = require('../../models/tipomedia.model');
 const tiposMediaSchema = require('../../validators/tiposmedia/validatorstiposmedia.js');
 
@@ -86,6 +87,7 @@ const TiposMediaController = {
     },
 
     update: async (req, res) => {
+        console.log(req.body);
         req.body.activo = req.body.activo === 'on';
         const { error, value } = tiposMediaSchema.validate(req.body);
         if (error) {

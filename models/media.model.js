@@ -62,8 +62,16 @@ const MediaModel = {
     },
 
     create: async (data, file) => {
-        const { integranteId, tiposmediaId, url, nombrearchivo, activo } = data;
+        let { integranteId, tiposmediaId, url, nombrearchivo, activo } = data;
         const orden = await getNextOrder('Media');
+
+        if (tiposmediaId === "imagen") {
+            tiposmediaId = 2;  // Si es "imagen", asignar 2
+        } else if (tiposmediaId === "dibujo") {
+            tiposmediaId = 3;  // Si es "dibujo", asignar 3
+        } else {
+            tiposmediaId = 1;  // Para cualquier otro caso, asignar 1
+        }
         
         return new Promise((resolve, reject) => {
             const query = `INSERT INTO Media (integranteId, tiposmediaId, url, nombrearchivo, orden, activo) VALUES (?, ?, ?, ?, ?, ?)`;
